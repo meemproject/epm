@@ -1,0 +1,109 @@
+version: 2
+jobs:
+  build_storybook:
+    docker:
+      - image: circleci/python:3.7.3-node
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - ""
+      - run: pip install awscli --upgrade --user
+      - run: echo 'export PATH=$HOME/.local/bin:$PATH' >> $BASH_ENV
+      - run: node -v && npm -v && aws --version
+      - checkout
+      - restore_cache:
+          keys:
+            - yarn-packages-{{ checksum "yarn.lock" }}
+      - run: yarn install --frozen-lockfile --ignore-engines
+      - run: git config --global user.email "$GIT_AUTHOR_EMAIL"
+      - run: git config --global user.name "$GIT_AUTHOR_NAME"
+      - run: yarn build-storybook
+      - run: yarn s3-sync-storybook
+  test:
+    docker:
+      - image: circleci/node:14
+    steps:
+      - checkout
+      - run: yarn install --frozen-lockfile
+      - run: yarn lint
+      - run: yarn build
+  release:
+    docker:
+      - image: circleci/node:14
+    steps:
+      - checkout
+      - run: yarn install --frozen-lockfile
+      - run: git config --global user.email "$GIT_AUTHOR_EMAIL"
+      - run: git config --global user.name "$GIT_AUTHOR_NAME"
+      - run: yarn run release
+  deploy_dev:
+    docker:
+      - image: circleci/node:14
+    steps:
+      - checkout
+      - run: yarn install --frozen-lockfile
+      - run: yarn build
+      - run:
+          name: Deploy SLS
+          command: |
+            yarn sls
+  deploy_stage:
+    docker:
+      - image: circleci/node:14
+    steps:
+      - checkout
+      - run: yarn install --frozen-lockfile
+      - run: yarn build
+      - run:
+          name: Deploy SLS
+          command: |
+            yarn sls
+  deploy_prod:
+    docker:
+      - image: circleci/node:14
+    steps:
+      - checkout
+      - run: yarn install --frozen-lockfile
+      - run: yarn build
+      - run:
+          name: Deploy SLS
+          command: |
+            yarn sls
+workflows:
+  version: 2
+  do_build:
+    jobs:
+      - test:
+          context: clubs_sls_dev
+          filters:
+            branches:
+              ignore:
+                - dev
+                - stage
+                - master
+      - release:
+          context: private_packages
+          filters:
+            branches:
+              only:
+                - dev
+                - stage
+                - master
+      - deploy_dev:
+          context: clubs_sls_dev
+          filters:
+            branches:
+              only:
+                - dev
+      - deploy_stage:
+          context: clubs_sls_stage
+          filters:
+            branches:
+              only:
+                - stage
+      - deploy_prod:
+          context: clubs_sls_prod
+          filters:
+            branches:
+              only:
+                - master

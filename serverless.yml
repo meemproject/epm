@@ -1,0 +1,18 @@
+# https://github.com/serverless-nextjs/serverless-next.js
+
+meem-web:
+  component: "@sls-next/serverless-component@3.6.0"
+  inputs:
+    # build:
+    #   cmd: echo
+    #   args: ['"Skipping nextjs build"']
+    removeOldLambdaVersions: true
+    timeout: 30
+    memory: 1024
+    useServerlessTraceTarget: true
+    bucketName: ${env.S3_BUCKET_NAME}
+    cloudfront:
+      distributionId: ${env.CF_DISTRIBUTION_ID}
+    name:
+      defaultLambda: ${env.S3_BUCKET_NAME}-default
+      apiLambda: ${env.S3_BUCKET_NAME}-api

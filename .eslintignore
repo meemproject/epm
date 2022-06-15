@@ -1,0 +1,6 @@
+build
+node_modules
+local_modules
+.next
+storybook-static
+generated

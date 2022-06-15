@@ -1,0 +1,91 @@
+{
+	"name": "@meemproject/clubs-web",
+	"version": "1.1.3",
+	"private": true,
+	"author": "Meem Project",
+	"contributors": [
+		{
+			"name": "James Gadsby",
+			"email": "james.gadsby@gmail.com"
+		},
+		{
+			"name": "Ken Goldfarb",
+			"email": "hello@kengoldfarb.com"
+		}
+	],
+	"scripts": {
+		"local": "next dev -p 3001",
+		"dev": "next dev -p 3001",
+		"build": "next build",
+		"start": "next start",
+		"lint": "eslint --max-warnings=0 --ext=.ts,.tsx . && tsc -p . --noEmit",
+		"lint:fix": "eslint --fix --ext=.ts,.tsx .",
+		"release": "semantic-release",
+		"sls": "serverless",
+		"test": "echo \"TODO: Implement tests\"",
+		"localPackageLink": "yarn link @meemproject/api @meemproject/react @meemproject/utils react react-dom @meemproject/meem-contracts",
+		"apollo": "apollo",
+		"codegen": "graphql-codegen --config codegen.js"
+	},
+	"resolutions": {
+		"graphql": "^15.7.2",
+		"react": "^18.1.0",
+		"react-dom": "^18.1.0",
+		"ethers": "^5.6.4"
+	},
+	"dependencies": {
+		"@apollo/client": "^3.5.10",
+		"@fontsource/inter": "^4.5.10",
+		"@kengoldfarb/log": "^1.0.5",
+		"@mantine/core": "4.2.2",
+		"@mantine/dates": "4.2.2",
+		"@mantine/form": "^4.2.9",
+		"@mantine/hooks": "4.2.2",
+		"@mantine/next": "4.2.2",
+		"@mantine/notifications": "4.2.2",
+		"@meemproject/api": "^0.6.4",
+		"@meemproject/meem-contracts": "^0.6.4",
+		"@meemproject/react": "^0.6.4",
+		"@next/bundle-analyzer": "^12.1.4",
+		"@types/superagent": "^4.1.15",
+		"blob-util": "^2.0.2",
+		"dayjs": "^1.11.0",
+		"ethers": "^5.6.4",
+		"graphql": "^15.7.2",
+		"graphql-ws": "^5.8.2",
+		"iconoir-react": "4.9.1",
+		"next": "12.1.4",
+		"react": "18.1.0",
+		"react-dom": "18.1.0",
+		"react-gtm-module": "^2.0.11",
+		"react-image-file-resizer": "^0.4.7",
+		"superagent": "^7.1.6",
+		"tabler-icons-react": "^1.46.0",
+		"use-file-picker": "^1.4.2"
+	},
+	"devDependencies": {
+		"@graphql-codegen/cli": "^2.6.2",
+		"@graphql-codegen/introspection": "^2.1.1",
+		"@graphql-codegen/typescript": "^2.4.8",
+		"@graphql-codegen/typescript-operations": "^2.3.5",
+		"@graphql-codegen/typescript-react-apollo": "^3.2.11",
+		"@kengoldfarb/semantic-release-config": "^1.0.3",
+		"@sentry/webpack-plugin": "^1.17.1",
+		"@types/react": "18.0.0",
+		"@zeit/next-source-maps": "^0.0.3",
+		"apollo": "^2.33.10",
+		"eslint": "^8.13.0",
+		"eslint-config-kengoldfarb": "^1.4.2",
+		"eslint-plugin-react-hooks": "^4.3.0",
+		"fs-extra": "^10.0.0",
+		"jest": "^27.5.1",
+		"prettier": "^2.6.2",
+		"serverless": "^2.0.0",
+		"serverless-prune-plugin": "^2.0.1",
+		"ts-jest": "^27.1.4",
+		"ts-node": "^10.4.0",
+		"ts-node-dev": "^1.1.8",
+		"typechain": "^6.0.2",
+		"typescript": "4.6.3"
+	}
+}
