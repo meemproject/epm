@@ -14,7 +14,6 @@ import { WalletProvider } from '@meemproject/react'
 import { createClient } from 'graphql-ws'
 import type { AppProps } from 'next/app'
 import React from 'react'
-import { ClubClubProvider } from '../components/Detail/ClubClubProvider'
 import '@fontsource/inter'
 
 function MyApp(props: AppProps) {
@@ -123,9 +122,7 @@ function MyApp(props: AppProps) {
 					}
 				>
 					<NotificationsProvider>
-						<ClubClubProvider>
-							<Component {...pageProps} />
-						</ClubClubProvider>
+						<Component {...pageProps} />
 					</NotificationsProvider>
 				</WalletProvider>
 			</ApolloProvider>

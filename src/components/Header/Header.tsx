@@ -23,7 +23,6 @@ import {
 	Mail
 } from 'tabler-icons-react'
 import { ensWalletAddress, quickTruncate } from '../../utils/truncated_wallet'
-import ClubClubContext from '../Detail/ClubClubProvider'
 
 const useStyles = createStyles(theme => ({
 	headerLeftItems: {
@@ -163,7 +162,6 @@ export function HeaderMenu() {
 	const router = useRouter()
 
 	const [username, setUsername] = useState('')
-	const clubclub = useContext(ClubClubContext)
 	const wallet = useWallet()
 
 	useEffect(() => {
@@ -303,22 +301,6 @@ export function HeaderMenu() {
 								Meem
 							</span>
 						</Menu.Item>
-						{!clubclub.isMember && (
-							<Menu.Item
-								onClick={handleJoinClubClub}
-								className={classes.menuItem}
-							>
-								Join Club Club
-							</Menu.Item>
-						)}
-						{clubclub.isMember && (
-							<Menu.Item
-								onClick={navigateToMyClubs}
-								className={classes.menuItem}
-							>
-								My Clubs
-							</Menu.Item>
-						)}
 
 						<Divider />
 

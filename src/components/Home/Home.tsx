@@ -8,19 +8,14 @@ import {
 	createStyles,
 	Container,
 	Text,
-	Center,
-	Image,
-	Autocomplete,
-	Loader,
-	Avatar,
-	SelectItemProps,
-	MantineColor,
-	AutocompleteItem,
-	Group,
 	Button,
-	Modal
+	Modal,
+	Select
 } from '@mantine/core'
+import { useForm } from '@mantine/form'
+import { MeemAPI } from '@meemproject/api'
 import { useWallet } from '@meemproject/react'
+import { ethers } from 'ethers'
 import { useRouter } from 'next/router'
 import React, {
 	forwardRef,
@@ -29,16 +24,9 @@ import React, {
 	useRef,
 	useState
 } from 'react'
-import {
-	GetClubsAutocompleteQuery,
-	GetIsMemberOfClubQuery
-} from '../../../generated/graphql'
-import {
-	GET_CLUBS_AUTOCOMPLETE,
-	GET_IS_MEMBER_OF_CLUB
-} from '../../graphql/clubs'
-import { clubMetadataFromContractUri } from '../../model/club/club_metadata'
-import ClubClubContext from '../Detail/ClubClubProvider'
+import { GetContractsQuery, Contracts } from '../../../generated/graphql'
+import { GET_CONTRACTS_BY_TYPE } from '../../graphql/contracts'
+import { DeployContract } from './DeployContract'
 
 const useStyles = createStyles(theme => ({
 	wrapper: {
@@ -59,252 +47,103 @@ const useStyles = createStyles(theme => ({
 			paddingTop: 0,
 			marginTop: 80
 		}
-	},
-
-	title: {
-		paddingBottom: 64
-	},
-
-	searchPrompt: {
-		marginTop: 64,
-		fontSize: 20,
-		fontWeight: 'bold',
-		color: 'black',
-
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 18,
-			marginTop: 48
-		}
-	},
-
-	clubSearch: {
-		marginTop: 16,
-		input: {
-			borderRadius: 16
-		}
-	},
-
-	joinMeemLink: {
-		marginTop: 24,
-		cursor: 'pointer',
-		a: {
-			color: 'rgba(255, 102, 81, 1)',
-			textDecoration: 'underline',
-			fontWeight: 'bold'
-		}
-	},
-	createButton: {
-		marginRight: 64,
-		backgroundColor: 'black',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 12
-	},
-	joinButton: {
-		backgroundColor: 'black',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 12
-	},
-	joinMeemDialogText: {
-		marginBottom: 8,
-		fontSize: 14
 	}
 }))
-
-interface ItemProps extends SelectItemProps {
-	color: MantineColor
-	description: string
-	slug: string
-	image: string
-}
-
-// eslint-disable-next-line react/display-name
-const CustomAutoCompleteItem = forwardRef<HTMLDivElement, ItemProps>(
-	({ description, value, image, ...others }: ItemProps, ref) => (
-		<div ref={ref} {...others}>
-			<Group noWrap>
-				<Avatar src={image} />
-
-				<div>
-					<Text>{value}</Text>
-					<Text size="xs" color="dimmed">
-						{description}
-					</Text>
-				</div>
-			</Group>
-		</div>
-	)
-)
 
 export function HomeComponent() {
 	const { classes } = useStyles()
 	const router = useRouter()
+	const { web3Provider, signer } = useWallet()
+	const [isLoading, setIsLoading] = useState(false)
+	const [isOpen, setIsOpen] = useState(false)
+	const [contract, setContract] = useState<Contracts>()
 
-	const autocompleteClient = new ApolloClient({
-		cache: new InMemoryCache(),
-		link: new HttpLink({
-			uri: process.env.NEXT_PUBLIC_GRAPHQL_API_URL
-		}),
-		ssrMode: typeof window === 'undefined'
+	const form = useForm({
+		initialValues: {
+			contractType: ''
+		},
+		validate: {}
 	})
 
-	const clubclub = useContext(ClubClubContext)
+	// const handleFormChange = async () => {
+	// 	console.log(form.values)
+	// }
 
-	const timeoutRef = useRef<number>(-1)
-	const [autocompleteFormValue, setAutocompleteFormValue] = useState('')
-	const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false)
-	const [isFetchingData, setIsFetchingData] = useState(false)
-	const [autocompleteData, setAutocompleteData] = useState<any[]>([])
-	const [showCreateButton, setShowCreateButton] = useState(false)
+	useEffect(() => {
+		console.log(form.values)
+	}, [form.values])
 
-	const handleChange = async (val: string) => {
-		window.clearTimeout(timeoutRef.current)
-		setAutocompleteFormValue(val)
-		setAutocompleteData([])
+	const {
+		loading,
+		error,
+		data: contracts
+	} = useQuery<GetContractsQuery>(GET_CONTRACTS_BY_TYPE, {
+		variables: { contractType: form.values.contractType }
+	})
 
-		if (val.trim().length === 0) {
-			setIsLoadingSuggestions(false)
-		} else {
-			setIsLoadingSuggestions(true)
-			timeoutRef.current = window.setTimeout(async () => {
-				if (isFetchingData) {
-					return
-				}
-				setIsFetchingData(true)
-				const { data } = await autocompleteClient.query({
-					query: GET_CLUBS_AUTOCOMPLETE,
-					variables: {
-						query: `%${val.trim()}%`
-					}
-				})
-
-				const typedData = data as GetClubsAutocompleteQuery
-
-				if (typedData.MeemContracts.length === 0) {
-					setAutocompleteData([])
-					setIsFetchingData(false)
-					setIsLoadingSuggestions(false)
-					setShowCreateButton(true)
-					log.debug('allowing create button = true')
-				} else {
-					const clubsList: React.SetStateAction<any[]> = []
-					typedData.MeemContracts.forEach(club => {
-						const metadata = clubMetadataFromContractUri(
-							club.contractURI
-						)
-						if (metadata.image.length > 0) {
-							const clubData = {
-								image: metadata.image,
-								value: club.name,
-								description: metadata.description,
-								slug: club.slug,
-								id: club.id
-							}
-							clubsList.push(clubData)
-						}
-					})
-					setAutocompleteData(clubsList)
-					setIsFetchingData(false)
-					setIsLoadingSuggestions(false)
-
-					// Now look through the returned clubs to see if a club of the same name exists
-					let shouldAllow = true
-					clubsList.forEach(club => {
-						if (
-							club.value &&
-							club.value.toLowerCase() ===
-								val.trim().toLowerCase()
-						) {
-							shouldAllow = false
-							return
-						}
-					})
-					setShowCreateButton(shouldAllow)
-					log.debug(`allowing create button = ${shouldAllow}`)
-				}
-			}, 250)
-		}
-	}
-
-	const handleSuggestionChosen = (suggestion: AutocompleteItem) => {
-		log.debug(`Chosen ${suggestion.value} - ${suggestion.description}`)
-		setIsLoadingSuggestions(true)
-		router.push({
-			pathname: `/${suggestion.slug}`
-		})
-	}
-
-	const goToCreate = () => {
-		//if (hasMeemId) {
-		router.push({
-			pathname: `/create`,
-			query: { clubname: autocompleteFormValue }
-		})
-		// } else {
-		// 	setJoinMeemDialogOpen(true)
+	const handleDeploy = async (selectedContract: Contracts) => {
+		// try {
+		// 	setIsLoading(true)
+		// 	console.log(contract)
+		// 	const c = new ethers.ContractFactory(
+		// 		contract.abi,
+		// 		contract.bytecode,
+		// 		signer
+		// 	)
+		// 	console.log(c)
+		// 	const tx = await c.deploy()
+		// 	console.log(tx)
+		// 	await tx.deployed()
+		// } catch (e) {
+		// 	console.log(e)
 		// }
+
+		// setIsLoading(false)
+		setIsOpen(true)
+		setContract(selectedContract)
 	}
+
+	console.log({ contracts })
 
 	return (
 		<div className={classes.wrapper}>
 			<Container size={900} className={classes.inner}>
-				<Center>
-					<Image
-						src="/clubs-home.svg"
-						height={150}
-						width={150}
-						fit={'contain'}
-					>
-						{' '}
-						className={classes.title}{' '}
-					</Image>
-				</Center>
-
-				<Text className={classes.searchPrompt} color="dimmed">
-					{`What's your club called?`}
-				</Text>
-				<Autocomplete
-					className={classes.clubSearch}
-					value={autocompleteFormValue}
-					data={autocompleteData}
-					limit={2}
-					size={'xl'}
-					itemComponent={CustomAutoCompleteItem}
-					onChange={handleChange}
-					placeholder={
-						'Start typing to see suggestions or create a new club...'
-					}
-					onItemSubmit={handleSuggestionChosen}
-					rightSection={
-						isLoadingSuggestions ? (
-							<Loader size={16} />
-						) : autocompleteFormValue.length > 0 &&
-						  showCreateButton &&
-						  clubclub.isMember ? (
-							<Button
-								className={classes.createButton}
-								onClick={goToCreate}
-							>
-								Create
-							</Button>
-						) : null
-					}
-				/>
-				{!clubclub.isMember && (
-					<Text className={classes.joinMeemLink}>
-						<a
-							onClick={() => {
-								router.push({ pathname: '/club-club' })
-							}}
-						>
-							Join Club Club to create
-						</a>
-					</Text>
-				)}
+				<form onSubmit={form.onSubmit(async values => {})}>
+					<Container>
+						<Select
+							label="Contract Type"
+							placeholder="Pick one"
+							data={[
+								{
+									value: MeemAPI.ContractType.Regular,
+									label: 'Regular Contract'
+								},
+								{
+									value: MeemAPI.ContractType.DiamondProxy,
+									label: 'Diamond Proxy (EIP-2535)'
+								},
+								{
+									value: MeemAPI.ContractType.DiamondFacet,
+									label: 'Diamond Facet (EIP-2535)'
+								}
+							]}
+							{...form.getInputProps('contractType')}
+						/>
+					</Container>
+				</form>
+				{contracts?.Contracts.map(contract => (
+					<Container key={contract.id}>
+						<Text>{contract.name}</Text>
+						{/* <Text>{contract.}</Text> */}
+						<Button onClick={e => handleDeploy(contract)}>
+							Deploy Contract
+						</Button>
+					</Container>
+				))}
 			</Container>
+			<Modal opened={isOpen} onClose={() => setIsOpen(false)}>
+				<DeployContract contract={contract} />
+			</Modal>
 		</div>
 	)
 }

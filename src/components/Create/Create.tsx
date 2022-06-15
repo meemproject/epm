@@ -29,7 +29,6 @@ import Resizer from 'react-image-file-resizer'
 import { ArrowLeft, Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
 import { CookieKeys } from '../../utils/cookies'
-import ClubClubContext from '../Detail/ClubClubProvider'
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -200,6 +199,29 @@ export const CreateComponent: React.FC = () => {
 			</div>
 
 			<Container>
+				<Select
+					label="Contract Type"
+					placeholder="Pick one"
+					required
+					data={[
+						{
+							value: MeemAPI.ContractType.Regular,
+							label: 'Regular Contract'
+						},
+						{
+							value: MeemAPI.ContractType.DiamondProxy,
+							label: 'Diamond Proxy (EIP-2535)'
+						},
+						{
+							value: MeemAPI.ContractType.DiamondFacet,
+							label: 'Diamond Facet (EIP-2535)'
+						}
+					]}
+					{...form.getInputProps('contractType')}
+				/>
+			</Container>
+
+			<Container>
 				<TextInput
 					label="Name"
 					radius="lg"
@@ -223,35 +245,6 @@ export const CreateComponent: React.FC = () => {
 					placeholder="This contract does something..."
 					required
 					{...form.getInputProps('description')}
-				/>
-			</Container>
-			<Container>
-				<TextInput
-					label="Contract Address"
-					radius="lg"
-					size="md"
-					maxLength={42}
-					placeholder="0x..."
-					// required
-					{...form.getInputProps('address')}
-				/>
-			</Container>
-			<Container>
-				<Textarea
-					label="Function Selectors (1 per line)"
-					radius="lg"
-					size="md"
-					autosize
-					minRows={5}
-					maxRows={6}
-					maxLength={5000}
-					// required
-					placeholder={`0x25b75159
-0x10f4af12
-0x6219ad0b
-0x96973b2a
-0xe107c137`}
-					{...form.getInputProps('functionSelectors')}
 				/>
 			</Container>
 			<Container>
@@ -290,30 +283,51 @@ export const CreateComponent: React.FC = () => {
 					{...form.getInputProps('bytecode')}
 				/>
 			</Container>
-			<Container>
-				<Select
-					label="Contract Type"
-					placeholder="Pick one"
-					data={[
-						{ value: MeemAPI.ContractType.Proxy, label: 'Proxy' },
-						{ value: MeemAPI.ContractType.Facet, label: 'Facet' },
-						{ value: '137', label: 'Polygon Mainnet' }
-					]}
-					{...form.getInputProps('contractType')}
-				/>
-			</Container>
-			<Container>
-				<Select
-					label="Chain"
-					placeholder="Pick one"
-					data={[
-						{ value: '1', label: 'Ethereum Mainnet' },
-						{ value: '4', label: 'Rinkeby' },
-						{ value: '137', label: 'Polygon Mainnet' }
-					]}
-					{...form.getInputProps('chainId')}
-				/>
-			</Container>
+			{form.values.contractType === MeemAPI.ContractType.DiamondFacet && (
+				<>
+					<Container>
+						<TextInput
+							label="Contract Address"
+							radius="lg"
+							size="md"
+							maxLength={42}
+							placeholder="0x..."
+							// required
+							{...form.getInputProps('address')}
+						/>
+					</Container>
+					<Container>
+						<Textarea
+							label="Function Selectors (1 per line)"
+							radius="lg"
+							size="md"
+							autosize
+							minRows={5}
+							maxRows={6}
+							maxLength={5000}
+							// required
+							placeholder={`0x25b75159
+0x10f4af12
+0x6219ad0b
+0x96973b2a
+0xe107c137`}
+							{...form.getInputProps('functionSelectors')}
+						/>
+					</Container>
+					<Container>
+						<Select
+							label="Chain"
+							placeholder="Pick one"
+							data={[
+								{ value: '1', label: 'Ethereum Mainnet' },
+								{ value: '4', label: 'Rinkeby' },
+								{ value: '137', label: 'Polygon Mainnet' }
+							]}
+							{...form.getInputProps('chainId')}
+						/>
+					</Container>
+				</>
+			)}
 			<Center>
 				<Button
 					type="submit"

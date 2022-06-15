@@ -131,6 +131,112 @@ export enum Clippings_Select_Column {
   UpdatedAt = 'updatedAt'
 }
 
+/** columns and relationships of "Contracts" */
+export type Contracts = {
+  __typename?: 'Contracts';
+  CreatorId?: Maybe<Scalars['uuid']>;
+  /** An object relationship */
+  Wallet?: Maybe<Wallets>;
+  abi: Scalars['jsonb'];
+  address?: Maybe<Scalars['String']>;
+  bytecode: Scalars['String'];
+  chainId: Scalars['Int'];
+  contractType: Scalars['String'];
+  createdAt: Scalars['timestamptz'];
+  deletedAt?: Maybe<Scalars['timestamptz']>;
+  description: Scalars['String'];
+  functionSelectors: Scalars['jsonb'];
+  id: Scalars['uuid'];
+  name: Scalars['String'];
+  updatedAt: Scalars['timestamptz'];
+  version: Scalars['Int'];
+};
+
+
+/** columns and relationships of "Contracts" */
+export type ContractsAbiArgs = {
+  path?: InputMaybe<Scalars['String']>;
+};
+
+
+/** columns and relationships of "Contracts" */
+export type ContractsFunctionSelectorsArgs = {
+  path?: InputMaybe<Scalars['String']>;
+};
+
+/** Boolean expression to filter rows from the table "Contracts". All fields are combined with a logical 'AND'. */
+export type Contracts_Bool_Exp = {
+  CreatorId?: InputMaybe<Uuid_Comparison_Exp>;
+  Wallet?: InputMaybe<Wallets_Bool_Exp>;
+  _and?: InputMaybe<Array<Contracts_Bool_Exp>>;
+  _not?: InputMaybe<Contracts_Bool_Exp>;
+  _or?: InputMaybe<Array<Contracts_Bool_Exp>>;
+  abi?: InputMaybe<Jsonb_Comparison_Exp>;
+  address?: InputMaybe<String_Comparison_Exp>;
+  bytecode?: InputMaybe<String_Comparison_Exp>;
+  chainId?: InputMaybe<Int_Comparison_Exp>;
+  contractType?: InputMaybe<String_Comparison_Exp>;
+  createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  deletedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  description?: InputMaybe<String_Comparison_Exp>;
+  functionSelectors?: InputMaybe<Jsonb_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  name?: InputMaybe<String_Comparison_Exp>;
+  updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  version?: InputMaybe<Int_Comparison_Exp>;
+};
+
+/** Ordering options when selecting data from "Contracts". */
+export type Contracts_Order_By = {
+  CreatorId?: InputMaybe<Order_By>;
+  Wallet?: InputMaybe<Wallets_Order_By>;
+  abi?: InputMaybe<Order_By>;
+  address?: InputMaybe<Order_By>;
+  bytecode?: InputMaybe<Order_By>;
+  chainId?: InputMaybe<Order_By>;
+  contractType?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  deletedAt?: InputMaybe<Order_By>;
+  description?: InputMaybe<Order_By>;
+  functionSelectors?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+  version?: InputMaybe<Order_By>;
+};
+
+/** select columns of table "Contracts" */
+export enum Contracts_Select_Column {
+  /** column name */
+  CreatorId = 'CreatorId',
+  /** column name */
+  Abi = 'abi',
+  /** column name */
+  Address = 'address',
+  /** column name */
+  Bytecode = 'bytecode',
+  /** column name */
+  ChainId = 'chainId',
+  /** column name */
+  ContractType = 'contractType',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  DeletedAt = 'deletedAt',
+  /** column name */
+  Description = 'description',
+  /** column name */
+  FunctionSelectors = 'functionSelectors',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Name = 'name',
+  /** column name */
+  UpdatedAt = 'updatedAt',
+  /** column name */
+  Version = 'version'
+}
+
 /** columns and relationships of "Hashtags" */
 export type Hashtags = {
   __typename?: 'Hashtags';
@@ -2701,6 +2807,10 @@ export type Query_Root = {
   Clippings: Array<Clippings>;
   /** fetch data from the table: "Clippings" using primary key columns */
   Clippings_by_pk?: Maybe<Clippings>;
+  /** fetch data from the table: "Contracts" */
+  Contracts: Array<Contracts>;
+  /** fetch data from the table: "Contracts" using primary key columns */
+  Contracts_by_pk?: Maybe<Contracts>;
   /** fetch data from the table: "Hashtags" */
   Hashtags: Array<Hashtags>;
   /** fetch data from the table: "Hashtags" using primary key columns */
@@ -2782,6 +2892,20 @@ export type Query_RootClippingsArgs = {
 
 
 export type Query_RootClippings_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+export type Query_RootContractsArgs = {
+  distinct_on?: InputMaybe<Array<Contracts_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Contracts_Order_By>>;
+  where?: InputMaybe<Contracts_Bool_Exp>;
+};
+
+
+export type Query_RootContracts_By_PkArgs = {
   id: Scalars['uuid'];
 };
 
@@ -3033,6 +3157,10 @@ export type Subscription_Root = {
   Clippings: Array<Clippings>;
   /** fetch data from the table: "Clippings" using primary key columns */
   Clippings_by_pk?: Maybe<Clippings>;
+  /** fetch data from the table: "Contracts" */
+  Contracts: Array<Contracts>;
+  /** fetch data from the table: "Contracts" using primary key columns */
+  Contracts_by_pk?: Maybe<Contracts>;
   /** fetch data from the table: "Hashtags" */
   Hashtags: Array<Hashtags>;
   /** fetch data from the table: "Hashtags" using primary key columns */
@@ -3114,6 +3242,20 @@ export type Subscription_RootClippingsArgs = {
 
 
 export type Subscription_RootClippings_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+export type Subscription_RootContractsArgs = {
+  distinct_on?: InputMaybe<Array<Contracts_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Contracts_Order_By>>;
+  where?: InputMaybe<Contracts_Bool_Exp>;
+};
+
+
+export type Subscription_RootContracts_By_PkArgs = {
   id: Scalars['uuid'];
 };
 
@@ -3398,451 +3540,50 @@ export type Uuid_Comparison_Exp = {
   _nin?: InputMaybe<Array<Scalars['uuid']>>;
 };
 
-export type GetIsMemberOfClubQueryVariables = Exact<{
-  walletAddress?: InputMaybe<Scalars['String']>;
-  clubSlug?: InputMaybe<Scalars['String']>;
+export type GetContractsQueryVariables = Exact<{
+  contractType?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type GetIsMemberOfClubQuery = { __typename?: 'query_root', Meems: Array<{ __typename?: 'Meems', owner: string, tokenId: string, MeemContractId?: any | null, MeemContract?: { __typename?: 'MeemContracts', address: string, name: string, symbol: string } | null }> };
-
-export type GetClubsAutocompleteQueryVariables = Exact<{
-  query?: InputMaybe<Scalars['String']>;
-}>;
+export type GetContractsQuery = { __typename?: 'query_root', Contracts: Array<{ __typename?: 'Contracts', abi: any, address?: string | null, bytecode: string, chainId: number, contractType: string }> };
 
 
-export type GetClubsAutocompleteQuery = { __typename?: 'query_root', MeemContracts: Array<{ __typename?: 'MeemContracts', id: any, name: string, contractURI: string, slug: string }> };
-
-export type GetClubSlugQueryVariables = Exact<{
-  contractAddress?: InputMaybe<Scalars['String']>;
-}>;
-
-
-export type GetClubSlugQuery = { __typename?: 'query_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string }> };
-
-export type GetClubQueryVariables = Exact<{
-  slug?: InputMaybe<Scalars['String']>;
-}>;
-
-
-export type GetClubQuery = { __typename?: 'query_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, contractURI: string, createdAt: any, name: string, splits: any, mintEndAt?: any | null, mintStartAt?: any | null, mintPermissions: any, originalsPerWallet: string, totalOriginalsSupply: string, symbol: string, id: any, Meems: Array<{ __typename?: 'Meems', owner: string, tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, data: string }>, MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string, Wallet?: { __typename?: 'Wallets', address: string } | null }>, MeemContractIntegrations: Array<{ __typename?: 'MeemContractIntegrations', IntegrationId?: any | null, id: any, isEnabled: boolean, metadata: any, isPublic: boolean, Integration?: { __typename?: 'Integrations', description: string, guideUrl: string, icon: string, id: any, name: string } | null }> }> };
-
-export type ClubSubscriptionSubscriptionVariables = Exact<{
-  address?: InputMaybe<Scalars['String']>;
-}>;
-
-
-export type ClubSubscriptionSubscription = { __typename?: 'subscription_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, contractURI: string, createdAt: any, name: string, splits: any, mintEndAt?: any | null, mintStartAt?: any | null, mintPermissions: any, originalsPerWallet: string, totalOriginalsSupply: string, symbol: string, Meems: Array<{ __typename?: 'Meems', owner: string, tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, data: string }>, MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string, Wallet?: { __typename?: 'Wallets', address: string } | null }> }> };
-
-export type MyClubsQueryVariables = Exact<{
-  walletAddress?: InputMaybe<Scalars['String']>;
-}>;
-
-
-export type MyClubsQuery = { __typename?: 'query_root', Meems: Array<{ __typename?: 'Meems', owner: string, tokenId: string, MeemContractId?: any | null, MeemContract?: { __typename?: 'MeemContracts', slug: string, address: string, contractURI: string, createdAt: any, name: string, splits: any, mintEndAt?: any | null, mintStartAt?: any | null, mintPermissions: any, originalsPerWallet: string, totalOriginalsSupply: string, symbol: string, MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string, Wallet?: { __typename?: 'Wallets', address: string } | null }> } | null }> };
-
-export type GetIntegrationsQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetIntegrationsQuery = { __typename?: 'query_root', Integrations: Array<{ __typename?: 'Integrations', createdAt: any, deletedAt?: any | null, description: string, guideUrl: string, icon: string, id: any, name: string, updatedAt: any }> };
-
-export type GetMeemIdQueryVariables = Exact<{
-  walletAddress: Scalars['String'];
-}>;
-
-
-export type GetMeemIdQuery = { __typename?: 'query_root', MeemIdentifications: Array<{ __typename?: 'MeemIdentifications', id: any, hasOnboarded: boolean, Wallets: Array<{ __typename?: 'Wallets', address: string }>, Twitters: Array<{ __typename?: 'Twitters', twitterId: string, id: any }> }> };
-
-
-export const GetIsMemberOfClubDocument = gql`
-    query GetIsMemberOfClub($walletAddress: String, $clubSlug: String) {
-  Meems(
-    where: {MeemContractId: {_is_null: false}, owner: {_ilike: $walletAddress}, MeemContract: {slug: {_eq: $clubSlug}}}
-  ) {
-    owner
-    tokenId
-    MeemContractId
-    MeemContract {
-      address
-      name
-      symbol
-    }
-  }
-}
-    `;
-
-/**
- * __useGetIsMemberOfClubQuery__
- *
- * To run a query within a React component, call `useGetIsMemberOfClubQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetIsMemberOfClubQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetIsMemberOfClubQuery({
- *   variables: {
- *      walletAddress: // value for 'walletAddress'
- *      clubSlug: // value for 'clubSlug'
- *   },
- * });
- */
-export function useGetIsMemberOfClubQuery(baseOptions?: Apollo.QueryHookOptions<GetIsMemberOfClubQuery, GetIsMemberOfClubQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetIsMemberOfClubQuery, GetIsMemberOfClubQueryVariables>(GetIsMemberOfClubDocument, options);
-      }
-export function useGetIsMemberOfClubLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetIsMemberOfClubQuery, GetIsMemberOfClubQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetIsMemberOfClubQuery, GetIsMemberOfClubQueryVariables>(GetIsMemberOfClubDocument, options);
-        }
-export type GetIsMemberOfClubQueryHookResult = ReturnType<typeof useGetIsMemberOfClubQuery>;
-export type GetIsMemberOfClubLazyQueryHookResult = ReturnType<typeof useGetIsMemberOfClubLazyQuery>;
-export type GetIsMemberOfClubQueryResult = Apollo.QueryResult<GetIsMemberOfClubQuery, GetIsMemberOfClubQueryVariables>;
-export const GetClubsAutocompleteDocument = gql`
-    query GetClubsAutocomplete($query: String) {
-  MeemContracts(where: {name: {_ilike: $query}}) {
-    id
-    name
-    contractURI
-    slug
-  }
-}
-    `;
-
-/**
- * __useGetClubsAutocompleteQuery__
- *
- * To run a query within a React component, call `useGetClubsAutocompleteQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetClubsAutocompleteQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetClubsAutocompleteQuery({
- *   variables: {
- *      query: // value for 'query'
- *   },
- * });
- */
-export function useGetClubsAutocompleteQuery(baseOptions?: Apollo.QueryHookOptions<GetClubsAutocompleteQuery, GetClubsAutocompleteQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetClubsAutocompleteQuery, GetClubsAutocompleteQueryVariables>(GetClubsAutocompleteDocument, options);
-      }
-export function useGetClubsAutocompleteLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetClubsAutocompleteQuery, GetClubsAutocompleteQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetClubsAutocompleteQuery, GetClubsAutocompleteQueryVariables>(GetClubsAutocompleteDocument, options);
-        }
-export type GetClubsAutocompleteQueryHookResult = ReturnType<typeof useGetClubsAutocompleteQuery>;
-export type GetClubsAutocompleteLazyQueryHookResult = ReturnType<typeof useGetClubsAutocompleteLazyQuery>;
-export type GetClubsAutocompleteQueryResult = Apollo.QueryResult<GetClubsAutocompleteQuery, GetClubsAutocompleteQueryVariables>;
-export const GetClubSlugDocument = gql`
-    query GetClubSlug($contractAddress: String) {
-  MeemContracts(where: {address: {_eq: $contractAddress}}) {
-    slug
-  }
-}
-    `;
-
-/**
- * __useGetClubSlugQuery__
- *
- * To run a query within a React component, call `useGetClubSlugQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetClubSlugQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetClubSlugQuery({
- *   variables: {
- *      contractAddress: // value for 'contractAddress'
- *   },
- * });
- */
-export function useGetClubSlugQuery(baseOptions?: Apollo.QueryHookOptions<GetClubSlugQuery, GetClubSlugQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetClubSlugQuery, GetClubSlugQueryVariables>(GetClubSlugDocument, options);
-      }
-export function useGetClubSlugLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetClubSlugQuery, GetClubSlugQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetClubSlugQuery, GetClubSlugQueryVariables>(GetClubSlugDocument, options);
-        }
-export type GetClubSlugQueryHookResult = ReturnType<typeof useGetClubSlugQuery>;
-export type GetClubSlugLazyQueryHookResult = ReturnType<typeof useGetClubSlugLazyQuery>;
-export type GetClubSlugQueryResult = Apollo.QueryResult<GetClubSlugQuery, GetClubSlugQueryVariables>;
-export const GetClubDocument = gql`
-    query GetClub($slug: String) {
-  MeemContracts(where: {slug: {_eq: $slug}}) {
-    slug
+export const GetContractsDocument = gql`
+    query GetContracts($contractType: String) {
+  Contracts(where: {contractType: {_eq: "proxy"}}) {
+    abi
     address
-    contractURI
-    createdAt
-    name
-    Meems {
-      owner
-      tokenId
-      tokenURI
-      mintedAt
-      mintedBy
-      data
-    }
-    splits
-    mintEndAt
-    mintStartAt
-    mintPermissions
-    originalsPerWallet
-    totalOriginalsSupply
-    symbol
-    MeemContractWallets {
-      role
-      Wallet {
-        address
-      }
-    }
-    id
-    MeemContractIntegrations(where: {isEnabled: {_eq: true}}) {
-      IntegrationId
-      id
-      isEnabled
-      metadata
-      Integration {
-        description
-        guideUrl
-        icon
-        id
-        name
-      }
-      isPublic
-    }
+    bytecode
+    chainId
+    contractType
   }
 }
     `;
 
 /**
- * __useGetClubQuery__
+ * __useGetContractsQuery__
  *
- * To run a query within a React component, call `useGetClubQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetClubQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetContractsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetContractsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetClubQuery({
+ * const { data, loading, error } = useGetContractsQuery({
  *   variables: {
- *      slug: // value for 'slug'
+ *      contractType: // value for 'contractType'
  *   },
  * });
  */
-export function useGetClubQuery(baseOptions?: Apollo.QueryHookOptions<GetClubQuery, GetClubQueryVariables>) {
+export function useGetContractsQuery(baseOptions?: Apollo.QueryHookOptions<GetContractsQuery, GetContractsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetClubQuery, GetClubQueryVariables>(GetClubDocument, options);
+        return Apollo.useQuery<GetContractsQuery, GetContractsQueryVariables>(GetContractsDocument, options);
       }
-export function useGetClubLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetClubQuery, GetClubQueryVariables>) {
+export function useGetContractsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetContractsQuery, GetContractsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetClubQuery, GetClubQueryVariables>(GetClubDocument, options);
+          return Apollo.useLazyQuery<GetContractsQuery, GetContractsQueryVariables>(GetContractsDocument, options);
         }
-export type GetClubQueryHookResult = ReturnType<typeof useGetClubQuery>;
-export type GetClubLazyQueryHookResult = ReturnType<typeof useGetClubLazyQuery>;
-export type GetClubQueryResult = Apollo.QueryResult<GetClubQuery, GetClubQueryVariables>;
-export const ClubSubscriptionDocument = gql`
-    subscription ClubSubscription($address: String) {
-  MeemContracts(where: {address: {_eq: $address}}) {
-    slug
-    address
-    contractURI
-    createdAt
-    name
-    Meems {
-      owner
-      tokenId
-      tokenURI
-      mintedAt
-      mintedBy
-      data
-    }
-    splits
-    mintEndAt
-    mintStartAt
-    mintPermissions
-    originalsPerWallet
-    totalOriginalsSupply
-    symbol
-    MeemContractWallets {
-      role
-      Wallet {
-        address
-      }
-    }
-  }
-}
-    `;
-
-/**
- * __useClubSubscriptionSubscription__
- *
- * To run a query within a React component, call `useClubSubscriptionSubscription` and pass it any options that fit your needs.
- * When your component renders, `useClubSubscriptionSubscription` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useClubSubscriptionSubscription({
- *   variables: {
- *      address: // value for 'address'
- *   },
- * });
- */
-export function useClubSubscriptionSubscription(baseOptions?: Apollo.SubscriptionHookOptions<ClubSubscriptionSubscription, ClubSubscriptionSubscriptionVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useSubscription<ClubSubscriptionSubscription, ClubSubscriptionSubscriptionVariables>(ClubSubscriptionDocument, options);
-      }
-export type ClubSubscriptionSubscriptionHookResult = ReturnType<typeof useClubSubscriptionSubscription>;
-export type ClubSubscriptionSubscriptionResult = Apollo.SubscriptionResult<ClubSubscriptionSubscription>;
-export const MyClubsDocument = gql`
-    query MyClubs($walletAddress: String) {
-  Meems(
-    where: {MeemContractId: {_is_null: false}, owner: {_eq: $walletAddress}}
-    distinct_on: MeemContractId
-  ) {
-    owner
-    tokenId
-    MeemContractId
-    MeemContract {
-      slug
-      address
-      contractURI
-      createdAt
-      name
-      splits
-      mintEndAt
-      mintStartAt
-      mintPermissions
-      originalsPerWallet
-      totalOriginalsSupply
-      symbol
-      MeemContractWallets {
-        role
-        Wallet {
-          address
-        }
-      }
-    }
-  }
-}
-    `;
-
-/**
- * __useMyClubsQuery__
- *
- * To run a query within a React component, call `useMyClubsQuery` and pass it any options that fit your needs.
- * When your component renders, `useMyClubsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useMyClubsQuery({
- *   variables: {
- *      walletAddress: // value for 'walletAddress'
- *   },
- * });
- */
-export function useMyClubsQuery(baseOptions?: Apollo.QueryHookOptions<MyClubsQuery, MyClubsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MyClubsQuery, MyClubsQueryVariables>(MyClubsDocument, options);
-      }
-export function useMyClubsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MyClubsQuery, MyClubsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MyClubsQuery, MyClubsQueryVariables>(MyClubsDocument, options);
-        }
-export type MyClubsQueryHookResult = ReturnType<typeof useMyClubsQuery>;
-export type MyClubsLazyQueryHookResult = ReturnType<typeof useMyClubsLazyQuery>;
-export type MyClubsQueryResult = Apollo.QueryResult<MyClubsQuery, MyClubsQueryVariables>;
-export const GetIntegrationsDocument = gql`
-    query GetIntegrations {
-  Integrations {
-    createdAt
-    deletedAt
-    description
-    guideUrl
-    icon
-    id
-    name
-    updatedAt
-  }
-}
-    `;
-
-/**
- * __useGetIntegrationsQuery__
- *
- * To run a query within a React component, call `useGetIntegrationsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetIntegrationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetIntegrationsQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetIntegrationsQuery(baseOptions?: Apollo.QueryHookOptions<GetIntegrationsQuery, GetIntegrationsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetIntegrationsQuery, GetIntegrationsQueryVariables>(GetIntegrationsDocument, options);
-      }
-export function useGetIntegrationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetIntegrationsQuery, GetIntegrationsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetIntegrationsQuery, GetIntegrationsQueryVariables>(GetIntegrationsDocument, options);
-        }
-export type GetIntegrationsQueryHookResult = ReturnType<typeof useGetIntegrationsQuery>;
-export type GetIntegrationsLazyQueryHookResult = ReturnType<typeof useGetIntegrationsLazyQuery>;
-export type GetIntegrationsQueryResult = Apollo.QueryResult<GetIntegrationsQuery, GetIntegrationsQueryVariables>;
-export const GetMeemIdDocument = gql`
-    query GetMeemId($walletAddress: String!) {
-  MeemIdentifications(where: {Wallets: {address: {_eq: $walletAddress}}}) {
-    Wallets {
-      address
-    }
-    id
-    hasOnboarded
-    Twitters {
-      twitterId
-      id
-    }
-  }
-}
-    `;
-
-/**
- * __useGetMeemIdQuery__
- *
- * To run a query within a React component, call `useGetMeemIdQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetMeemIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetMeemIdQuery({
- *   variables: {
- *      walletAddress: // value for 'walletAddress'
- *   },
- * });
- */
-export function useGetMeemIdQuery(baseOptions: Apollo.QueryHookOptions<GetMeemIdQuery, GetMeemIdQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetMeemIdQuery, GetMeemIdQueryVariables>(GetMeemIdDocument, options);
-      }
-export function useGetMeemIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMeemIdQuery, GetMeemIdQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetMeemIdQuery, GetMeemIdQueryVariables>(GetMeemIdDocument, options);
-        }
-export type GetMeemIdQueryHookResult = ReturnType<typeof useGetMeemIdQuery>;
-export type GetMeemIdLazyQueryHookResult = ReturnType<typeof useGetMeemIdLazyQuery>;
-export type GetMeemIdQueryResult = Apollo.QueryResult<GetMeemIdQuery, GetMeemIdQueryVariables>;
+export type GetContractsQueryHookResult = ReturnType<typeof useGetContractsQuery>;
+export type GetContractsLazyQueryHookResult = ReturnType<typeof useGetContractsLazyQuery>;
+export type GetContractsQueryResult = Apollo.QueryResult<GetContractsQuery, GetContractsQueryVariables>;
