@@ -215,7 +215,7 @@ export function HeaderMenu() {
 			<div className={classes.inner}>
 				<div className={classes.headerLeftItems}>
 					<a onClick={navigateHome}>
-						<Text className={classes.mainLogo}>♣</Text>
+						<Text className={classes.mainLogo}>EPM</Text>
 					</a>
 				</div>
 

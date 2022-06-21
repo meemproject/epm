@@ -1,232 +1,157 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable import/named */
-import { useQuery } from '@apollo/client'
+import { ApolloClient, HttpLink, InMemoryCache, useQuery } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import {
 	createStyles,
 	Container,
 	Text,
-	Image,
 	Button,
+	Modal,
+	Select,
 	Space,
-	Center,
-	Loader,
-	Grid
+	Grid,
+	TextInput
 } from '@mantine/core'
-import { useWallet } from '@meemproject/react'
+import { useForm } from '@mantine/form'
+import { MeemAPI } from '@meemproject/api'
+import { makeFetcher, useWallet } from '@meemproject/react'
+import { ethers } from 'ethers'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
-import { ArrowLeft } from 'tabler-icons-react'
-import { MeemContracts, MyClubsQuery } from '../../../generated/graphql'
-import { GET_MY_CLUBS } from '../../graphql/clubs'
-import clubFromMeemContract, {
-	Club,
-	clubSummaryFrommeemContract
-} from '../../model/club/club'
+import React, {
+	forwardRef,
+	useContext,
+	useEffect,
+	useRef,
+	useState
+} from 'react'
+import {
+	GetContractsQuery,
+	Contracts,
+	GetMyContractsQuery
+} from '../../../generated/graphql'
+import { GET_MY_CONTRACTS } from '../../graphql/contracts'
+import { ContractCard } from '../Atoms/ContractCard'
+import { SelectChain } from '../Atoms/SelectChain'
 
 const useStyles = createStyles(theme => ({
-	header: {
-		marginBottom: 60,
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		flexDirection: 'row',
-		paddingTop: 32,
-		borderBottomColor: 'rgba(0, 0, 0, 0.08)',
-		borderBottomWidth: '1px',
-		borderBottomStyle: 'solid',
-		paddingBottom: 32,
-		paddingLeft: 32,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			marginBottom: 32,
-			paddingBottom: 16,
-			paddingLeft: 8,
-			paddingTop: 16
-		}
-	},
-	headerLeftItems: {
-		display: 'flex',
-		alignItems: 'center'
-	},
-	headerArrow: {
-		marginRight: 32,
-		marginTop: 6,
-		cursor: 'pointer',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			marginRight: 16,
-			marginLeft: 16
-		}
-	},
-	headerClubName: {
-		fontWeight: 600,
-		fontSize: 24,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 20
-		}
-	},
-	buttonCreate: {
-		backgroundColor: 'black',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24,
-		marginRight: 32
-	},
-	createClubLink: {
-		marginTop: 24,
-		a: {
-			color: 'rgba(255, 102, 81, 1)',
-			textDecoration: 'underline',
-			fontWeight: 'bold'
-		}
-	},
-	clubItem: {
-		display: 'flex',
-		alignItems: 'center',
-		marginBottom: 24,
-		fontSize: 16,
-		fontWeight: 600,
-		cursor: 'pointer'
-	},
-	clubLogoImage: {
-		imageRendering: 'pixelated'
+	wrapper: {
+		position: 'relative',
+		boxSizing: 'border-box',
+		backgroundColor:
+			theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.white
 	},
 
-	myClubsPrompt: { fontSize: 18, marginBottom: 16 }
+	inner: {
+		position: 'relative',
+		paddingTop: 0,
+		paddingBottom: 120,
+		marginTop: 120,
+
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			paddingBottom: 80,
+			paddingTop: 0,
+			marginTop: 80
+		}
+	}
 }))
 
-export const MyClubsComponent: React.FC = () => {
+export const MyContracts: React.FC = () => {
 	const { classes } = useStyles()
 	const router = useRouter()
-	const wallet = useWallet()
+	const { web3Provider, signer, accounts } = useWallet()
+	const [isLoading, setIsLoading] = useState(false)
+	const [isOpen, setIsOpen] = useState(false)
+	const [selectedContract, setSelectedContract] = useState<Contracts>()
 
 	const {
 		loading,
 		error,
-		data: clubData
-	} = useQuery<MyClubsQuery>(GET_MY_CLUBS, {
-		variables: { walletAddress: wallet.accounts[0] }
+		data: contractQueryResult
+	} = useQuery<GetMyContractsQuery>(GET_MY_CONTRACTS, {
+		variables: {
+			address: accounts[0]
+		}
 	})
 
-	const [clubs, setClubs] = useState<Club[]>([])
+	console.log({ contractQueryResult })
 
-	useEffect(() => {
-		if (error) {
-			log.warn(error)
+	const form = useForm({
+		initialValues: {
+			address: '',
+			chain: MeemAPI.NetworkChainId.Rinkeby.toString()
+		},
+		validate: {
+			address: val =>
+				ethers.utils.isAddress(val)
+					? null
+					: 'A valid address is required'
 		}
-
-		if (!loading && !error && clubs.length === 0 && clubData) {
-			const tempClubs: Club[] = []
-
-			clubData.Meems.forEach(meem => {
-				const possibleClub = clubSummaryFrommeemContract(
-					meem.MeemContract as MeemContracts
-				)
-				if (possibleClub.name) {
-					tempClubs.push(possibleClub)
-				}
-			})
-
-			setClubs(tempClubs)
-		}
-	}, [
-		clubs,
-		clubData,
-		error,
-		loading,
-		wallet.accounts,
-		wallet.isConnected,
-		wallet.web3Provider
-	])
-
-	const navigateHome = () => {
-		router.push({ pathname: '/' })
-	}
-
-	const navigateToCreate = () => {
-		router.push({ pathname: '/' })
-	}
-
-	const navigateToClub = (club: string) => {
-		router.push({ pathname: `/${club}` })
-	}
+	})
 
 	return (
-		<>
-			<div className={classes.header}>
-				<div className={classes.headerLeftItems}>
-					<a onClick={navigateHome}>
-						<ArrowLeft className={classes.headerArrow} size={32} />
-					</a>
-					<Text className={classes.headerClubName}>My Clubs</Text>
-				</div>
-				<Button
-					onClick={navigateToCreate}
-					className={classes.buttonCreate}
-				>
-					Create a Club
-				</Button>
-			</div>
-
+		<div className={classes.wrapper}>
+			<Container size={900} className={classes.inner}>
+				<Button onClick={() => setIsOpen(true)}>Add Contract</Button>
+			</Container>
 			<Container>
-				{loading && (
-					<Container>
-						<Space h={60} />
-						<Center>
-							<Loader />
-						</Center>
-					</Container>
-				)}
-				{clubs.length === 0 && !loading && (
-					<>
-						<Text className={classes.myClubsPrompt}>
-							{`You haven't joined any clubs!`}
+				{contractQueryResult?.Wallets[0].WalletContractInstances.map(
+					instance => (
+						<Text key={instance.id}>
+							{instance.ContractInstance?.address}
 						</Text>
-						<Text className={classes.createClubLink}>
-							<a onClick={navigateToCreate}>Start a new one?</a>
-						</Text>
-					</>
-				)}
-				{clubs.length > 0 && !loading && (
-					<>
-						<Grid>
-							{clubs.map(club => (
-								<Grid.Col
-									xs={6}
-									sm={4}
-									md={4}
-									lg={4}
-									xl={4}
-									key={club.address}
-								>
-									<div
-										key={club.address}
-										className={classes.clubItem}
-										onClick={() => {
-											navigateToClub(club.slug!)
-										}}
-									>
-										<Image
-											className={classes.clubLogoImage}
-											src={club.image!}
-											width={40}
-											height={40}
-											fit={'contain'}
-										/>
-										<Space w="xs" />
-										<Text>{club.name!}</Text>
-									</div>
-								</Grid.Col>
-							))}
-						</Grid>
-
-						<Space h={60} />
-					</>
+					)
 				)}
 			</Container>
-		</>
+			<Modal opened={isOpen} onClose={() => setIsOpen(false)}>
+				<form
+					onSubmit={form.onSubmit(async values => {
+						try {
+							const trackContract = makeFetcher<
+								MeemAPI.v1.TrackContractInstance.IQueryParams,
+								MeemAPI.v1.TrackContractInstance.IRequestBody,
+								MeemAPI.v1.TrackContractInstance.IResponseBody
+							>({
+								method: MeemAPI.v1.TrackContractInstance.method
+							})
+							await trackContract(
+								MeemAPI.v1.TrackContractInstance.path(),
+								undefined,
+								{
+									...values,
+									chainId: +values.chain
+								}
+							)
+							setIsOpen(false)
+						} catch (e) {
+							log.warn(e)
+						}
+					})}
+				>
+					<Container>
+						<SelectChain form={form} />
+						<Space h={12} />
+						<TextInput
+							label="Contract Address"
+							placeholder="0x..."
+							onBlur={() => form.validate()}
+							{...form.getInputProps('address')}
+						/>
+						<Space h={12} />
+						<Button
+							type="submit"
+							disabled={
+								form.values.address.length === 0 ||
+								Object.values(form.values).length === 0
+							}
+						>
+							Add
+						</Button>
+					</Container>
+				</form>
+			</Modal>
+		</div>
 	)
 }

@@ -10,7 +10,9 @@ import {
 	Text,
 	Button,
 	Modal,
-	Select
+	Select,
+	Space,
+	Grid
 } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { MeemAPI } from '@meemproject/api'
@@ -26,6 +28,7 @@ import React, {
 } from 'react'
 import { GetContractsQuery, Contracts } from '../../../generated/graphql'
 import { GET_CONTRACTS_BY_TYPE } from '../../graphql/contracts'
+import { ContractCard } from '../Atoms/ContractCard'
 import { DeployContract } from './DeployContract'
 
 const useStyles = createStyles(theme => ({
@@ -56,7 +59,7 @@ export function HomeComponent() {
 	const { web3Provider, signer } = useWallet()
 	const [isLoading, setIsLoading] = useState(false)
 	const [isOpen, setIsOpen] = useState(false)
-	const [contract, setContract] = useState<Contracts>()
+	const [selectedContract, setSelectedContract] = useState<Contracts>()
 
 	const form = useForm({
 		initialValues: {
@@ -81,7 +84,7 @@ export function HomeComponent() {
 		variables: { contractType: form.values.contractType }
 	})
 
-	const handleDeploy = async (selectedContract: Contracts) => {
+	const handleDeploy = async (c: Partial<Contracts>) => {
 		// try {
 		// 	setIsLoading(true)
 		// 	console.log(contract)
@@ -100,7 +103,7 @@ export function HomeComponent() {
 
 		// setIsLoading(false)
 		setIsOpen(true)
-		setContract(selectedContract)
+		setSelectedContract(c)
 	}
 
 	console.log({ contracts })
@@ -131,18 +134,21 @@ export function HomeComponent() {
 						/>
 					</Container>
 				</form>
-				{contracts?.Contracts.map(contract => (
-					<Container key={contract.id}>
-						<Text>{contract.name}</Text>
-						{/* <Text>{contract.}</Text> */}
-						<Button onClick={e => handleDeploy(contract)}>
-							Deploy Contract
-						</Button>
-					</Container>
-				))}
+				<Grid>
+					{contracts?.Contracts.map(contract => (
+						<Grid.Col span={4} key={contract.id}>
+							<ContractCard
+								contract={contract}
+								onClick={handleDeploy}
+								ctaText="Deploy Contract"
+							/>
+							<Space h={8} />
+						</Grid.Col>
+					))}
+				</Grid>
 			</Container>
 			<Modal opened={isOpen} onClose={() => setIsOpen(false)}>
-				<DeployContract contract={contract} />
+				<DeployContract contract={selectedContract} />
 			</Modal>
 		</div>
 	)

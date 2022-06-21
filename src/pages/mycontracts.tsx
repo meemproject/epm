@@ -2,7 +2,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import React from 'react'
 import { HeaderMenu } from '../components/Header/Header'
-import { MyClubsComponent } from '../components/MyContracts/MyContracts'
+import { MyContracts } from '../components/MyContracts/MyContracts'
 
 const CreatePage: NextPage = () => {
 	return (
@@ -46,7 +46,7 @@ const CreatePage: NextPage = () => {
 				/>
 			</Head>
 			<HeaderMenu />
-			<MyClubsComponent />
+			<MyContracts />
 		</>
 	)
 }

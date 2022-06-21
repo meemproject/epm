@@ -137,7 +137,9 @@ export const DeployContract: React.FC<IProps> = ({ contract }) => {
 			<Title order={3}>{contract.name}</Title>
 			<Text>{contract.description}</Text>
 			<Container size={900} className={classes.inner}>
-				<Title order={3}>Constructor Arguments</Title>
+				{inputs.length > 0 && (
+					<Title order={3}>Constructor Arguments</Title>
+				)}
 				<form
 					onSubmit={form.onSubmit(async values => {
 						handleDeploy()

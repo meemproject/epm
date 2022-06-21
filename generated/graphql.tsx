@@ -19,8 +19,13 @@ export type Scalars = {
   uuid: any;
 };
 
+export type Boolean_Cast_Exp = {
+  String?: InputMaybe<String_Comparison_Exp>;
+};
+
 /** Boolean expression to compare columns of type "Boolean". All fields are combined with logical 'AND'. */
 export type Boolean_Comparison_Exp = {
+  _cast?: InputMaybe<Boolean_Cast_Exp>;
   _eq?: InputMaybe<Scalars['Boolean']>;
   _gt?: InputMaybe<Scalars['Boolean']>;
   _gte?: InputMaybe<Scalars['Boolean']>;
@@ -131,16 +136,282 @@ export enum Clippings_Select_Column {
   UpdatedAt = 'updatedAt'
 }
 
+/** columns and relationships of "ContractInstances" */
+export type ContractInstances = {
+  __typename?: 'ContractInstances';
+  /** An object relationship */
+  Contract?: Maybe<Contracts>;
+  ContractId?: Maybe<Scalars['uuid']>;
+  /** An array relationship */
+  WalletContractInstances: Array<WalletContractInstances>;
+  /** An aggregate relationship */
+  WalletContractInstances_aggregate: WalletContractInstances_Aggregate;
+  address: Scalars['String'];
+  chainId: Scalars['Int'];
+  createdAt: Scalars['timestamptz'];
+  deletedAt?: Maybe<Scalars['timestamptz']>;
+  id: Scalars['uuid'];
+  updatedAt: Scalars['timestamptz'];
+};
+
+
+/** columns and relationships of "ContractInstances" */
+export type ContractInstancesWalletContractInstancesArgs = {
+  distinct_on?: InputMaybe<Array<WalletContractInstances_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<WalletContractInstances_Order_By>>;
+  where?: InputMaybe<WalletContractInstances_Bool_Exp>;
+};
+
+
+/** columns and relationships of "ContractInstances" */
+export type ContractInstancesWalletContractInstances_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<WalletContractInstances_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<WalletContractInstances_Order_By>>;
+  where?: InputMaybe<WalletContractInstances_Bool_Exp>;
+};
+
+/** aggregated selection of "ContractInstances" */
+export type ContractInstances_Aggregate = {
+  __typename?: 'ContractInstances_aggregate';
+  aggregate?: Maybe<ContractInstances_Aggregate_Fields>;
+  nodes: Array<ContractInstances>;
+};
+
+/** aggregate fields of "ContractInstances" */
+export type ContractInstances_Aggregate_Fields = {
+  __typename?: 'ContractInstances_aggregate_fields';
+  avg?: Maybe<ContractInstances_Avg_Fields>;
+  count: Scalars['Int'];
+  max?: Maybe<ContractInstances_Max_Fields>;
+  min?: Maybe<ContractInstances_Min_Fields>;
+  stddev?: Maybe<ContractInstances_Stddev_Fields>;
+  stddev_pop?: Maybe<ContractInstances_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<ContractInstances_Stddev_Samp_Fields>;
+  sum?: Maybe<ContractInstances_Sum_Fields>;
+  var_pop?: Maybe<ContractInstances_Var_Pop_Fields>;
+  var_samp?: Maybe<ContractInstances_Var_Samp_Fields>;
+  variance?: Maybe<ContractInstances_Variance_Fields>;
+};
+
+
+/** aggregate fields of "ContractInstances" */
+export type ContractInstances_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<ContractInstances_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** order by aggregate values of table "ContractInstances" */
+export type ContractInstances_Aggregate_Order_By = {
+  avg?: InputMaybe<ContractInstances_Avg_Order_By>;
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<ContractInstances_Max_Order_By>;
+  min?: InputMaybe<ContractInstances_Min_Order_By>;
+  stddev?: InputMaybe<ContractInstances_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<ContractInstances_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<ContractInstances_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<ContractInstances_Sum_Order_By>;
+  var_pop?: InputMaybe<ContractInstances_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<ContractInstances_Var_Samp_Order_By>;
+  variance?: InputMaybe<ContractInstances_Variance_Order_By>;
+};
+
+/** aggregate avg on columns */
+export type ContractInstances_Avg_Fields = {
+  __typename?: 'ContractInstances_avg_fields';
+  chainId?: Maybe<Scalars['Float']>;
+};
+
+/** order by avg() on columns of table "ContractInstances" */
+export type ContractInstances_Avg_Order_By = {
+  chainId?: InputMaybe<Order_By>;
+};
+
+/** Boolean expression to filter rows from the table "ContractInstances". All fields are combined with a logical 'AND'. */
+export type ContractInstances_Bool_Exp = {
+  Contract?: InputMaybe<Contracts_Bool_Exp>;
+  ContractId?: InputMaybe<Uuid_Comparison_Exp>;
+  WalletContractInstances?: InputMaybe<WalletContractInstances_Bool_Exp>;
+  _and?: InputMaybe<Array<ContractInstances_Bool_Exp>>;
+  _not?: InputMaybe<ContractInstances_Bool_Exp>;
+  _or?: InputMaybe<Array<ContractInstances_Bool_Exp>>;
+  address?: InputMaybe<String_Comparison_Exp>;
+  chainId?: InputMaybe<Int_Comparison_Exp>;
+  createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  deletedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+};
+
+/** aggregate max on columns */
+export type ContractInstances_Max_Fields = {
+  __typename?: 'ContractInstances_max_fields';
+  ContractId?: Maybe<Scalars['uuid']>;
+  address?: Maybe<Scalars['String']>;
+  chainId?: Maybe<Scalars['Int']>;
+  createdAt?: Maybe<Scalars['timestamptz']>;
+  deletedAt?: Maybe<Scalars['timestamptz']>;
+  id?: Maybe<Scalars['uuid']>;
+  updatedAt?: Maybe<Scalars['timestamptz']>;
+};
+
+/** order by max() on columns of table "ContractInstances" */
+export type ContractInstances_Max_Order_By = {
+  ContractId?: InputMaybe<Order_By>;
+  address?: InputMaybe<Order_By>;
+  chainId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  deletedAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type ContractInstances_Min_Fields = {
+  __typename?: 'ContractInstances_min_fields';
+  ContractId?: Maybe<Scalars['uuid']>;
+  address?: Maybe<Scalars['String']>;
+  chainId?: Maybe<Scalars['Int']>;
+  createdAt?: Maybe<Scalars['timestamptz']>;
+  deletedAt?: Maybe<Scalars['timestamptz']>;
+  id?: Maybe<Scalars['uuid']>;
+  updatedAt?: Maybe<Scalars['timestamptz']>;
+};
+
+/** order by min() on columns of table "ContractInstances" */
+export type ContractInstances_Min_Order_By = {
+  ContractId?: InputMaybe<Order_By>;
+  address?: InputMaybe<Order_By>;
+  chainId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  deletedAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
+/** Ordering options when selecting data from "ContractInstances". */
+export type ContractInstances_Order_By = {
+  Contract?: InputMaybe<Contracts_Order_By>;
+  ContractId?: InputMaybe<Order_By>;
+  WalletContractInstances_aggregate?: InputMaybe<WalletContractInstances_Aggregate_Order_By>;
+  address?: InputMaybe<Order_By>;
+  chainId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  deletedAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
+/** select columns of table "ContractInstances" */
+export enum ContractInstances_Select_Column {
+  /** column name */
+  ContractId = 'ContractId',
+  /** column name */
+  Address = 'address',
+  /** column name */
+  ChainId = 'chainId',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  DeletedAt = 'deletedAt',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  UpdatedAt = 'updatedAt'
+}
+
+/** aggregate stddev on columns */
+export type ContractInstances_Stddev_Fields = {
+  __typename?: 'ContractInstances_stddev_fields';
+  chainId?: Maybe<Scalars['Float']>;
+};
+
+/** order by stddev() on columns of table "ContractInstances" */
+export type ContractInstances_Stddev_Order_By = {
+  chainId?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_pop on columns */
+export type ContractInstances_Stddev_Pop_Fields = {
+  __typename?: 'ContractInstances_stddev_pop_fields';
+  chainId?: Maybe<Scalars['Float']>;
+};
+
+/** order by stddev_pop() on columns of table "ContractInstances" */
+export type ContractInstances_Stddev_Pop_Order_By = {
+  chainId?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_samp on columns */
+export type ContractInstances_Stddev_Samp_Fields = {
+  __typename?: 'ContractInstances_stddev_samp_fields';
+  chainId?: Maybe<Scalars['Float']>;
+};
+
+/** order by stddev_samp() on columns of table "ContractInstances" */
+export type ContractInstances_Stddev_Samp_Order_By = {
+  chainId?: InputMaybe<Order_By>;
+};
+
+/** aggregate sum on columns */
+export type ContractInstances_Sum_Fields = {
+  __typename?: 'ContractInstances_sum_fields';
+  chainId?: Maybe<Scalars['Int']>;
+};
+
+/** order by sum() on columns of table "ContractInstances" */
+export type ContractInstances_Sum_Order_By = {
+  chainId?: InputMaybe<Order_By>;
+};
+
+/** aggregate var_pop on columns */
+export type ContractInstances_Var_Pop_Fields = {
+  __typename?: 'ContractInstances_var_pop_fields';
+  chainId?: Maybe<Scalars['Float']>;
+};
+
+/** order by var_pop() on columns of table "ContractInstances" */
+export type ContractInstances_Var_Pop_Order_By = {
+  chainId?: InputMaybe<Order_By>;
+};
+
+/** aggregate var_samp on columns */
+export type ContractInstances_Var_Samp_Fields = {
+  __typename?: 'ContractInstances_var_samp_fields';
+  chainId?: Maybe<Scalars['Float']>;
+};
+
+/** order by var_samp() on columns of table "ContractInstances" */
+export type ContractInstances_Var_Samp_Order_By = {
+  chainId?: InputMaybe<Order_By>;
+};
+
+/** aggregate variance on columns */
+export type ContractInstances_Variance_Fields = {
+  __typename?: 'ContractInstances_variance_fields';
+  chainId?: Maybe<Scalars['Float']>;
+};
+
+/** order by variance() on columns of table "ContractInstances" */
+export type ContractInstances_Variance_Order_By = {
+  chainId?: InputMaybe<Order_By>;
+};
+
 /** columns and relationships of "Contracts" */
 export type Contracts = {
   __typename?: 'Contracts';
-  CreatorId?: Maybe<Scalars['uuid']>;
+  /** An array relationship */
+  ContractInstances: Array<ContractInstances>;
+  /** An aggregate relationship */
+  ContractInstances_aggregate: ContractInstances_Aggregate;
   /** An object relationship */
-  Wallet?: Maybe<Wallets>;
+  Creator?: Maybe<Wallets>;
+  CreatorId?: Maybe<Scalars['uuid']>;
   abi: Scalars['jsonb'];
-  address?: Maybe<Scalars['String']>;
   bytecode: Scalars['String'];
-  chainId: Scalars['Int'];
   contractType: Scalars['String'];
   createdAt: Scalars['timestamptz'];
   deletedAt?: Maybe<Scalars['timestamptz']>;
@@ -150,6 +421,26 @@ export type Contracts = {
   name: Scalars['String'];
   updatedAt: Scalars['timestamptz'];
   version: Scalars['Int'];
+};
+
+
+/** columns and relationships of "Contracts" */
+export type ContractsContractInstancesArgs = {
+  distinct_on?: InputMaybe<Array<ContractInstances_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<ContractInstances_Order_By>>;
+  where?: InputMaybe<ContractInstances_Bool_Exp>;
+};
+
+
+/** columns and relationships of "Contracts" */
+export type ContractsContractInstances_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<ContractInstances_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<ContractInstances_Order_By>>;
+  where?: InputMaybe<ContractInstances_Bool_Exp>;
 };
 
 
@@ -164,17 +455,36 @@ export type ContractsFunctionSelectorsArgs = {
   path?: InputMaybe<Scalars['String']>;
 };
 
+/** order by aggregate values of table "Contracts" */
+export type Contracts_Aggregate_Order_By = {
+  avg?: InputMaybe<Contracts_Avg_Order_By>;
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Contracts_Max_Order_By>;
+  min?: InputMaybe<Contracts_Min_Order_By>;
+  stddev?: InputMaybe<Contracts_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<Contracts_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<Contracts_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<Contracts_Sum_Order_By>;
+  var_pop?: InputMaybe<Contracts_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<Contracts_Var_Samp_Order_By>;
+  variance?: InputMaybe<Contracts_Variance_Order_By>;
+};
+
+/** order by avg() on columns of table "Contracts" */
+export type Contracts_Avg_Order_By = {
+  version?: InputMaybe<Order_By>;
+};
+
 /** Boolean expression to filter rows from the table "Contracts". All fields are combined with a logical 'AND'. */
 export type Contracts_Bool_Exp = {
+  ContractInstances?: InputMaybe<ContractInstances_Bool_Exp>;
+  Creator?: InputMaybe<Wallets_Bool_Exp>;
   CreatorId?: InputMaybe<Uuid_Comparison_Exp>;
-  Wallet?: InputMaybe<Wallets_Bool_Exp>;
   _and?: InputMaybe<Array<Contracts_Bool_Exp>>;
   _not?: InputMaybe<Contracts_Bool_Exp>;
   _or?: InputMaybe<Array<Contracts_Bool_Exp>>;
   abi?: InputMaybe<Jsonb_Comparison_Exp>;
-  address?: InputMaybe<String_Comparison_Exp>;
   bytecode?: InputMaybe<String_Comparison_Exp>;
-  chainId?: InputMaybe<Int_Comparison_Exp>;
   contractType?: InputMaybe<String_Comparison_Exp>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   deletedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
@@ -186,14 +496,41 @@ export type Contracts_Bool_Exp = {
   version?: InputMaybe<Int_Comparison_Exp>;
 };
 
+/** order by max() on columns of table "Contracts" */
+export type Contracts_Max_Order_By = {
+  CreatorId?: InputMaybe<Order_By>;
+  bytecode?: InputMaybe<Order_By>;
+  contractType?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  deletedAt?: InputMaybe<Order_By>;
+  description?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+  version?: InputMaybe<Order_By>;
+};
+
+/** order by min() on columns of table "Contracts" */
+export type Contracts_Min_Order_By = {
+  CreatorId?: InputMaybe<Order_By>;
+  bytecode?: InputMaybe<Order_By>;
+  contractType?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  deletedAt?: InputMaybe<Order_By>;
+  description?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+  version?: InputMaybe<Order_By>;
+};
+
 /** Ordering options when selecting data from "Contracts". */
 export type Contracts_Order_By = {
+  ContractInstances_aggregate?: InputMaybe<ContractInstances_Aggregate_Order_By>;
+  Creator?: InputMaybe<Wallets_Order_By>;
   CreatorId?: InputMaybe<Order_By>;
-  Wallet?: InputMaybe<Wallets_Order_By>;
   abi?: InputMaybe<Order_By>;
-  address?: InputMaybe<Order_By>;
   bytecode?: InputMaybe<Order_By>;
-  chainId?: InputMaybe<Order_By>;
   contractType?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   deletedAt?: InputMaybe<Order_By>;
@@ -212,11 +549,7 @@ export enum Contracts_Select_Column {
   /** column name */
   Abi = 'abi',
   /** column name */
-  Address = 'address',
-  /** column name */
   Bytecode = 'bytecode',
-  /** column name */
-  ChainId = 'chainId',
   /** column name */
   ContractType = 'contractType',
   /** column name */
@@ -236,6 +569,41 @@ export enum Contracts_Select_Column {
   /** column name */
   Version = 'version'
 }
+
+/** order by stddev() on columns of table "Contracts" */
+export type Contracts_Stddev_Order_By = {
+  version?: InputMaybe<Order_By>;
+};
+
+/** order by stddev_pop() on columns of table "Contracts" */
+export type Contracts_Stddev_Pop_Order_By = {
+  version?: InputMaybe<Order_By>;
+};
+
+/** order by stddev_samp() on columns of table "Contracts" */
+export type Contracts_Stddev_Samp_Order_By = {
+  version?: InputMaybe<Order_By>;
+};
+
+/** order by sum() on columns of table "Contracts" */
+export type Contracts_Sum_Order_By = {
+  version?: InputMaybe<Order_By>;
+};
+
+/** order by var_pop() on columns of table "Contracts" */
+export type Contracts_Var_Pop_Order_By = {
+  version?: InputMaybe<Order_By>;
+};
+
+/** order by var_samp() on columns of table "Contracts" */
+export type Contracts_Var_Samp_Order_By = {
+  version?: InputMaybe<Order_By>;
+};
+
+/** order by variance() on columns of table "Contracts" */
+export type Contracts_Variance_Order_By = {
+  version?: InputMaybe<Order_By>;
+};
 
 /** columns and relationships of "Hashtags" */
 export type Hashtags = {
@@ -296,8 +664,13 @@ export enum Hashtags_Select_Column {
   UpdatedAt = 'updatedAt'
 }
 
+export type Int_Cast_Exp = {
+  String?: InputMaybe<String_Comparison_Exp>;
+};
+
 /** Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'. */
 export type Int_Comparison_Exp = {
+  _cast?: InputMaybe<Int_Cast_Exp>;
   _eq?: InputMaybe<Scalars['Int']>;
   _gt?: InputMaybe<Scalars['Int']>;
   _gte?: InputMaybe<Scalars['Int']>;
@@ -684,6 +1057,13 @@ export type MeemContracts_Aggregate_FieldsCountArgs = {
   distinct?: InputMaybe<Scalars['Boolean']>;
 };
 
+/** order by aggregate values of table "MeemContracts" */
+export type MeemContracts_Aggregate_Order_By = {
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<MeemContracts_Max_Order_By>;
+  min?: InputMaybe<MeemContracts_Min_Order_By>;
+};
+
 /** Boolean expression to filter rows from the table "MeemContracts". All fields are combined with a logical 'AND'. */
 export type MeemContracts_Bool_Exp = {
   DefaultChildProperties?: InputMaybe<MeemProperties_Bool_Exp>;
@@ -750,6 +1130,33 @@ export type MeemContracts_Max_Fields = {
   updatedAt?: Maybe<Scalars['timestamptz']>;
 };
 
+/** order by max() on columns of table "MeemContracts" */
+export type MeemContracts_Max_Order_By = {
+  DefaultChildPropertiesId?: InputMaybe<Order_By>;
+  DefaultPropertiesId?: InputMaybe<Order_By>;
+  address?: InputMaybe<Order_By>;
+  contractURI?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  deletedAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  isTransferrableLockedBy?: InputMaybe<Order_By>;
+  mintDatesLockedBy?: InputMaybe<Order_By>;
+  mintEndAt?: InputMaybe<Order_By>;
+  mintPermissionsLockedBy?: InputMaybe<Order_By>;
+  mintStartAt?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  originalsPerWallet?: InputMaybe<Order_By>;
+  originalsPerWalletLockedBy?: InputMaybe<Order_By>;
+  slug?: InputMaybe<Order_By>;
+  splitsLockedBy?: InputMaybe<Order_By>;
+  symbol?: InputMaybe<Order_By>;
+  totalOriginalsSupply?: InputMaybe<Order_By>;
+  totalOriginalsSupplyLockedBy?: InputMaybe<Order_By>;
+  transferLockupUntil?: InputMaybe<Order_By>;
+  transferLockupUntilLockedBy?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
 /** aggregate min on columns */
 export type MeemContracts_Min_Fields = {
   __typename?: 'MeemContracts_min_fields';
@@ -776,6 +1183,33 @@ export type MeemContracts_Min_Fields = {
   transferLockupUntil?: Maybe<Scalars['timestamp']>;
   transferLockupUntilLockedBy?: Maybe<Scalars['String']>;
   updatedAt?: Maybe<Scalars['timestamptz']>;
+};
+
+/** order by min() on columns of table "MeemContracts" */
+export type MeemContracts_Min_Order_By = {
+  DefaultChildPropertiesId?: InputMaybe<Order_By>;
+  DefaultPropertiesId?: InputMaybe<Order_By>;
+  address?: InputMaybe<Order_By>;
+  contractURI?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  deletedAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  isTransferrableLockedBy?: InputMaybe<Order_By>;
+  mintDatesLockedBy?: InputMaybe<Order_By>;
+  mintEndAt?: InputMaybe<Order_By>;
+  mintPermissionsLockedBy?: InputMaybe<Order_By>;
+  mintStartAt?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  originalsPerWallet?: InputMaybe<Order_By>;
+  originalsPerWalletLockedBy?: InputMaybe<Order_By>;
+  slug?: InputMaybe<Order_By>;
+  splitsLockedBy?: InputMaybe<Order_By>;
+  symbol?: InputMaybe<Order_By>;
+  totalOriginalsSupply?: InputMaybe<Order_By>;
+  totalOriginalsSupplyLockedBy?: InputMaybe<Order_By>;
+  transferLockupUntil?: InputMaybe<Order_By>;
+  transferLockupUntilLockedBy?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
 };
 
 /** Ordering options when selecting data from "MeemContracts". */
@@ -1146,6 +1580,10 @@ export type MeemPasses_Variance_Order_By = {
 export type MeemProperties = {
   __typename?: 'MeemProperties';
   /** An array relationship */
+  MeemContracts: Array<MeemContracts>;
+  /** An aggregate relationship */
+  MeemContracts_aggregate: MeemContracts_Aggregate;
+  /** An array relationship */
   Meems: Array<Meems>;
   /** An aggregate relationship */
   Meems_aggregate: Meems_Aggregate;
@@ -1158,6 +1596,10 @@ export type MeemProperties = {
   id: Scalars['uuid'];
   isTransferrable: Scalars['Boolean'];
   isTransferrableLockedBy: Scalars['String'];
+  /** An array relationship */
+  meemContractsByDefaultpropertiesid: Array<MeemContracts>;
+  /** An aggregate relationship */
+  meemContractsByDefaultpropertiesid_aggregate: MeemContracts_Aggregate;
   /** An array relationship */
   meemsByPropertiesid: Array<Meems>;
   /** An aggregate relationship */
@@ -1184,6 +1626,26 @@ export type MeemProperties = {
 
 
 /** columns and relationships of "MeemProperties" */
+export type MeemPropertiesMeemContractsArgs = {
+  distinct_on?: InputMaybe<Array<MeemContracts_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<MeemContracts_Order_By>>;
+  where?: InputMaybe<MeemContracts_Bool_Exp>;
+};
+
+
+/** columns and relationships of "MeemProperties" */
+export type MeemPropertiesMeemContracts_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<MeemContracts_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<MeemContracts_Order_By>>;
+  where?: InputMaybe<MeemContracts_Bool_Exp>;
+};
+
+
+/** columns and relationships of "MeemProperties" */
 export type MeemPropertiesMeemsArgs = {
   distinct_on?: InputMaybe<Array<Meems_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
@@ -1206,6 +1668,26 @@ export type MeemPropertiesMeems_AggregateArgs = {
 /** columns and relationships of "MeemProperties" */
 export type MeemPropertiesCopyPermissionsArgs = {
   path?: InputMaybe<Scalars['String']>;
+};
+
+
+/** columns and relationships of "MeemProperties" */
+export type MeemPropertiesMeemContractsByDefaultpropertiesidArgs = {
+  distinct_on?: InputMaybe<Array<MeemContracts_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<MeemContracts_Order_By>>;
+  where?: InputMaybe<MeemContracts_Bool_Exp>;
+};
+
+
+/** columns and relationships of "MeemProperties" */
+export type MeemPropertiesMeemContractsByDefaultpropertiesid_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<MeemContracts_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<MeemContracts_Order_By>>;
+  where?: InputMaybe<MeemContracts_Bool_Exp>;
 };
 
 
@@ -1248,6 +1730,7 @@ export type MeemPropertiesSplitsArgs = {
 
 /** Boolean expression to filter rows from the table "MeemProperties". All fields are combined with a logical 'AND'. */
 export type MeemProperties_Bool_Exp = {
+  MeemContracts?: InputMaybe<MeemContracts_Bool_Exp>;
   Meems?: InputMaybe<Meems_Bool_Exp>;
   _and?: InputMaybe<Array<MeemProperties_Bool_Exp>>;
   _not?: InputMaybe<MeemProperties_Bool_Exp>;
@@ -1261,6 +1744,7 @@ export type MeemProperties_Bool_Exp = {
   id?: InputMaybe<Uuid_Comparison_Exp>;
   isTransferrable?: InputMaybe<Boolean_Comparison_Exp>;
   isTransferrableLockedBy?: InputMaybe<String_Comparison_Exp>;
+  meemContractsByDefaultpropertiesid?: InputMaybe<MeemContracts_Bool_Exp>;
   meemsByPropertiesid?: InputMaybe<Meems_Bool_Exp>;
   mintDatesLockedBy?: InputMaybe<String_Comparison_Exp>;
   mintEndAt?: InputMaybe<Timestamp_Comparison_Exp>;
@@ -1284,6 +1768,7 @@ export type MeemProperties_Bool_Exp = {
 
 /** Ordering options when selecting data from "MeemProperties". */
 export type MeemProperties_Order_By = {
+  MeemContracts_aggregate?: InputMaybe<MeemContracts_Aggregate_Order_By>;
   Meems_aggregate?: InputMaybe<Meems_Aggregate_Order_By>;
   copiesPerWallet?: InputMaybe<Order_By>;
   copiesPerWalletLockedBy?: InputMaybe<Order_By>;
@@ -1294,6 +1779,7 @@ export type MeemProperties_Order_By = {
   id?: InputMaybe<Order_By>;
   isTransferrable?: InputMaybe<Order_By>;
   isTransferrableLockedBy?: InputMaybe<Order_By>;
+  meemContractsByDefaultpropertiesid_aggregate?: InputMaybe<MeemContracts_Aggregate_Order_By>;
   meemsByPropertiesid_aggregate?: InputMaybe<Meems_Aggregate_Order_By>;
   mintDatesLockedBy?: InputMaybe<Order_By>;
   mintEndAt?: InputMaybe<Order_By>;
@@ -2671,18 +3157,204 @@ export enum Twitters_Select_Column {
   UpdatedAt = 'updatedAt'
 }
 
+/** columns and relationships of "WalletContractInstances" */
+export type WalletContractInstances = {
+  __typename?: 'WalletContractInstances';
+  /** An object relationship */
+  ContractInstance?: Maybe<ContractInstances>;
+  ContractInstanceId?: Maybe<Scalars['uuid']>;
+  /** An object relationship */
+  Wallet?: Maybe<Wallets>;
+  WalletId?: Maybe<Scalars['uuid']>;
+  createdAt: Scalars['timestamptz'];
+  deletedAt?: Maybe<Scalars['timestamptz']>;
+  id: Scalars['uuid'];
+  note: Scalars['String'];
+  updatedAt: Scalars['timestamptz'];
+};
+
+/** aggregated selection of "WalletContractInstances" */
+export type WalletContractInstances_Aggregate = {
+  __typename?: 'WalletContractInstances_aggregate';
+  aggregate?: Maybe<WalletContractInstances_Aggregate_Fields>;
+  nodes: Array<WalletContractInstances>;
+};
+
+/** aggregate fields of "WalletContractInstances" */
+export type WalletContractInstances_Aggregate_Fields = {
+  __typename?: 'WalletContractInstances_aggregate_fields';
+  count: Scalars['Int'];
+  max?: Maybe<WalletContractInstances_Max_Fields>;
+  min?: Maybe<WalletContractInstances_Min_Fields>;
+};
+
+
+/** aggregate fields of "WalletContractInstances" */
+export type WalletContractInstances_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<WalletContractInstances_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** order by aggregate values of table "WalletContractInstances" */
+export type WalletContractInstances_Aggregate_Order_By = {
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<WalletContractInstances_Max_Order_By>;
+  min?: InputMaybe<WalletContractInstances_Min_Order_By>;
+};
+
+/** Boolean expression to filter rows from the table "WalletContractInstances". All fields are combined with a logical 'AND'. */
+export type WalletContractInstances_Bool_Exp = {
+  ContractInstance?: InputMaybe<ContractInstances_Bool_Exp>;
+  ContractInstanceId?: InputMaybe<Uuid_Comparison_Exp>;
+  Wallet?: InputMaybe<Wallets_Bool_Exp>;
+  WalletId?: InputMaybe<Uuid_Comparison_Exp>;
+  _and?: InputMaybe<Array<WalletContractInstances_Bool_Exp>>;
+  _not?: InputMaybe<WalletContractInstances_Bool_Exp>;
+  _or?: InputMaybe<Array<WalletContractInstances_Bool_Exp>>;
+  createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  deletedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  note?: InputMaybe<String_Comparison_Exp>;
+  updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+};
+
+/** aggregate max on columns */
+export type WalletContractInstances_Max_Fields = {
+  __typename?: 'WalletContractInstances_max_fields';
+  ContractInstanceId?: Maybe<Scalars['uuid']>;
+  WalletId?: Maybe<Scalars['uuid']>;
+  createdAt?: Maybe<Scalars['timestamptz']>;
+  deletedAt?: Maybe<Scalars['timestamptz']>;
+  id?: Maybe<Scalars['uuid']>;
+  note?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['timestamptz']>;
+};
+
+/** order by max() on columns of table "WalletContractInstances" */
+export type WalletContractInstances_Max_Order_By = {
+  ContractInstanceId?: InputMaybe<Order_By>;
+  WalletId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  deletedAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  note?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type WalletContractInstances_Min_Fields = {
+  __typename?: 'WalletContractInstances_min_fields';
+  ContractInstanceId?: Maybe<Scalars['uuid']>;
+  WalletId?: Maybe<Scalars['uuid']>;
+  createdAt?: Maybe<Scalars['timestamptz']>;
+  deletedAt?: Maybe<Scalars['timestamptz']>;
+  id?: Maybe<Scalars['uuid']>;
+  note?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['timestamptz']>;
+};
+
+/** order by min() on columns of table "WalletContractInstances" */
+export type WalletContractInstances_Min_Order_By = {
+  ContractInstanceId?: InputMaybe<Order_By>;
+  WalletId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  deletedAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  note?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
+/** Ordering options when selecting data from "WalletContractInstances". */
+export type WalletContractInstances_Order_By = {
+  ContractInstance?: InputMaybe<ContractInstances_Order_By>;
+  ContractInstanceId?: InputMaybe<Order_By>;
+  Wallet?: InputMaybe<Wallets_Order_By>;
+  WalletId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  deletedAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  note?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
+/** select columns of table "WalletContractInstances" */
+export enum WalletContractInstances_Select_Column {
+  /** column name */
+  ContractInstanceId = 'ContractInstanceId',
+  /** column name */
+  WalletId = 'WalletId',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  DeletedAt = 'deletedAt',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Note = 'note',
+  /** column name */
+  UpdatedAt = 'updatedAt'
+}
+
 /** columns and relationships of "Wallets" */
 export type Wallets = {
   __typename?: 'Wallets';
+  /** An array relationship */
+  Contracts: Array<Contracts>;
+  /** An array relationship */
+  MeemContractWallets: Array<MeemContractWallets>;
   /** An object relationship */
   MeemIdentification?: Maybe<MeemIdentifications>;
   MeemIdentificationId?: Maybe<Scalars['uuid']>;
+  /** An array relationship */
+  WalletContractInstances: Array<WalletContractInstances>;
+  /** An aggregate relationship */
+  WalletContractInstances_aggregate: WalletContractInstances_Aggregate;
   address: Scalars['String'];
   createdAt: Scalars['timestamptz'];
   deletedAt?: Maybe<Scalars['timestamptz']>;
   id: Scalars['uuid'];
   isDefault: Scalars['Boolean'];
   updatedAt: Scalars['timestamptz'];
+};
+
+
+/** columns and relationships of "Wallets" */
+export type WalletsContractsArgs = {
+  distinct_on?: InputMaybe<Array<Contracts_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Contracts_Order_By>>;
+  where?: InputMaybe<Contracts_Bool_Exp>;
+};
+
+
+/** columns and relationships of "Wallets" */
+export type WalletsMeemContractWalletsArgs = {
+  distinct_on?: InputMaybe<Array<MeemContractWallets_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<MeemContractWallets_Order_By>>;
+  where?: InputMaybe<MeemContractWallets_Bool_Exp>;
+};
+
+
+/** columns and relationships of "Wallets" */
+export type WalletsWalletContractInstancesArgs = {
+  distinct_on?: InputMaybe<Array<WalletContractInstances_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<WalletContractInstances_Order_By>>;
+  where?: InputMaybe<WalletContractInstances_Bool_Exp>;
+};
+
+
+/** columns and relationships of "Wallets" */
+export type WalletsWalletContractInstances_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<WalletContractInstances_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<WalletContractInstances_Order_By>>;
+  where?: InputMaybe<WalletContractInstances_Bool_Exp>;
 };
 
 /** order by aggregate values of table "Wallets" */
@@ -2694,8 +3366,11 @@ export type Wallets_Aggregate_Order_By = {
 
 /** Boolean expression to filter rows from the table "Wallets". All fields are combined with a logical 'AND'. */
 export type Wallets_Bool_Exp = {
+  Contracts?: InputMaybe<Contracts_Bool_Exp>;
+  MeemContractWallets?: InputMaybe<MeemContractWallets_Bool_Exp>;
   MeemIdentification?: InputMaybe<MeemIdentifications_Bool_Exp>;
   MeemIdentificationId?: InputMaybe<Uuid_Comparison_Exp>;
+  WalletContractInstances?: InputMaybe<WalletContractInstances_Bool_Exp>;
   _and?: InputMaybe<Array<Wallets_Bool_Exp>>;
   _not?: InputMaybe<Wallets_Bool_Exp>;
   _or?: InputMaybe<Array<Wallets_Bool_Exp>>;
@@ -2729,8 +3404,11 @@ export type Wallets_Min_Order_By = {
 
 /** Ordering options when selecting data from "Wallets". */
 export type Wallets_Order_By = {
+  Contracts_aggregate?: InputMaybe<Contracts_Aggregate_Order_By>;
+  MeemContractWallets_aggregate?: InputMaybe<MeemContractWallets_Aggregate_Order_By>;
   MeemIdentification?: InputMaybe<MeemIdentifications_Order_By>;
   MeemIdentificationId?: InputMaybe<Order_By>;
+  WalletContractInstances_aggregate?: InputMaybe<WalletContractInstances_Aggregate_Order_By>;
   address?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   deletedAt?: InputMaybe<Order_By>;
@@ -2807,7 +3485,13 @@ export type Query_Root = {
   Clippings: Array<Clippings>;
   /** fetch data from the table: "Clippings" using primary key columns */
   Clippings_by_pk?: Maybe<Clippings>;
-  /** fetch data from the table: "Contracts" */
+  /** An array relationship */
+  ContractInstances: Array<ContractInstances>;
+  /** An aggregate relationship */
+  ContractInstances_aggregate: ContractInstances_Aggregate;
+  /** fetch data from the table: "ContractInstances" using primary key columns */
+  ContractInstances_by_pk?: Maybe<ContractInstances>;
+  /** An array relationship */
   Contracts: Array<Contracts>;
   /** fetch data from the table: "Contracts" using primary key columns */
   Contracts_by_pk?: Maybe<Contracts>;
@@ -2827,9 +3511,9 @@ export type Query_Root = {
   MeemContractWallets: Array<MeemContractWallets>;
   /** fetch data from the table: "MeemContractWallets" using primary key columns */
   MeemContractWallets_by_pk?: Maybe<MeemContractWallets>;
-  /** fetch data from the table: "MeemContracts" */
+  /** An array relationship */
   MeemContracts: Array<MeemContracts>;
-  /** fetch aggregated fields from the table: "MeemContracts" */
+  /** An aggregate relationship */
   MeemContracts_aggregate: MeemContracts_Aggregate;
   /** fetch data from the table: "MeemContracts" using primary key columns */
   MeemContracts_by_pk?: Maybe<MeemContracts>;
@@ -2876,6 +3560,12 @@ export type Query_Root = {
   /** fetch data from the table: "Twitters" using primary key columns */
   Twitters_by_pk?: Maybe<Twitters>;
   /** An array relationship */
+  WalletContractInstances: Array<WalletContractInstances>;
+  /** An aggregate relationship */
+  WalletContractInstances_aggregate: WalletContractInstances_Aggregate;
+  /** fetch data from the table: "WalletContractInstances" using primary key columns */
+  WalletContractInstances_by_pk?: Maybe<WalletContractInstances>;
+  /** An array relationship */
   Wallets: Array<Wallets>;
   /** fetch data from the table: "Wallets" using primary key columns */
   Wallets_by_pk?: Maybe<Wallets>;
@@ -2892,6 +3582,29 @@ export type Query_RootClippingsArgs = {
 
 
 export type Query_RootClippings_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+export type Query_RootContractInstancesArgs = {
+  distinct_on?: InputMaybe<Array<ContractInstances_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<ContractInstances_Order_By>>;
+  where?: InputMaybe<ContractInstances_Bool_Exp>;
+};
+
+
+export type Query_RootContractInstances_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<ContractInstances_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<ContractInstances_Order_By>>;
+  where?: InputMaybe<ContractInstances_Bool_Exp>;
+};
+
+
+export type Query_RootContractInstances_By_PkArgs = {
   id: Scalars['uuid'];
 };
 
@@ -3138,6 +3851,29 @@ export type Query_RootTwitters_By_PkArgs = {
 };
 
 
+export type Query_RootWalletContractInstancesArgs = {
+  distinct_on?: InputMaybe<Array<WalletContractInstances_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<WalletContractInstances_Order_By>>;
+  where?: InputMaybe<WalletContractInstances_Bool_Exp>;
+};
+
+
+export type Query_RootWalletContractInstances_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<WalletContractInstances_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<WalletContractInstances_Order_By>>;
+  where?: InputMaybe<WalletContractInstances_Bool_Exp>;
+};
+
+
+export type Query_RootWalletContractInstances_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
 export type Query_RootWalletsArgs = {
   distinct_on?: InputMaybe<Array<Wallets_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
@@ -3157,7 +3893,13 @@ export type Subscription_Root = {
   Clippings: Array<Clippings>;
   /** fetch data from the table: "Clippings" using primary key columns */
   Clippings_by_pk?: Maybe<Clippings>;
-  /** fetch data from the table: "Contracts" */
+  /** An array relationship */
+  ContractInstances: Array<ContractInstances>;
+  /** An aggregate relationship */
+  ContractInstances_aggregate: ContractInstances_Aggregate;
+  /** fetch data from the table: "ContractInstances" using primary key columns */
+  ContractInstances_by_pk?: Maybe<ContractInstances>;
+  /** An array relationship */
   Contracts: Array<Contracts>;
   /** fetch data from the table: "Contracts" using primary key columns */
   Contracts_by_pk?: Maybe<Contracts>;
@@ -3177,9 +3919,9 @@ export type Subscription_Root = {
   MeemContractWallets: Array<MeemContractWallets>;
   /** fetch data from the table: "MeemContractWallets" using primary key columns */
   MeemContractWallets_by_pk?: Maybe<MeemContractWallets>;
-  /** fetch data from the table: "MeemContracts" */
+  /** An array relationship */
   MeemContracts: Array<MeemContracts>;
-  /** fetch aggregated fields from the table: "MeemContracts" */
+  /** An aggregate relationship */
   MeemContracts_aggregate: MeemContracts_Aggregate;
   /** fetch data from the table: "MeemContracts" using primary key columns */
   MeemContracts_by_pk?: Maybe<MeemContracts>;
@@ -3226,6 +3968,12 @@ export type Subscription_Root = {
   /** fetch data from the table: "Twitters" using primary key columns */
   Twitters_by_pk?: Maybe<Twitters>;
   /** An array relationship */
+  WalletContractInstances: Array<WalletContractInstances>;
+  /** An aggregate relationship */
+  WalletContractInstances_aggregate: WalletContractInstances_Aggregate;
+  /** fetch data from the table: "WalletContractInstances" using primary key columns */
+  WalletContractInstances_by_pk?: Maybe<WalletContractInstances>;
+  /** An array relationship */
   Wallets: Array<Wallets>;
   /** fetch data from the table: "Wallets" using primary key columns */
   Wallets_by_pk?: Maybe<Wallets>;
@@ -3242,6 +3990,29 @@ export type Subscription_RootClippingsArgs = {
 
 
 export type Subscription_RootClippings_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+export type Subscription_RootContractInstancesArgs = {
+  distinct_on?: InputMaybe<Array<ContractInstances_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<ContractInstances_Order_By>>;
+  where?: InputMaybe<ContractInstances_Bool_Exp>;
+};
+
+
+export type Subscription_RootContractInstances_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<ContractInstances_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<ContractInstances_Order_By>>;
+  where?: InputMaybe<ContractInstances_Bool_Exp>;
+};
+
+
+export type Subscription_RootContractInstances_By_PkArgs = {
   id: Scalars['uuid'];
 };
 
@@ -3488,6 +4259,29 @@ export type Subscription_RootTwitters_By_PkArgs = {
 };
 
 
+export type Subscription_RootWalletContractInstancesArgs = {
+  distinct_on?: InputMaybe<Array<WalletContractInstances_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<WalletContractInstances_Order_By>>;
+  where?: InputMaybe<WalletContractInstances_Bool_Exp>;
+};
+
+
+export type Subscription_RootWalletContractInstances_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<WalletContractInstances_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<WalletContractInstances_Order_By>>;
+  where?: InputMaybe<WalletContractInstances_Bool_Exp>;
+};
+
+
+export type Subscription_RootWalletContractInstances_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
 export type Subscription_RootWalletsArgs = {
   distinct_on?: InputMaybe<Array<Wallets_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
@@ -3501,8 +4295,13 @@ export type Subscription_RootWallets_By_PkArgs = {
   id: Scalars['uuid'];
 };
 
+export type Timestamp_Cast_Exp = {
+  String?: InputMaybe<String_Comparison_Exp>;
+};
+
 /** Boolean expression to compare columns of type "timestamp". All fields are combined with logical 'AND'. */
 export type Timestamp_Comparison_Exp = {
+  _cast?: InputMaybe<Timestamp_Cast_Exp>;
   _eq?: InputMaybe<Scalars['timestamp']>;
   _gt?: InputMaybe<Scalars['timestamp']>;
   _gte?: InputMaybe<Scalars['timestamp']>;
@@ -3514,8 +4313,13 @@ export type Timestamp_Comparison_Exp = {
   _nin?: InputMaybe<Array<Scalars['timestamp']>>;
 };
 
+export type Timestamptz_Cast_Exp = {
+  String?: InputMaybe<String_Comparison_Exp>;
+};
+
 /** Boolean expression to compare columns of type "timestamptz". All fields are combined with logical 'AND'. */
 export type Timestamptz_Comparison_Exp = {
+  _cast?: InputMaybe<Timestamptz_Cast_Exp>;
   _eq?: InputMaybe<Scalars['timestamptz']>;
   _gt?: InputMaybe<Scalars['timestamptz']>;
   _gte?: InputMaybe<Scalars['timestamptz']>;
@@ -3527,8 +4331,13 @@ export type Timestamptz_Comparison_Exp = {
   _nin?: InputMaybe<Array<Scalars['timestamptz']>>;
 };
 
+export type Uuid_Cast_Exp = {
+  String?: InputMaybe<String_Comparison_Exp>;
+};
+
 /** Boolean expression to compare columns of type "uuid". All fields are combined with logical 'AND'. */
 export type Uuid_Comparison_Exp = {
+  _cast?: InputMaybe<Uuid_Cast_Exp>;
   _eq?: InputMaybe<Scalars['uuid']>;
   _gt?: InputMaybe<Scalars['uuid']>;
   _gte?: InputMaybe<Scalars['uuid']>;
@@ -3545,17 +4354,44 @@ export type GetContractsQueryVariables = Exact<{
 }>;
 
 
-export type GetContractsQuery = { __typename?: 'query_root', Contracts: Array<{ __typename?: 'Contracts', abi: any, address?: string | null, bytecode: string, chainId: number, contractType: string }> };
+export type GetContractsQuery = { __typename?: 'query_root', Contracts: Array<{ __typename?: 'Contracts', id: any, name: string, description: string, abi: any, bytecode: string, contractType: string, CreatorId?: any | null, Creator?: { __typename?: 'Wallets', address: string } | null }> };
+
+export type SearchContractsQueryVariables = Exact<{
+  contractType?: InputMaybe<Scalars['String']>;
+  searchTerm?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type SearchContractsQuery = { __typename?: 'query_root', Contracts: Array<{ __typename?: 'Contracts', id: any, name: string, description: string, abi: any, bytecode: string, contractType: string, functionSelectors: any, CreatorId?: any | null, ContractInstances: Array<{ __typename?: 'ContractInstances', chainId: number, address: string }>, Creator?: { __typename?: 'Wallets', address: string } | null }> };
+
+export type GetContractsByAddressesQueryVariables = Exact<{
+  addresses?: InputMaybe<Array<Scalars['String']> | Scalars['String']>;
+}>;
+
+
+export type GetContractsByAddressesQuery = { __typename?: 'query_root', ContractInstances: Array<{ __typename?: 'ContractInstances', id: any, address: string, Contract?: { __typename?: 'Contracts', name: string, description: string } | null }> };
+
+export type GetMyContractsQueryVariables = Exact<{
+  address: Scalars['String'];
+}>;
+
+
+export type GetMyContractsQuery = { __typename?: 'query_root', Wallets: Array<{ __typename?: 'Wallets', id: any, WalletContractInstances: Array<{ __typename?: 'WalletContractInstances', id: any, ContractInstance?: { __typename?: 'ContractInstances', address: string, Contract?: { __typename?: 'Contracts', name: string, description: string } | null } | null }> }> };
 
 
 export const GetContractsDocument = gql`
     query GetContracts($contractType: String) {
-  Contracts(where: {contractType: {_eq: "proxy"}}) {
+  Contracts(where: {contractType: {_eq: $contractType}}) {
+    id
+    name
+    description
     abi
-    address
     bytecode
-    chainId
     contractType
+    CreatorId
+    Creator {
+      address
+    }
   }
 }
     `;
@@ -3587,3 +4423,140 @@ export function useGetContractsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type GetContractsQueryHookResult = ReturnType<typeof useGetContractsQuery>;
 export type GetContractsLazyQueryHookResult = ReturnType<typeof useGetContractsLazyQuery>;
 export type GetContractsQueryResult = Apollo.QueryResult<GetContractsQuery, GetContractsQueryVariables>;
+export const SearchContractsDocument = gql`
+    query SearchContracts($contractType: String, $searchTerm: String) {
+  Contracts(
+    where: {contractType: {_eq: $contractType}, _or: [{name: {_ilike: $searchTerm}}, {description: {_ilike: $searchTerm}}]}
+  ) {
+    id
+    name
+    description
+    abi
+    bytecode
+    contractType
+    functionSelectors
+    ContractInstances {
+      chainId
+      address
+    }
+    CreatorId
+    Creator {
+      address
+    }
+  }
+}
+    `;
+
+/**
+ * __useSearchContractsQuery__
+ *
+ * To run a query within a React component, call `useSearchContractsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchContractsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchContractsQuery({
+ *   variables: {
+ *      contractType: // value for 'contractType'
+ *      searchTerm: // value for 'searchTerm'
+ *   },
+ * });
+ */
+export function useSearchContractsQuery(baseOptions?: Apollo.QueryHookOptions<SearchContractsQuery, SearchContractsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SearchContractsQuery, SearchContractsQueryVariables>(SearchContractsDocument, options);
+      }
+export function useSearchContractsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchContractsQuery, SearchContractsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SearchContractsQuery, SearchContractsQueryVariables>(SearchContractsDocument, options);
+        }
+export type SearchContractsQueryHookResult = ReturnType<typeof useSearchContractsQuery>;
+export type SearchContractsLazyQueryHookResult = ReturnType<typeof useSearchContractsLazyQuery>;
+export type SearchContractsQueryResult = Apollo.QueryResult<SearchContractsQuery, SearchContractsQueryVariables>;
+export const GetContractsByAddressesDocument = gql`
+    query GetContractsByAddresses($addresses: [String!]) {
+  ContractInstances(where: {address: {_in: $addresses}}) {
+    id
+    address
+    Contract {
+      name
+      description
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetContractsByAddressesQuery__
+ *
+ * To run a query within a React component, call `useGetContractsByAddressesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetContractsByAddressesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetContractsByAddressesQuery({
+ *   variables: {
+ *      addresses: // value for 'addresses'
+ *   },
+ * });
+ */
+export function useGetContractsByAddressesQuery(baseOptions?: Apollo.QueryHookOptions<GetContractsByAddressesQuery, GetContractsByAddressesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetContractsByAddressesQuery, GetContractsByAddressesQueryVariables>(GetContractsByAddressesDocument, options);
+      }
+export function useGetContractsByAddressesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetContractsByAddressesQuery, GetContractsByAddressesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetContractsByAddressesQuery, GetContractsByAddressesQueryVariables>(GetContractsByAddressesDocument, options);
+        }
+export type GetContractsByAddressesQueryHookResult = ReturnType<typeof useGetContractsByAddressesQuery>;
+export type GetContractsByAddressesLazyQueryHookResult = ReturnType<typeof useGetContractsByAddressesLazyQuery>;
+export type GetContractsByAddressesQueryResult = Apollo.QueryResult<GetContractsByAddressesQuery, GetContractsByAddressesQueryVariables>;
+export const GetMyContractsDocument = gql`
+    query GetMyContracts($address: String!) {
+  Wallets(where: {address: {_ilike: $address}}) {
+    id
+    WalletContractInstances {
+      id
+      ContractInstance {
+        address
+        Contract {
+          name
+          description
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetMyContractsQuery__
+ *
+ * To run a query within a React component, call `useGetMyContractsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMyContractsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMyContractsQuery({
+ *   variables: {
+ *      address: // value for 'address'
+ *   },
+ * });
+ */
+export function useGetMyContractsQuery(baseOptions: Apollo.QueryHookOptions<GetMyContractsQuery, GetMyContractsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetMyContractsQuery, GetMyContractsQueryVariables>(GetMyContractsDocument, options);
+      }
+export function useGetMyContractsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMyContractsQuery, GetMyContractsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetMyContractsQuery, GetMyContractsQueryVariables>(GetMyContractsDocument, options);
+        }
+export type GetMyContractsQueryHookResult = ReturnType<typeof useGetMyContractsQuery>;
+export type GetMyContractsLazyQueryHookResult = ReturnType<typeof useGetMyContractsLazyQuery>;
+export type GetMyContractsQueryResult = Apollo.QueryResult<GetMyContractsQuery, GetMyContractsQueryVariables>;

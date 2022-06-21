@@ -178,7 +178,8 @@ export const CreateComponent: React.FC = () => {
 						undefined,
 						{
 							...values,
-							chainId: +values.chainId,
+							contractType:
+								values.contractType as MeemAPI.ContractType,
 							abi: JSON.parse(values.abi),
 							functionSelectors:
 								values.functionSelectors.length > 0
@@ -285,7 +286,7 @@ export const CreateComponent: React.FC = () => {
 			</Container>
 			{form.values.contractType === MeemAPI.ContractType.DiamondFacet && (
 				<>
-					<Container>
+					{/* <Container>
 						<TextInput
 							label="Contract Address"
 							radius="lg"
@@ -295,7 +296,7 @@ export const CreateComponent: React.FC = () => {
 							// required
 							{...form.getInputProps('address')}
 						/>
-					</Container>
+					</Container> */}
 					<Container>
 						<Textarea
 							label="Function Selectors (1 per line)"
@@ -314,7 +315,7 @@ export const CreateComponent: React.FC = () => {
 							{...form.getInputProps('functionSelectors')}
 						/>
 					</Container>
-					<Container>
+					{/* <Container>
 						<Select
 							label="Chain"
 							placeholder="Pick one"
@@ -325,7 +326,7 @@ export const CreateComponent: React.FC = () => {
 							]}
 							{...form.getInputProps('chainId')}
 						/>
-					</Container>
+					</Container> */}
 				</>
 			)}
 			<Center>
