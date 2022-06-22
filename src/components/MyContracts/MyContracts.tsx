@@ -2,7 +2,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable import/named */
-import { ApolloClient, HttpLink, InMemoryCache, useQuery } from '@apollo/client'
+import {
+	ApolloClient,
+	HttpLink,
+	InMemoryCache,
+	useQuery,
+	useSubscription
+} from '@apollo/client'
 import log from '@kengoldfarb/log'
 import {
 	createStyles,
@@ -19,6 +25,7 @@ import { useForm } from '@mantine/form'
 import { MeemAPI } from '@meemproject/api'
 import { makeFetcher, useWallet } from '@meemproject/react'
 import { ethers } from 'ethers'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, {
 	forwardRef,
@@ -72,11 +79,11 @@ export const MyContracts: React.FC = () => {
 		data: contractQueryResult
 	} = useQuery<GetMyContractsQuery>(GET_MY_CONTRACTS, {
 		variables: {
-			address: accounts[0]
+			address: accounts && accounts[0]
 		}
 	})
 
-	console.log({ contractQueryResult })
+	// console.log({ account: accounts[0], loading, error, contractQueryResult })
 
 	const form = useForm({
 		initialValues: {
@@ -97,13 +104,32 @@ export const MyContracts: React.FC = () => {
 				<Button onClick={() => setIsOpen(true)}>Add Contract</Button>
 			</Container>
 			<Container>
-				{contractQueryResult?.Wallets[0].WalletContractInstances.map(
-					instance => (
-						<Text key={instance.id}>
-							{instance.ContractInstance?.address}
-						</Text>
-					)
-				)}
+				<ul>
+					{contractQueryResult?.Wallets[0].WalletContractInstances.map(
+						instance => (
+							<ContractCard
+								key={instance.id}
+								contract={instance.ContractInstance?.Contract}
+							/>
+							// <li key={instance.id}>
+							// 	<Link
+							// 		href={{
+							// 			pathname: '/manage',
+							// 			query: {
+							// 				address:
+							// 					instance.ContractInstance
+							// 						?.address,
+							// 				chain: MeemAPI.NetworkChainId
+							// 					.Rinkeby
+							// 			}
+							// 		}}
+							// 	>
+							// 		<a>{instance.ContractInstance?.address}</a>
+							// 	</Link>
+							// </li>
+						)
+					)}
+				</ul>
 			</Container>
 			<Modal opened={isOpen} onClose={() => setIsOpen(false)}>
 				<form

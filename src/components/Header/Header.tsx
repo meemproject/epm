@@ -23,6 +23,7 @@ import {
 	Mail
 } from 'tabler-icons-react'
 import { ensWalletAddress, quickTruncate } from '../../utils/truncated_wallet'
+import { NetworkSwitcher } from '../Atoms/NetworkSwitcher'
 
 const useStyles = createStyles(theme => ({
 	headerLeftItems: {
@@ -217,6 +218,9 @@ export function HeaderMenu() {
 					<a onClick={navigateHome}>
 						<Text className={classes.mainLogo}>EPM</Text>
 					</a>
+					<NetworkSwitcher
+						onChange={chainId => wallet.setChain(chainId)}
+					/>
 				</div>
 
 				<div className={classes.headerRightItems}>
@@ -303,6 +307,30 @@ export function HeaderMenu() {
 						</Menu.Item>
 
 						<Divider />
+						<Menu.Item
+							onClick={() => router.push('/mycontracts')}
+							className={classes.menuItem}
+						>
+							My Contracts
+						</Menu.Item>
+						<Menu.Item
+							onClick={() => router.push('/create')}
+							className={classes.menuItem}
+						>
+							Create Contract
+						</Menu.Item>
+						<Menu.Item
+							onClick={() => router.push('/manage')}
+							className={classes.menuItem}
+						>
+							Manage Contract
+						</Menu.Item>
+						<Menu.Item
+							onClick={() => router.push('/contracts')}
+							className={classes.menuItem}
+						>
+							Deploy Contract
+						</Menu.Item>
 
 						<Menu.Item
 							onClick={handleTwitter}

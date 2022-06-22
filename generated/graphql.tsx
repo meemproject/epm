@@ -4349,12 +4349,7 @@ export type Uuid_Comparison_Exp = {
   _nin?: InputMaybe<Array<Scalars['uuid']>>;
 };
 
-export type GetContractsQueryVariables = Exact<{
-  contractType?: InputMaybe<Scalars['String']>;
-}>;
-
-
-export type GetContractsQuery = { __typename?: 'query_root', Contracts: Array<{ __typename?: 'Contracts', id: any, name: string, description: string, abi: any, bytecode: string, contractType: string, CreatorId?: any | null, Creator?: { __typename?: 'Wallets', address: string } | null }> };
+export type ContractPartsFragment = { __typename?: 'Contracts', id: any, name: string, description: string, abi: any, bytecode: string, contractType: string, functionSelectors: any, CreatorId?: any | null, ContractInstances: Array<{ __typename?: 'ContractInstances', chainId: number, address: string }>, Creator?: { __typename?: 'Wallets', address: string } | null };
 
 export type SearchContractsQueryVariables = Exact<{
   contractType?: InputMaybe<Scalars['String']>;
@@ -4369,83 +4364,50 @@ export type GetContractsByAddressesQueryVariables = Exact<{
 }>;
 
 
-export type GetContractsByAddressesQuery = { __typename?: 'query_root', ContractInstances: Array<{ __typename?: 'ContractInstances', id: any, address: string, Contract?: { __typename?: 'Contracts', name: string, description: string } | null }> };
+export type GetContractsByAddressesQuery = { __typename?: 'query_root', ContractInstances: Array<{ __typename?: 'ContractInstances', id: any, address: string, Contract?: { __typename?: 'Contracts', id: any, name: string, description: string, abi: any, bytecode: string, contractType: string, functionSelectors: any, CreatorId?: any | null, ContractInstances: Array<{ __typename?: 'ContractInstances', chainId: number, address: string }>, Creator?: { __typename?: 'Wallets', address: string } | null } | null }> };
+
+export type GetMyContractsSubscriptionSubscriptionVariables = Exact<{
+  address: Scalars['String'];
+}>;
+
+
+export type GetMyContractsSubscriptionSubscription = { __typename?: 'subscription_root', Wallets: Array<{ __typename?: 'Wallets', id: any, WalletContractInstances: Array<{ __typename?: 'WalletContractInstances', id: any, ContractInstance?: { __typename?: 'ContractInstances', address: string, Contract?: { __typename?: 'Contracts', id: any, name: string, description: string, abi: any, bytecode: string, contractType: string, functionSelectors: any, CreatorId?: any | null, ContractInstances: Array<{ __typename?: 'ContractInstances', chainId: number, address: string }>, Creator?: { __typename?: 'Wallets', address: string } | null } | null } | null }> }> };
 
 export type GetMyContractsQueryVariables = Exact<{
   address: Scalars['String'];
 }>;
 
 
-export type GetMyContractsQuery = { __typename?: 'query_root', Wallets: Array<{ __typename?: 'Wallets', id: any, WalletContractInstances: Array<{ __typename?: 'WalletContractInstances', id: any, ContractInstance?: { __typename?: 'ContractInstances', address: string, Contract?: { __typename?: 'Contracts', name: string, description: string } | null } | null }> }> };
+export type GetMyContractsQuery = { __typename?: 'query_root', Wallets: Array<{ __typename?: 'Wallets', id: any, WalletContractInstances: Array<{ __typename?: 'WalletContractInstances', id: any, ContractInstance?: { __typename?: 'ContractInstances', address: string, Contract?: { __typename?: 'Contracts', id: any, name: string, description: string, abi: any, bytecode: string, contractType: string, functionSelectors: any, CreatorId?: any | null, ContractInstances: Array<{ __typename?: 'ContractInstances', chainId: number, address: string }>, Creator?: { __typename?: 'Wallets', address: string } | null } | null } | null }> }> };
 
-
-export const GetContractsDocument = gql`
-    query GetContracts($contractType: String) {
-  Contracts(where: {contractType: {_eq: $contractType}}) {
-    id
-    name
-    description
-    abi
-    bytecode
-    contractType
-    CreatorId
-    Creator {
-      address
-    }
+export const ContractPartsFragmentDoc = gql`
+    fragment ContractParts on Contracts {
+  id
+  name
+  description
+  abi
+  bytecode
+  contractType
+  functionSelectors
+  ContractInstances {
+    chainId
+    address
+  }
+  CreatorId
+  Creator {
+    address
   }
 }
     `;
-
-/**
- * __useGetContractsQuery__
- *
- * To run a query within a React component, call `useGetContractsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetContractsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetContractsQuery({
- *   variables: {
- *      contractType: // value for 'contractType'
- *   },
- * });
- */
-export function useGetContractsQuery(baseOptions?: Apollo.QueryHookOptions<GetContractsQuery, GetContractsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetContractsQuery, GetContractsQueryVariables>(GetContractsDocument, options);
-      }
-export function useGetContractsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetContractsQuery, GetContractsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetContractsQuery, GetContractsQueryVariables>(GetContractsDocument, options);
-        }
-export type GetContractsQueryHookResult = ReturnType<typeof useGetContractsQuery>;
-export type GetContractsLazyQueryHookResult = ReturnType<typeof useGetContractsLazyQuery>;
-export type GetContractsQueryResult = Apollo.QueryResult<GetContractsQuery, GetContractsQueryVariables>;
 export const SearchContractsDocument = gql`
     query SearchContracts($contractType: String, $searchTerm: String) {
   Contracts(
     where: {contractType: {_eq: $contractType}, _or: [{name: {_ilike: $searchTerm}}, {description: {_ilike: $searchTerm}}]}
   ) {
-    id
-    name
-    description
-    abi
-    bytecode
-    contractType
-    functionSelectors
-    ContractInstances {
-      chainId
-      address
-    }
-    CreatorId
-    Creator {
-      address
-    }
+    ...ContractParts
   }
 }
-    `;
+    ${ContractPartsFragmentDoc}`;
 
 /**
  * __useSearchContractsQuery__
@@ -4481,12 +4443,11 @@ export const GetContractsByAddressesDocument = gql`
     id
     address
     Contract {
-      name
-      description
+      ...ContractParts
     }
   }
 }
-    `;
+    ${ContractPartsFragmentDoc}`;
 
 /**
  * __useGetContractsByAddressesQuery__
@@ -4515,6 +4476,45 @@ export function useGetContractsByAddressesLazyQuery(baseOptions?: Apollo.LazyQue
 export type GetContractsByAddressesQueryHookResult = ReturnType<typeof useGetContractsByAddressesQuery>;
 export type GetContractsByAddressesLazyQueryHookResult = ReturnType<typeof useGetContractsByAddressesLazyQuery>;
 export type GetContractsByAddressesQueryResult = Apollo.QueryResult<GetContractsByAddressesQuery, GetContractsByAddressesQueryVariables>;
+export const GetMyContractsSubscriptionDocument = gql`
+    subscription GetMyContractsSubscription($address: String!) {
+  Wallets(where: {address: {_ilike: $address}}) {
+    id
+    WalletContractInstances {
+      id
+      ContractInstance {
+        address
+        Contract {
+          ...ContractParts
+        }
+      }
+    }
+  }
+}
+    ${ContractPartsFragmentDoc}`;
+
+/**
+ * __useGetMyContractsSubscriptionSubscription__
+ *
+ * To run a query within a React component, call `useGetMyContractsSubscriptionSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useGetMyContractsSubscriptionSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMyContractsSubscriptionSubscription({
+ *   variables: {
+ *      address: // value for 'address'
+ *   },
+ * });
+ */
+export function useGetMyContractsSubscriptionSubscription(baseOptions: Apollo.SubscriptionHookOptions<GetMyContractsSubscriptionSubscription, GetMyContractsSubscriptionSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<GetMyContractsSubscriptionSubscription, GetMyContractsSubscriptionSubscriptionVariables>(GetMyContractsSubscriptionDocument, options);
+      }
+export type GetMyContractsSubscriptionSubscriptionHookResult = ReturnType<typeof useGetMyContractsSubscriptionSubscription>;
+export type GetMyContractsSubscriptionSubscriptionResult = Apollo.SubscriptionResult<GetMyContractsSubscriptionSubscription>;
 export const GetMyContractsDocument = gql`
     query GetMyContracts($address: String!) {
   Wallets(where: {address: {_ilike: $address}}) {
@@ -4524,14 +4524,13 @@ export const GetMyContractsDocument = gql`
       ContractInstance {
         address
         Contract {
-          name
-          description
+          ...ContractParts
         }
       }
     }
   }
 }
-    `;
+    ${ContractPartsFragmentDoc}`;
 
 /**
  * __useGetMyContractsQuery__

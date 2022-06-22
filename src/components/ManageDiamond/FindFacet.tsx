@@ -45,12 +45,15 @@ import {
 } from '../../../generated/graphql'
 import { SEARCH_CONTRACTS } from '../../graphql/contracts'
 import { diamondABI } from '../../lib/diamond'
+import { ArrayElement } from '../../lib/utils'
 import { CookieKeys } from '../../utils/cookies'
+import { ContractCard } from '../Atoms/ContractCard'
 
-const useStyles = createStyles(theme => ({}))
-
-type ArrayElement<ArrayType extends readonly unknown[]> =
-	ArrayType extends readonly (infer ElementType)[] ? ElementType : never
+const useStyles = createStyles(theme => ({
+	clickable: {
+		cursor: 'pointer'
+	}
+}))
 
 export interface IProps {
 	onClick: (contract: ArrayElement<SearchContractsQuery['Contracts']>) => void
@@ -122,8 +125,10 @@ export const FindFacet: React.FC<IProps> = ({ onClick }) => {
 			})}
 		>
 			<Container>
+				<Text size="xl">Find a Facet</Text>
+				<Space h={12} />
 				<TextInput
-					label="Find a Contract"
+					// label="Find a Contract"
 					radius="lg"
 					size="md"
 					placeholder="Access Control"
@@ -134,14 +139,12 @@ export const FindFacet: React.FC<IProps> = ({ onClick }) => {
 			<Container>
 				<Grid>
 					{facets?.Contracts.map(facet => (
-						<Grid.Col key={facet.id} span={5}>
-							<Card
-								shadow="sm"
-								p="lg"
-								onClick={() => onClick(facet)}
-							>
-								<Text>{facet.name}</Text>
-							</Card>
+						<Grid.Col key={facet.id} md={6}>
+							<ContractCard contract={facet}>
+								<Button onClick={() => onClick(facet)}>
+									Select
+								</Button>
+							</ContractCard>
 						</Grid.Col>
 					))}
 				</Grid>

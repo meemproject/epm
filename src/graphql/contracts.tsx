@@ -1,18 +1,38 @@
 import { gql } from '@apollo/client'
 
-export const GET_CONTRACTS_BY_TYPE = gql`
-	query GetContracts($contractType: String) {
-		Contracts(where: { contractType: { _eq: $contractType } }) {
-			id
-			name
-			description
-			abi
-			bytecode
-			contractType
-			CreatorId
-			Creator {
-				address
-			}
+// export const GET_CONTRACTS_BY_TYPE = gql`
+// 	query GetContracts($contractType: String) {
+// 		Contracts(where: { contractType: { _eq: $contractType } }) {
+// 			id
+// 			name
+// 			description
+// 			abi
+// 			bytecode
+// 			contractType
+// 			CreatorId
+// 			Creator {
+// 				address
+// 			}
+// 		}
+// 	}
+// `
+
+export const CONTRACT_PARTS = gql`
+	fragment ContractParts on Contracts {
+		id
+		name
+		description
+		abi
+		bytecode
+		contractType
+		functionSelectors
+		ContractInstances {
+			chainId
+			address
+		}
+		CreatorId
+		Creator {
+			address
 		}
 	}
 `
@@ -28,23 +48,11 @@ export const SEARCH_CONTRACTS = gql`
 				]
 			}
 		) {
-			id
-			name
-			description
-			abi
-			bytecode
-			contractType
-			functionSelectors
-			ContractInstances {
-				chainId
-				address
-			}
-			CreatorId
-			Creator {
-				address
-			}
+			...ContractParts
 		}
 	}
+
+	${CONTRACT_PARTS}
 `
 
 export const GET_CONTRACTS_BY_ADDRESS = gql`
@@ -53,11 +61,31 @@ export const GET_CONTRACTS_BY_ADDRESS = gql`
 			id
 			address
 			Contract {
-				name
-				description
+				...ContractParts
 			}
 		}
 	}
+
+	${CONTRACT_PARTS}
+`
+
+export const GET_MY_CONTRACTS_SUBSCRIPTION = gql`
+	subscription GetMyContractsSubscription($address: String!) {
+		Wallets(where: { address: { _ilike: $address } }) {
+			id
+			WalletContractInstances {
+				id
+				ContractInstance {
+					address
+					Contract {
+						...ContractParts
+					}
+				}
+			}
+		}
+	}
+
+	${CONTRACT_PARTS}
 `
 
 export const GET_MY_CONTRACTS = gql`
@@ -69,13 +97,14 @@ export const GET_MY_CONTRACTS = gql`
 				ContractInstance {
 					address
 					Contract {
-						name
-						description
+						...ContractParts
 					}
 				}
 			}
 		}
 	}
+
+	${CONTRACT_PARTS}
 `
 
 // // # ${options.creatorId ? 'CreatorId: { _eq: $creatorId }' : ''}

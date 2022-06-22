@@ -160,8 +160,6 @@ export const CreateComponent: React.FC = () => {
 	const { web3Provider, accounts, signer, isConnected, connectWallet } =
 		useWallet()
 
-	const handleSubmit = async () => {}
-
 	return (
 		<form
 			onSubmit={form.onSubmit(async values => {
@@ -189,6 +187,14 @@ export const CreateComponent: React.FC = () => {
 									: []
 						}
 					)
+
+					form.reset()
+
+					showNotification({
+						title: 'Contract created',
+						message:
+							'The contract was saved and can now be deployed.'
+					})
 					console.log(values)
 				} catch (e) {
 					console.log(e)
@@ -286,17 +292,6 @@ export const CreateComponent: React.FC = () => {
 			</Container>
 			{form.values.contractType === MeemAPI.ContractType.DiamondFacet && (
 				<>
-					{/* <Container>
-						<TextInput
-							label="Contract Address"
-							radius="lg"
-							size="md"
-							maxLength={42}
-							placeholder="0x..."
-							// required
-							{...form.getInputProps('address')}
-						/>
-					</Container> */}
 					<Container>
 						<Textarea
 							label="Function Selectors (1 per line)"
@@ -315,18 +310,6 @@ export const CreateComponent: React.FC = () => {
 							{...form.getInputProps('functionSelectors')}
 						/>
 					</Container>
-					{/* <Container>
-						<Select
-							label="Chain"
-							placeholder="Pick one"
-							data={[
-								{ value: '1', label: 'Ethereum Mainnet' },
-								{ value: '4', label: 'Rinkeby' },
-								{ value: '137', label: 'Polygon Mainnet' }
-							]}
-							{...form.getInputProps('chainId')}
-						/>
-					</Container> */}
 				</>
 			)}
 			<Center>

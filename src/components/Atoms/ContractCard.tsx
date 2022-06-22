@@ -1,21 +1,34 @@
-import { createStyles, Text, Button, Card, Spoiler } from '@mantine/core'
+import {
+	createStyles,
+	Text,
+	Button,
+	Card,
+	Spoiler,
+	Accordion
+} from '@mantine/core'
 import React from 'react'
-import { Contracts } from '../../../generated/graphql'
+import { SearchContractsQuery } from '../../../generated/graphql'
+import { ArrayElement } from '../../lib/utils'
+import { Address } from './Address'
 
 const useStyles = createStyles(_theme => ({
 	card: {}
 }))
 
 export interface IProps {
-	contract?: Partial<Contracts>
-	ctaText: string
-	onClick: (contract: Partial<Contracts>) => void
+	contract?: ArrayElement<SearchContractsQuery['Contracts']> | null
+	ctaText?: string
+	onClick?: (
+		contract: ArrayElement<SearchContractsQuery['Contracts']>
+	) => void
+	children?: React.ReactNode
 }
 
 export const ContractCard: React.FC<IProps> = ({
 	contract,
 	ctaText,
-	onClick
+	onClick,
+	children
 }) => {
 	const { classes } = useStyles()
 
@@ -27,13 +40,32 @@ export const ContractCard: React.FC<IProps> = ({
 		<Card key={contract.id} shadow="sm" p="lg" className={classes.card}>
 			{/* <Card.Section></Card.Section> */}
 			<Text size="xl">{contract.name}</Text>
-			<Spoiler maxHeight={120} showLabel="Show more" hideLabel="hide">
+			<Spoiler maxHeight={50} showLabel="Show more" hideLabel="hide">
 				{contract.description}
 			</Spoiler>
-			<Text>Created By</Text>
-			<Text>{contract.Creator?.address}</Text>
+			<Accordion>
+				<Accordion.Item label="Contract Info">
+					<Text>Created By</Text>
+					<Address address={contract.Creator?.address} />
+				</Accordion.Item>
+				<Accordion.Item label="Creator">
+					<Text>Created By</Text>
+					<Address address={contract.Creator?.address} />
+				</Accordion.Item>
+			</Accordion>
 
-			<Button onClick={() => onClick(contract)}>{ctaText}</Button>
+			{ctaText && (
+				<Button
+					onClick={() => {
+						if (onClick) {
+							onClick(contract)
+						}
+					}}
+				>
+					{ctaText}
+				</Button>
+			)}
+			{children}
 		</Card>
 	)
 }

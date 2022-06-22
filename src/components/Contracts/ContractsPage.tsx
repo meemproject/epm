@@ -26,8 +26,12 @@ import React, {
 	useRef,
 	useState
 } from 'react'
-import { GetContractsQuery, Contracts } from '../../../generated/graphql'
-import { GET_CONTRACTS_BY_TYPE } from '../../graphql/contracts'
+import {
+	GetContractsQuery,
+	Contracts,
+	SearchContractsQuery
+} from '../../../generated/graphql'
+import { SEARCH_CONTRACTS } from '../../graphql/contracts'
 import { ContractCard } from '../Atoms/ContractCard'
 import { DeployContract } from './DeployContract'
 
@@ -53,7 +57,7 @@ const useStyles = createStyles(theme => ({
 	}
 }))
 
-export function HomeComponent() {
+export function ContractsPage() {
 	const { classes } = useStyles()
 	const router = useRouter()
 	const { web3Provider, signer } = useWallet()
@@ -80,8 +84,8 @@ export function HomeComponent() {
 		loading,
 		error,
 		data: contracts
-	} = useQuery<GetContractsQuery>(GET_CONTRACTS_BY_TYPE, {
-		variables: { contractType: form.values.contractType }
+	} = useQuery<SearchContractsQuery>(SEARCH_CONTRACTS, {
+		variables: { contractType: form.values.contractType, searchTerm: '%' }
 	})
 
 	const handleDeploy = async (c: Partial<Contracts>) => {
@@ -136,7 +140,7 @@ export function HomeComponent() {
 				</form>
 				<Grid>
 					{contracts?.Contracts.map(contract => (
-						<Grid.Col span={4} key={contract.id}>
+						<Grid.Col md={6} key={contract.id}>
 							<ContractCard
 								contract={contract}
 								onClick={handleDeploy}

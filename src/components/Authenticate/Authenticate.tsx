@@ -102,6 +102,7 @@ const MAuthenticate: React.FC = () => {
 
 					Cookies.set('meemJwtToken', loginRequest.jwt)
 					wallet.setJwt(loginRequest.jwt)
+					log.debug(loginRequest.jwt)
 					log.debug(`saved JWT token as cookie.`)
 
 					router.push({

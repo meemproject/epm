@@ -16,9 +16,13 @@ import {
 	Select,
 	JsonInput,
 	Modal,
-	Group
+	Group,
+	Timeline,
+	ThemeIcon,
+	Title
 } from '@mantine/core'
 import { formList, useForm } from '@mantine/form'
+import { useClipboard } from '@mantine/hooks'
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
 import * as meemContracts from '@meemproject/meem-contracts'
@@ -38,7 +42,18 @@ import React, {
 } from 'react'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import Resizer from 'react-image-file-resizer'
-import { ArrowLeft, GripVertical, Upload } from 'tabler-icons-react'
+import {
+	ArrowLeft,
+	Bulb,
+	BulbOff,
+	Check,
+	CirclePlus,
+	Diamond,
+	DiamondOff,
+	FaceIdError,
+	GripVertical,
+	Upload
+} from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
 import {
 	Contracts,
@@ -48,45 +63,20 @@ import {
 import { GET_CONTRACTS_BY_ADDRESS } from '../../graphql/contracts'
 import { diamondABI } from '../../lib/diamond'
 import { CookieKeys } from '../../utils/cookies'
+import { ContractCard } from '../Atoms/ContractCard'
 import { SelectChain } from '../Atoms/SelectChain'
 import { FindFacet, IProps as IFindFacetProps } from './FindFacet'
 
 const useStyles = createStyles(theme => ({
-	header: {
-		backgroundColor: 'rgba(160, 160, 160, 0.05)',
-		marginBottom: 60,
-		display: 'flex',
-		alignItems: 'end',
-		flexDirection: 'row',
-		paddingTop: 24,
-		paddingBottom: 24,
-		paddingLeft: 32,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			paddingTop: 12,
-			paddingBottom: 12,
-			paddingLeft: 16
-		}
-	},
-	headerArrow: {
-		marginRight: 32,
-		cursor: 'pointer',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			marginRight: 16
-		}
-	},
-	headerPrompt: {
-		fontSize: 16,
-		fontWeight: 500,
-		color: 'rgba(0, 0, 0, 0.6)',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			marginBottom: 0
-		}
+	section_wrapper: {
+		display: 'flex'
 	}
 }))
 
 export const ManageDiamond: React.FC = () => {
 	const router = useRouter()
 	const { classes } = useStyles()
+	const clipboard = useClipboard({ timeout: 500 })
 
 	console.log({ query: router.query })
 
@@ -105,6 +95,9 @@ export const ManageDiamond: React.FC = () => {
 	})
 
 	const [isLoading, setIsLoading] = useState(false)
+	const [isDiamond, setIsDiamond] = useState(false)
+	const [bytecode, setBytecode] = useState<string>()
+
 	const [isOpen, setIsOpen] = useState(false)
 	const [fetchedAddress, setFetchedAddress] = useState<string>()
 	const [facets, setFacets] = useState<
@@ -114,7 +107,31 @@ export const ManageDiamond: React.FC = () => {
 		useWallet()
 
 	const handleFacetSelect: IFindFacetProps['onClick'] = async contract => {
-		console.log({ contract })
+		const instance = contract.ContractInstances.find(
+			c => c.chainId === +form.values.chain
+		)
+		if (!instance) {
+			showNotification({
+				title: 'Contract Not Deployed',
+				message: 'The contract has not been deployed yet!'
+			})
+
+			return
+		}
+
+		const existingFacet = form.values.facets.find(
+			f => f.target === instance.address
+		)
+
+		if (existingFacet) {
+			showNotification({
+				title: 'Facet already added!',
+				message: 'That facet has already been added.'
+			})
+
+			return
+		}
+
 		form.values.facets.push({
 			selectors: contract.functionSelectors,
 			target: contract.ContractInstances[0].address
@@ -173,6 +190,7 @@ export const ManageDiamond: React.FC = () => {
 	useEffect(() => {
 		const fetchDiamondInfo = async () => {
 			try {
+				// return
 				console.log('Fetching', form.values.address)
 				const diamond = new ethers.Contract(
 					form.values.address,
@@ -180,22 +198,28 @@ export const ManageDiamond: React.FC = () => {
 					signer
 				)
 
-				const result = await diamond.facets()
-				// const bytecode = await web3Provider?.getCode(
-				// 	form.values.address
-				// )
-				// console.log({ result, bytecode })
+				const [facetResult, bytecodeResult] = await Promise.allSettled([
+					diamond.facets(),
+					web3Provider?.getCode(form.values.address)
+				])
+
+				const result =
+					facetResult.status === 'fulfilled' && facetResult.value
+
+				const bytecode =
+					bytecodeResult.status === 'fulfilled' &&
+					bytecodeResult.value
+
 				form.values.facets.splice(0, form.values.facets.length)
 				// form.setFieldValue('facets', formList(result))
 				result.forEach((f, i) => form.values.facets.push(f))
 				setFacets(result)
+				setBytecode(bytecode)
 				setFetchedAddress(form.values.address)
+				setIsDiamond(true)
 			} catch (e) {
-				form.setErrors({
-					address:
-						'Address is not a valid Diamond (EIP-2535) contract'
-				})
-				console.log(e)
+				setIsDiamond(false)
+				setFetchedAddress(form.values.address)
 			}
 		}
 
@@ -223,138 +247,268 @@ export const ManageDiamond: React.FC = () => {
 		}
 	}, [router, form])
 
+	const isValidAddress = fetchedAddress
+		? ethers.utils.isAddress(fetchedAddress)
+		: false
+
 	return (
-		<form
-			onSubmit={form.onSubmit(async values => {
-				try {
-					const createContract = makeFetcher<
-						MeemAPI.v1.CreateContract.IQueryParams,
-						MeemAPI.v1.CreateContract.IRequestBody,
-						MeemAPI.v1.CreateContract.IResponseBody
-					>({
-						method: MeemAPI.v1.CreateContract.method
-					})
-					await createContract(
-						MeemAPI.v1.CreateContract.path(),
-						undefined,
-						{
-							...values,
-							contractType:
-								values.contractType as MeemAPI.ContractType,
-							chainId: +values.chainId,
-							abi: JSON.parse(values.abi),
-							functionSelectors:
-								values.functionSelectors.length > 0
-									? values.functionSelectors
-											.split('\n')
-											.map(v => v.trim())
-									: []
-						}
-					)
-					console.log(values)
-				} catch (e) {
-					console.log(e)
-				}
-			})}
-		>
-			<div className={classes.header}>
-				<Text className={classes.headerPrompt}>Manage Contract</Text>
-			</div>
-			<Center>
-				<Button
-					type="submit"
-					loading={isLoading}
-					disabled={isLoading}
-					onClick={() => setIsOpen(true)}
-				>
-					Add Facet
-				</Button>
-			</Center>
-
-			<Container>
-				<SelectChain form={form} />
-				<TextInput
-					label="Contract Address"
-					radius="lg"
-					size="md"
-					maxLength={42}
-					placeholder="0x..."
-					// required
-					{...form.getInputProps('address')}
-				/>
-			</Container>
-			<DragDropContext
-				onDragEnd={({ destination, source }) => {
-					if (destination?.index !== 0) {
-						form.reorderListItem('facets', {
-							from: source.index,
-							to: destination?.index ?? 0
+		<Container size="md">
+			<form
+				onSubmit={form.onSubmit(async values => {
+					try {
+						const createContract = makeFetcher<
+							MeemAPI.v1.CreateContract.IQueryParams,
+							MeemAPI.v1.CreateContract.IRequestBody,
+							MeemAPI.v1.CreateContract.IResponseBody
+						>({
+							method: MeemAPI.v1.CreateContract.method
 						})
+						await createContract(
+							MeemAPI.v1.CreateContract.path(),
+							undefined,
+							{
+								...values,
+								contractType:
+									values.contractType as MeemAPI.ContractType,
+								chainId: +values.chainId,
+								abi: JSON.parse(values.abi),
+								functionSelectors:
+									values.functionSelectors.length > 0
+										? values.functionSelectors
+												.split('\n')
+												.map(v => v.trim())
+										: []
+							}
+						)
+						console.log(values)
+					} catch (e) {
+						console.log(e)
 					}
-				}}
+				})}
 			>
-				<Droppable droppableId="dnd-list" direction="vertical">
-					{provided => (
-						<div
-							{...provided.droppableProps}
-							ref={provided.innerRef}
+				<Space h={24} />
+				<Container>
+					<Text size="xl">Contract Info</Text>
+					<Space h={12} />
+					<SelectChain form={form} />
+					<TextInput
+						label="Contract Address"
+						radius="lg"
+						size="md"
+						maxLength={42}
+						placeholder="0x..."
+						// required
+						{...form.getInputProps('address')}
+					/>
+				</Container>
+				<Space h={48} />
+				<Container>
+					<Text size="xl">Features</Text>
+					<Space h={12} />
+					<Timeline bulletSize={24} lineWidth={2}>
+						<Timeline.Item
+							active
+							bullet={
+								<ThemeIcon
+									color={isValidAddress ? 'green' : 'red'}
+								>
+									{isValidAddress ? (
+										<Check size={20} />
+									) : (
+										<FaceIdError size={20} />
+									)}
+								</ThemeIcon>
+							}
+							title={
+								isValidAddress
+									? 'Valid Address Format'
+									: 'Not a Valid Address Format'
+							}
 						>
-							{form.values.facets.map((facet, i) => {
-								const contract = data?.ContractInstances.find(
-									c =>
-										c.address?.toLowerCase() ===
-										facet.target.toLowerCase()
-								)
-								return (
-									<Draggable
-										key={facet.target}
-										index={i}
-										draggableId={i.toString()}
-										isDragDisabled={
-											facet.target === fetchedAddress
-										}
+							{!isValidAddress && (
+								<Text color="dimmed" size="sm">
+									This
+								</Text>
+							)}
+						</Timeline.Item>
+						<Timeline.Item
+							active
+							bullet={
+								<ThemeIcon color={bytecode ? 'green' : 'red'}>
+									{bytecode ? (
+										<Bulb size={20} />
+									) : (
+										<BulbOff size={20} />
+									)}
+								</ThemeIcon>
+							}
+							title={
+								bytecode
+									? 'Smart Contract'
+									: 'Not a Smart Contract'
+							}
+						>
+							{!bytecode && (
+								<Text color="dimmed" size="sm">
+									This address is not a smart contract.
+								</Text>
+							)}
+						</Timeline.Item>
+						{bytecode && (
+							<Timeline.Item
+								active
+								bullet={
+									<ThemeIcon
+										color={isDiamond ? 'green' : 'red'}
 									>
-										{p => {
-											// const pr = form.getListInputProps(
-											// 	'facets',
-											// 	i,
-											// 	'target'
-											// )
+										{isDiamond ? (
+											<Diamond size={20} />
+										) : (
+											<DiamondOff size={20} />
+										)}
+									</ThemeIcon>
+								}
+								title={
+									isDiamond
+										? 'Upgradeable Contract'
+										: 'Not Upgradeable'
+								}
+							>
+								{isDiamond && (
+									<Text color="dimmed" size="sm">
+										This is a{' '}
+										<a href="https://eips.ethereum.org/EIPS/eip-2535">
+											Diamond Proxy Contract
+										</a>
+									</Text>
+								)}
+							</Timeline.Item>
+						)}
+					</Timeline>
+				</Container>
+				{isDiamond && (
+					<>
+						<Space h={48} />
+						<Container>
+							<div className={classes.section_wrapper}>
+								<Text size="xl">Facets</Text>
+								<Space w={12} />
+								<Button
+									type="submit"
+									loading={isLoading}
+									disabled={isLoading}
+									onClick={() => setIsOpen(true)}
+									leftIcon={<CirclePlus />}
+								>
+									Add Facet
+								</Button>
+							</div>
+							<Space h={12} />
+							<Text size="md" color="dimmed">
+								Drag &amp; drop facets to re-order. Facets
+								closest to the top will take priority over those
+								below
+							</Text>
 
-											// console.log({ pr })
+							<DragDropContext
+								onDragEnd={({ destination, source }) => {
+									if (destination) {
+										form.reorderListItem('facets', {
+											from: source.index,
+											to: destination.index
+										})
+									}
+								}}
+							>
+								<Droppable
+									droppableId="dnd-list"
+									direction="vertical"
+								>
+									{provided => (
+										<div
+											{...provided.droppableProps}
+											ref={provided.innerRef}
+										>
+											{form.values.facets.map(
+												(facet, i) => {
+													const contract =
+														data?.ContractInstances.find(
+															c =>
+																c.address?.toLowerCase() ===
+																facet.target.toLowerCase()
+														)
+													if (
+														facet.target ===
+														form.values.address
+													) {
+														return null
+													}
+													return (
+														<Draggable
+															key={facet.target}
+															index={i}
+															draggableId={i.toString()}
+															isDragDisabled={
+																facet.target ===
+																fetchedAddress
+															}
+														>
+															{p => {
+																// const pr = form.getListInputProps(
+																// 	'facets',
+																// 	i,
+																// 	'target'
+																// )
 
-											return (
-												<Group
-													ref={p.innerRef}
-													mt="xs"
-													{...p.draggableProps}
-												>
-													<Center
-														{...p.dragHandleProps}
-													>
-														<GripVertical
-															size={18}
-														/>
-													</Center>
-													<Text>{facet.target}</Text>
+																// console.log({ pr })
+
+																return (
+																	<Group
+																		ref={
+																			p.innerRef
+																		}
+																		mt="xs"
+																		{...p.draggableProps}
+																	>
+																		<Center
+																			{...p.dragHandleProps}
+																		>
+																			<div>
+																				<GripVertical
+																					size={
+																						18
+																					}
+																				/>
+																			</div>
+																			<ContractCard
+																				contract={
+																					contract?.Contract
+																				}
+																			/>
+																		</Center>
+																		{/* <Text>{facet.target}</Text>
 													<Text>
 														{
 															contract?.Contract
 																?.name
 														}
-													</Text>
-												</Group>
-											)
-										}}
-									</Draggable>
-								)
-							})}
-							{provided.placeholder}
-						</div>
-					)}
-				</Droppable>
-			</DragDropContext>
-			{/* <Container>
+													</Text> */}
+																	</Group>
+																)
+															}}
+														</Draggable>
+													)
+												}
+											)}
+											{provided.placeholder}
+										</div>
+									)}
+								</Droppable>
+							</DragDropContext>
+						</Container>
+					</>
+				)}
+				{/* <Container>
 				{facets.map(facet => {
 					const contract = data?.ContractInstances.find(
 						c =>
@@ -365,7 +519,7 @@ export const ManageDiamond: React.FC = () => {
 					return <Text key={facet.target}>{facet.target}</Text>
 				})}
 			</Container> */}
-			{/* <Container>
+				{/* <Container>
 				<Select
 					label="Facets"
 					searchable
@@ -380,19 +534,26 @@ export const ManageDiamond: React.FC = () => {
 				/>
 			</Container> */}
 
-			<Center>
-				<Button
-					type="submit"
-					loading={isLoading}
-					disabled={isLoading}
-					onClick={handleSave}
+				{isDiamond && (
+					<Center>
+						<Button
+							type="submit"
+							loading={isLoading}
+							disabled={isLoading}
+							onClick={handleSave}
+						>
+							Save
+						</Button>
+					</Center>
+				)}
+				<Modal
+					opened={isOpen}
+					onClose={() => setIsOpen(false)}
+					size={900}
 				>
-					Save
-				</Button>
-			</Center>
-			<Modal opened={isOpen} onClose={() => setIsOpen(false)}>
-				<FindFacet onClick={handleFacetSelect} />
-			</Modal>
-		</form>
+					<FindFacet onClick={handleFacetSelect} />
+				</Modal>
+			</form>
+		</Container>
 	)
 }

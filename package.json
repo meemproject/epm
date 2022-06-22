@@ -61,7 +61,7 @@
 		"react-gtm-module": "^2.0.11",
 		"react-image-file-resizer": "^0.4.7",
 		"superagent": "^7.1.6",
-		"tabler-icons-react": "^1.46.0",
+		"tabler-icons-react": "^1.50.0",
 		"use-file-picker": "^1.4.2"
 	},
 	"devDependencies": {
