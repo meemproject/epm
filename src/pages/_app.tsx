@@ -8,7 +8,7 @@ import {
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
 import { getMainDefinition } from '@apollo/client/utilities'
 import log, { LogLevel } from '@kengoldfarb/log'
-import { MantineProvider } from '@mantine/core'
+import { Global, MantineProvider } from '@mantine/core'
 import { NotificationsProvider } from '@mantine/notifications'
 import { WalletProvider } from '@meemproject/react'
 import { createClient } from 'graphql-ws'
@@ -122,6 +122,16 @@ function MyApp(props: AppProps) {
 					}
 				>
 					<NotificationsProvider>
+						<Global
+							styles={theme => ({
+								a: {
+									color: theme.colors.dark,
+									'&:hover': {
+										opacity: 0.6
+									}
+								}
+							})}
+						/>
 						<Component {...pageProps} />
 					</NotificationsProvider>
 				</WalletProvider>

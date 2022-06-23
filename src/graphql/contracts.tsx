@@ -75,8 +75,12 @@ export const GET_MY_CONTRACTS_SUBSCRIPTION = gql`
 			id
 			WalletContractInstances {
 				id
+				note
+				name
 				ContractInstance {
+					id
 					address
+					chainId
 					Contract {
 						...ContractParts
 					}
@@ -94,8 +98,12 @@ export const GET_MY_CONTRACTS = gql`
 			id
 			WalletContractInstances {
 				id
+				note
+				name
 				ContractInstance {
+					id
 					address
+					chainId
 					Contract {
 						...ContractParts
 					}

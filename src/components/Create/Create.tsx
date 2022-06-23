@@ -140,6 +140,8 @@ export const CreateComponent: React.FC = () => {
 	const router = useRouter()
 	const { classes } = useStyles()
 
+	const [isSubmitting, setIsSubmitting] = useState(false)
+
 	const form = useForm({
 		initialValues: {
 			name: '',
@@ -156,7 +158,6 @@ export const CreateComponent: React.FC = () => {
 		}
 	})
 
-	const [isLoading, setIsLoading] = useState(false)
 	const { web3Provider, accounts, signer, isConnected, connectWallet } =
 		useWallet()
 
@@ -164,6 +165,7 @@ export const CreateComponent: React.FC = () => {
 		<form
 			onSubmit={form.onSubmit(async values => {
 				try {
+					setIsSubmitting(true)
 					const createContract = makeFetcher<
 						MeemAPI.v1.CreateContract.IQueryParams,
 						MeemAPI.v1.CreateContract.IRequestBody,
@@ -199,6 +201,7 @@ export const CreateComponent: React.FC = () => {
 				} catch (e) {
 					console.log(e)
 				}
+				setIsSubmitting(false)
 			})}
 		>
 			<div className={classes.header}>
@@ -315,8 +318,7 @@ export const CreateComponent: React.FC = () => {
 			<Center>
 				<Button
 					type="submit"
-					loading={isLoading}
-					disabled={isLoading}
+					loading={isSubmitting}
 					className={classes.buttonCreate}
 				>
 					Continue

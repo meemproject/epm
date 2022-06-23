@@ -1,43 +1,20 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable import/named */
-import { ApolloClient, HttpLink, InMemoryCache, useQuery } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import {
 	createStyles,
 	Container,
 	Text,
-	Center,
-	Image,
-	Autocomplete,
-	Loader,
-	Avatar,
-	SelectItemProps,
-	MantineColor,
-	AutocompleteItem,
-	Group,
 	Button,
-	Modal,
-	Select,
 	TextInput,
 	Space,
 	Title
 } from '@mantine/core'
 import { useForm } from '@mantine/form'
-import { MeemAPI } from '@meemproject/api'
-import { useWallet } from '@meemproject/react'
+import { chains, MeemAPI } from '@meemproject/api'
+import { makeFetcher, useWallet } from '@meemproject/react'
 import { ethers } from 'ethers'
 import { useRouter } from 'next/router'
-import React, {
-	forwardRef,
-	useContext,
-	useEffect,
-	useRef,
-	useState
-} from 'react'
-import { GetContractsQuery, Contracts } from '../../../generated/graphql'
-import { GET_CONTRACTS_BY_TYPE } from '../../graphql/contracts'
+import React, { useState } from 'react'
+import { Contracts } from '../../../generated/graphql'
 
 const useStyles = createStyles(theme => ({
 	wrapper: {
@@ -70,14 +47,11 @@ export interface IProps {
 export const DeployContract: React.FC<IProps> = ({ contract }) => {
 	const { classes } = useStyles()
 	const router = useRouter()
-	const { web3Provider, signer } = useWallet()
+	const { signer, chainId } = useWallet()
 	const [isLoading, setIsLoading] = useState(false)
 
 	const form = useForm({
 		initialValues: {},
-		// initialValues: {
-		// 	args: []
-		// },
 		validate: {}
 	})
 
@@ -99,16 +73,15 @@ export const DeployContract: React.FC<IProps> = ({ contract }) => {
 	// console.log({ constructorAbi })
 
 	const handleDeploy = async () => {
-		// console.log({ form, contract })
 		const args: any[] = []
 		for (let i = 0; i < inputs.length; i += 1) {
+			// @ts-ignore
 			args.push(form.values[`args${i}`])
 		}
 
 		// console.log(args)
 		try {
 			setIsLoading(true)
-			console.log(contract)
 			const c = new ethers.ContractFactory(
 				contract.abi,
 				{
@@ -116,20 +89,38 @@ export const DeployContract: React.FC<IProps> = ({ contract }) => {
 				},
 				signer
 			)
-			console.log(c)
 			const tx = await c.deploy(...args)
-			// const tx = await c.deploy()
-			// const tx = await c.deploy()
-			console.log(tx)
 			await tx.deployed()
+
+			const trackContract = makeFetcher<
+				MeemAPI.v1.TrackContractInstance.IQueryParams,
+				MeemAPI.v1.TrackContractInstance.IRequestBody,
+				MeemAPI.v1.TrackContractInstance.IResponseBody
+			>({
+				method: MeemAPI.v1.TrackContractInstance.method
+			})
+			await trackContract(
+				MeemAPI.v1.TrackContractInstance.path(),
+				undefined,
+				{
+					address: tx.address,
+					chainId
+				}
+			)
+			router.push(`/manage`, {
+				query: {
+					address: tx.address,
+					chainId
+				}
+			})
 		} catch (e) {
-			console.log(e)
+			log.warn(e)
 		}
 
 		setIsLoading(false)
 	}
 
-	// console.log({ contract })
+	const chain = chains.find(c => c.chainId === chainId)
 
 	return (
 		<div className={classes.wrapper}>
@@ -141,7 +132,7 @@ export const DeployContract: React.FC<IProps> = ({ contract }) => {
 					<Title order={3}>Constructor Arguments</Title>
 				)}
 				<form
-					onSubmit={form.onSubmit(async values => {
+					onSubmit={form.onSubmit(async _values => {
 						handleDeploy()
 					})}
 				>
@@ -159,7 +150,10 @@ export const DeployContract: React.FC<IProps> = ({ contract }) => {
 						)
 					})}
 					<Space h={8} />
-					<Button type="submit">Deploy</Button>
+					<Button
+						loading={isLoading}
+						type="submit"
+					>{`Deploy to ${chain?.name}`}</Button>
 				</form>
 			</Container>
 		</div>

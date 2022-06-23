@@ -964,6 +964,7 @@ export type MeemContracts = {
   id: Scalars['uuid'];
   isTransferrable: Scalars['Boolean'];
   isTransferrableLockedBy: Scalars['String'];
+  metadata: Scalars['jsonb'];
   mintDatesLockedBy: Scalars['String'];
   mintEndAt?: Maybe<Scalars['timestamp']>;
   mintPermissions: Scalars['jsonb'];
@@ -1021,6 +1022,12 @@ export type MeemContractsMeems_AggregateArgs = {
   offset?: InputMaybe<Scalars['Int']>;
   order_by?: InputMaybe<Array<Meems_Order_By>>;
   where?: InputMaybe<Meems_Bool_Exp>;
+};
+
+
+/** columns and relationships of "MeemContracts" */
+export type MeemContractsMetadataArgs = {
+  path?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -1083,6 +1090,7 @@ export type MeemContracts_Bool_Exp = {
   id?: InputMaybe<Uuid_Comparison_Exp>;
   isTransferrable?: InputMaybe<Boolean_Comparison_Exp>;
   isTransferrableLockedBy?: InputMaybe<String_Comparison_Exp>;
+  metadata?: InputMaybe<Jsonb_Comparison_Exp>;
   mintDatesLockedBy?: InputMaybe<String_Comparison_Exp>;
   mintEndAt?: InputMaybe<Timestamp_Comparison_Exp>;
   mintPermissions?: InputMaybe<Jsonb_Comparison_Exp>;
@@ -1228,6 +1236,7 @@ export type MeemContracts_Order_By = {
   id?: InputMaybe<Order_By>;
   isTransferrable?: InputMaybe<Order_By>;
   isTransferrableLockedBy?: InputMaybe<Order_By>;
+  metadata?: InputMaybe<Order_By>;
   mintDatesLockedBy?: InputMaybe<Order_By>;
   mintEndAt?: InputMaybe<Order_By>;
   mintPermissions?: InputMaybe<Order_By>;
@@ -1267,6 +1276,8 @@ export enum MeemContracts_Select_Column {
   IsTransferrable = 'isTransferrable',
   /** column name */
   IsTransferrableLockedBy = 'isTransferrableLockedBy',
+  /** column name */
+  Metadata = 'metadata',
   /** column name */
   MintDatesLockedBy = 'mintDatesLockedBy',
   /** column name */
@@ -3169,7 +3180,8 @@ export type WalletContractInstances = {
   createdAt: Scalars['timestamptz'];
   deletedAt?: Maybe<Scalars['timestamptz']>;
   id: Scalars['uuid'];
-  note: Scalars['String'];
+  name?: Maybe<Scalars['String']>;
+  note?: Maybe<Scalars['String']>;
   updatedAt: Scalars['timestamptz'];
 };
 
@@ -3214,6 +3226,7 @@ export type WalletContractInstances_Bool_Exp = {
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   deletedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
+  name?: InputMaybe<String_Comparison_Exp>;
   note?: InputMaybe<String_Comparison_Exp>;
   updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
 };
@@ -3226,6 +3239,7 @@ export type WalletContractInstances_Max_Fields = {
   createdAt?: Maybe<Scalars['timestamptz']>;
   deletedAt?: Maybe<Scalars['timestamptz']>;
   id?: Maybe<Scalars['uuid']>;
+  name?: Maybe<Scalars['String']>;
   note?: Maybe<Scalars['String']>;
   updatedAt?: Maybe<Scalars['timestamptz']>;
 };
@@ -3237,6 +3251,7 @@ export type WalletContractInstances_Max_Order_By = {
   createdAt?: InputMaybe<Order_By>;
   deletedAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
   note?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
 };
@@ -3249,6 +3264,7 @@ export type WalletContractInstances_Min_Fields = {
   createdAt?: Maybe<Scalars['timestamptz']>;
   deletedAt?: Maybe<Scalars['timestamptz']>;
   id?: Maybe<Scalars['uuid']>;
+  name?: Maybe<Scalars['String']>;
   note?: Maybe<Scalars['String']>;
   updatedAt?: Maybe<Scalars['timestamptz']>;
 };
@@ -3260,6 +3276,7 @@ export type WalletContractInstances_Min_Order_By = {
   createdAt?: InputMaybe<Order_By>;
   deletedAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
   note?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
 };
@@ -3273,6 +3290,7 @@ export type WalletContractInstances_Order_By = {
   createdAt?: InputMaybe<Order_By>;
   deletedAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
   note?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
 };
@@ -3289,6 +3307,8 @@ export enum WalletContractInstances_Select_Column {
   DeletedAt = 'deletedAt',
   /** column name */
   Id = 'id',
+  /** column name */
+  Name = 'name',
   /** column name */
   Note = 'note',
   /** column name */
@@ -4378,7 +4398,7 @@ export type GetMyContractsQueryVariables = Exact<{
 }>;
 
 
-export type GetMyContractsQuery = { __typename?: 'query_root', Wallets: Array<{ __typename?: 'Wallets', id: any, WalletContractInstances: Array<{ __typename?: 'WalletContractInstances', id: any, ContractInstance?: { __typename?: 'ContractInstances', address: string, Contract?: { __typename?: 'Contracts', id: any, name: string, description: string, abi: any, bytecode: string, contractType: string, functionSelectors: any, CreatorId?: any | null, ContractInstances: Array<{ __typename?: 'ContractInstances', chainId: number, address: string }>, Creator?: { __typename?: 'Wallets', address: string } | null } | null } | null }> }> };
+export type GetMyContractsQuery = { __typename?: 'query_root', Wallets: Array<{ __typename?: 'Wallets', id: any, WalletContractInstances: Array<{ __typename?: 'WalletContractInstances', id: any, note?: string | null, name?: string | null, ContractInstance?: { __typename?: 'ContractInstances', address: string, chainId: number, Contract?: { __typename?: 'Contracts', id: any, name: string, description: string, abi: any, bytecode: string, contractType: string, functionSelectors: any, CreatorId?: any | null, ContractInstances: Array<{ __typename?: 'ContractInstances', chainId: number, address: string }>, Creator?: { __typename?: 'Wallets', address: string } | null } | null } | null }> }> };
 
 export const ContractPartsFragmentDoc = gql`
     fragment ContractParts on Contracts {
@@ -4521,8 +4541,11 @@ export const GetMyContractsDocument = gql`
     id
     WalletContractInstances {
       id
+      note
+      name
       ContractInstance {
         address
+        chainId
         Contract {
           ...ContractParts
         }

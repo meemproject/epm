@@ -12,7 +12,10 @@ import {
 	Modal,
 	Select,
 	Space,
-	Grid
+	Grid,
+	Title,
+	TextInput,
+	Skeleton
 } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { MeemAPI } from '@meemproject/api'
@@ -47,7 +50,7 @@ const useStyles = createStyles(theme => ({
 		position: 'relative',
 		paddingTop: 0,
 		paddingBottom: 120,
-		marginTop: 120,
+		marginTop: 24,
 
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			paddingBottom: 80,
@@ -67,7 +70,8 @@ export function ContractsPage() {
 
 	const form = useForm({
 		initialValues: {
-			contractType: ''
+			contractType: '',
+			searchText: ''
 		},
 		validate: {}
 	})
@@ -85,7 +89,10 @@ export function ContractsPage() {
 		error,
 		data: contracts
 	} = useQuery<SearchContractsQuery>(SEARCH_CONTRACTS, {
-		variables: { contractType: form.values.contractType, searchTerm: '%' }
+		variables: {
+			contractType: form.values.contractType,
+			searchTerm: `${form.values.searchText}%`
+		}
 	})
 
 	const handleDeploy = async (c: Partial<Contracts>) => {
@@ -113,32 +120,48 @@ export function ContractsPage() {
 	console.log({ contracts })
 
 	return (
-		<div className={classes.wrapper}>
+		<>
 			<Container size={900} className={classes.inner}>
 				<form onSubmit={form.onSubmit(async values => {})}>
-					<Container>
-						<Select
-							label="Contract Type"
-							placeholder="Pick one"
-							data={[
-								{
-									value: MeemAPI.ContractType.Regular,
-									label: 'Regular Contract'
-								},
-								{
-									value: MeemAPI.ContractType.DiamondProxy,
-									label: 'Diamond Proxy (EIP-2535)'
-								},
-								{
-									value: MeemAPI.ContractType.DiamondFacet,
-									label: 'Diamond Facet (EIP-2535)'
-								}
-							]}
-							{...form.getInputProps('contractType')}
-						/>
-					</Container>
+					<Title>Contracts</Title>
+					<Space h={8} />
+					<Text>Search for contracts and deploy.</Text>
+					<Space h={8} />
+					<Select
+						label="Contract Type"
+						placeholder="Pick one"
+						data={[
+							{
+								value: MeemAPI.ContractType.Regular,
+								label: 'Regular Contract'
+							},
+							{
+								value: MeemAPI.ContractType.DiamondProxy,
+								label: 'Diamond Proxy (EIP-2535)'
+							},
+							{
+								value: MeemAPI.ContractType.DiamondFacet,
+								label: 'Diamond Facet (EIP-2535)'
+							}
+						]}
+						{...form.getInputProps('contractType')}
+					/>
+					<Space h={8} />
+					<TextInput
+						{...form.getInputProps('searchText')}
+						disabled={form.values.contractType.length === 0}
+						placeholder="Access Control"
+					/>
 				</form>
+				<Space h={24} />
 				<Grid>
+					{loading &&
+						[...Array(6)].map((_, i) => (
+							<Grid.Col md={6} key={`col-${i}`}>
+								<Skeleton height="295px" width="100%" />
+								<Space h={8} />
+							</Grid.Col>
+						))}
 					{contracts?.Contracts.map(contract => (
 						<Grid.Col md={6} key={contract.id}>
 							<ContractCard
@@ -154,6 +177,6 @@ export function ContractsPage() {
 			<Modal opened={isOpen} onClose={() => setIsOpen(false)}>
 				<DeployContract contract={selectedContract} />
 			</Modal>
-		</div>
+		</>
 	)
 }

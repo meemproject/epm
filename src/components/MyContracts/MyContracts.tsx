@@ -19,7 +19,9 @@ import {
 	Select,
 	Space,
 	Grid,
-	TextInput
+	TextInput,
+	Title,
+	Skeleton
 } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { MeemAPI } from '@meemproject/api'
@@ -40,8 +42,9 @@ import {
 	GetMyContractsQuery
 } from '../../../generated/graphql'
 import { GET_MY_CONTRACTS } from '../../graphql/contracts'
+import { ChainSelect } from '../Atoms/ChainSelect'
 import { ContractCard } from '../Atoms/ContractCard'
-import { SelectChain } from '../Atoms/SelectChain'
+import { WalletContractCard } from '../Atoms/WalletContractCard'
 
 const useStyles = createStyles(theme => ({
 	wrapper: {
@@ -55,7 +58,7 @@ const useStyles = createStyles(theme => ({
 		position: 'relative',
 		paddingTop: 0,
 		paddingBottom: 120,
-		marginTop: 120,
+		marginTop: 24,
 
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			paddingBottom: 80,
@@ -88,7 +91,7 @@ export const MyContracts: React.FC = () => {
 	const form = useForm({
 		initialValues: {
 			address: '',
-			chain: MeemAPI.NetworkChainId.Rinkeby.toString()
+			chainId: 4
 		},
 		validate: {
 			address: val =>
@@ -99,37 +102,56 @@ export const MyContracts: React.FC = () => {
 	})
 
 	return (
-		<div className={classes.wrapper}>
+		<>
 			<Container size={900} className={classes.inner}>
-				<Button onClick={() => setIsOpen(true)}>Add Contract</Button>
-			</Container>
-			<Container>
-				<ul>
+				<Title>My Contracts</Title>
+				<Space h={8} />
+				<Text>All the contracts you&apos;ve deployed or tracked</Text>
+				<Space h={8} />
+				<Button onClick={() => setIsOpen(true)}>Track Contract</Button>
+
+				{contractQueryResult?.Wallets[0].WalletContractInstances
+					.length === 0 && (
+					<>
+						<Space h={24} />
+						<Text>
+							You&apos;re not tracking any contracts yet. You can
+							either manually input a contract address in
+							&quot;Track Contract&quot; or{' '}
+							<Link href="/contracts">
+								<a>find a contract to deploy</a>
+							</Link>
+						</Text>
+					</>
+				)}
+				<Space h={24} />
+				<Grid>
+					{loading &&
+						[...Array(6)].map((_, i) => (
+							<Grid.Col md={6} key={`col-${i}`}>
+								<Skeleton height="380px" width="100%" />
+								<Space h={8} />
+							</Grid.Col>
+						))}
 					{contractQueryResult?.Wallets[0].WalletContractInstances.map(
 						instance => (
-							<ContractCard
-								key={instance.id}
-								contract={instance.ContractInstance?.Contract}
-							/>
-							// <li key={instance.id}>
-							// 	<Link
-							// 		href={{
-							// 			pathname: '/manage',
-							// 			query: {
-							// 				address:
-							// 					instance.ContractInstance
-							// 						?.address,
-							// 				chain: MeemAPI.NetworkChainId
-							// 					.Rinkeby
-							// 			}
-							// 		}}
-							// 	>
-							// 		<a>{instance.ContractInstance?.address}</a>
-							// 	</Link>
-							// </li>
+							<Grid.Col md={6} key={instance.id}>
+								<WalletContractCard
+									walletContract={instance}
+									href={`/manage?address=${instance.ContractInstance?.address}&chainId=${instance.ContractInstance?.chainId}`}
+								/>
+								{/* <ContractCard
+									key={instance.id}
+									contract={
+										instance.ContractInstance?.Contract
+									}
+									href={`/manage?address=${instance.ContractInstance?.address}&chainId=${instance.ContractInstance?.chainId}`}
+								/> */}
+								<Space h={16} />
+							</Grid.Col>
 						)
 					)}
-				</ul>
+				</Grid>
 			</Container>
 			<Modal opened={isOpen} onClose={() => setIsOpen(false)}>
 				<form
@@ -147,7 +169,7 @@ export const MyContracts: React.FC = () => {
 								undefined,
 								{
 									...values,
-									chainId: +values.chain
+									chainId: +values.chainId
 								}
 							)
 							setIsOpen(false)
@@ -157,7 +179,7 @@ export const MyContracts: React.FC = () => {
 					})}
 				>
 					<Container>
-						<SelectChain form={form} />
+						<ChainSelect form={form} />
 						<Space h={12} />
 						<TextInput
 							label="Contract Address"
@@ -178,6 +200,6 @@ export const MyContracts: React.FC = () => {
 					</Container>
 				</form>
 			</Modal>
-		</div>
+		</>
 	)
 }

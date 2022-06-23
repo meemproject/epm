@@ -11,6 +11,7 @@ import {
 	Divider
 } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useContext, useEffect, useState } from 'react'
 import {
@@ -23,7 +24,7 @@ import {
 	Mail
 } from 'tabler-icons-react'
 import { ensWalletAddress, quickTruncate } from '../../utils/truncated_wallet'
-import { NetworkSwitcher } from '../Atoms/NetworkSwitcher'
+import { ChainSelect } from '../Atoms/ChainSelect'
 
 const useStyles = createStyles(theme => ({
 	headerLeftItems: {
@@ -218,7 +219,8 @@ export function HeaderMenu() {
 					<a onClick={navigateHome}>
 						<Text className={classes.mainLogo}>EPM</Text>
 					</a>
-					<NetworkSwitcher
+					<ChainSelect
+						chainId={wallet.chainId}
 						onChange={chainId => wallet.setChain(chainId)}
 					/>
 				</div>
@@ -307,29 +309,25 @@ export function HeaderMenu() {
 						</Menu.Item>
 
 						<Divider />
-						<Menu.Item
-							onClick={() => router.push('/mycontracts')}
-							className={classes.menuItem}
-						>
-							My Contracts
+						<Menu.Item className={classes.menuItem}>
+							<Link href="/mycontracts">
+								<a>My Contracts</a>
+							</Link>
 						</Menu.Item>
-						<Menu.Item
-							onClick={() => router.push('/create')}
-							className={classes.menuItem}
-						>
-							Create Contract
+						<Menu.Item className={classes.menuItem}>
+							<Link href="/create">
+								<a>Create Contract</a>
+							</Link>
 						</Menu.Item>
-						<Menu.Item
-							onClick={() => router.push('/manage')}
-							className={classes.menuItem}
-						>
-							Manage Contract
+						<Menu.Item className={classes.menuItem}>
+							<Link href="/manage">
+								<a>Manage Contract</a>
+							</Link>
 						</Menu.Item>
-						<Menu.Item
-							onClick={() => router.push('/contracts')}
-							className={classes.menuItem}
-						>
-							Deploy Contract
+						<Menu.Item className={classes.menuItem}>
+							<Link href="/contracts">
+								<a>Deploy Contract</a>
+							</Link>
 						</Menu.Item>
 
 						<Menu.Item

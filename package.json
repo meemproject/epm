@@ -49,6 +49,7 @@
 		"@next/bundle-analyzer": "^12.1.4",
 		"@types/superagent": "^4.1.15",
 		"blob-util": "^2.0.2",
+		"classnames": "^2.3.1",
 		"dayjs": "^1.11.0",
 		"ethers": "^5.6.4",
 		"graphql": "^15.7.2",

@@ -16,7 +16,8 @@ import {
 	Select,
 	JsonInput,
 	Grid,
-	Card
+	Card,
+	Skeleton
 } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { showNotification } from '@mantine/notifications'
@@ -87,33 +88,6 @@ export const FindFacet: React.FC<IProps> = ({ onClick }) => {
 		}
 	})
 
-	// const fetchDiamondInfo = useCallback(async () => {
-	// 	try {
-	// 		const diamond = new ethers.Contract(
-	// 			form.values.address,
-	// 			diamondABI,
-	// 			signer
-	// 		)
-
-	// 		const result = await diamond.facets()
-	// 		console.log({ result })
-	// 	} catch (e) {
-	// 		form.setErrors({
-	// 			address: 'Address is not a valid Diamond (EIP-2535) contract'
-	// 		})
-	// 		console.log(e)
-	// 	}
-	// }, [form, signer])
-
-	// useEffect(() => {
-	// 	if (form.values.address.length > 0) {
-	// 		fetchDiamondInfo()
-	// 	}
-	// 	// console.log(form.values.address)
-	// }, [form.values.address, fetchDiamondInfo])
-
-	console.log({ facets })
-
 	return (
 		<form
 			onSubmit={form.onSubmit(async values => {
@@ -124,31 +98,33 @@ export const FindFacet: React.FC<IProps> = ({ onClick }) => {
 				}
 			})}
 		>
-			<Container>
-				<Text size="xl">Find a Facet</Text>
-				<Space h={12} />
-				<TextInput
-					// label="Find a Contract"
-					radius="lg"
-					size="md"
-					placeholder="Access Control"
-					// required
-					{...form.getInputProps('searchTerm')}
-				/>
-			</Container>
-			<Container>
-				<Grid>
-					{facets?.Contracts.map(facet => (
-						<Grid.Col key={facet.id} md={6}>
-							<ContractCard contract={facet}>
-								<Button onClick={() => onClick(facet)}>
-									Select
-								</Button>
-							</ContractCard>
+			<TextInput
+				// label="Find a Contract"
+				radius="lg"
+				size="md"
+				placeholder="Access Control"
+				// required
+				{...form.getInputProps('searchTerm')}
+			/>
+			<Grid>
+				{loading &&
+					[...Array(6)].map((_, i) => (
+						<Grid.Col md={6} key={`col-${i}`}>
+							<Skeleton height="290px" width="100%" />
+							<Space h={8} />
 						</Grid.Col>
 					))}
-				</Grid>
-			</Container>
+				{facets?.Contracts.map(facet => (
+					<Grid.Col key={facet.id} md={6}>
+						<ContractCard contract={facet}>
+							<Button onClick={() => onClick(facet)}>
+								Select
+							</Button>
+						</ContractCard>
+					</Grid.Col>
+				))}
+			</Grid>
+
 			{/* <Container>
 				<Center>
 					<Button type="submit" loading={loading} disabled={loading}>
