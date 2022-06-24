@@ -35,6 +35,7 @@ import {
 	SearchContractsQuery
 } from '../../../generated/graphql'
 import { SEARCH_CONTRACTS } from '../../graphql/contracts'
+import { Page } from '../../styles/Page'
 import { ContractCard } from '../Atoms/ContractCard'
 import { DeployContract } from './DeployContract'
 
@@ -60,7 +61,7 @@ const useStyles = createStyles(theme => ({
 	}
 }))
 
-export function ContractsPage() {
+export const ContractsContainer: React.FC = () => {
 	const { classes } = useStyles()
 	const router = useRouter()
 	const { web3Provider, signer } = useWallet()
@@ -117,66 +118,64 @@ export function ContractsPage() {
 		setSelectedContract(c)
 	}
 
-	console.log({ contracts })
+	console.log({ contracts, signer })
 
 	return (
-		<>
-			<Container size={900} className={classes.inner}>
-				<form onSubmit={form.onSubmit(async values => {})}>
-					<Title>Contracts</Title>
-					<Space h={8} />
-					<Text>Search for contracts and deploy.</Text>
-					<Space h={8} />
-					<Select
-						label="Contract Type"
-						placeholder="Pick one"
-						data={[
-							{
-								value: MeemAPI.ContractType.Regular,
-								label: 'Regular Contract'
-							},
-							{
-								value: MeemAPI.ContractType.DiamondProxy,
-								label: 'Diamond Proxy (EIP-2535)'
-							},
-							{
-								value: MeemAPI.ContractType.DiamondFacet,
-								label: 'Diamond Facet (EIP-2535)'
-							}
-						]}
-						{...form.getInputProps('contractType')}
-					/>
-					<Space h={8} />
-					<TextInput
-						{...form.getInputProps('searchText')}
-						disabled={form.values.contractType.length === 0}
-						placeholder="Access Control"
-					/>
-				</form>
-				<Space h={24} />
-				<Grid>
-					{loading &&
-						[...Array(6)].map((_, i) => (
-							<Grid.Col md={6} key={`col-${i}`}>
-								<Skeleton height="295px" width="100%" />
-								<Space h={8} />
-							</Grid.Col>
-						))}
-					{contracts?.Contracts.map(contract => (
-						<Grid.Col md={6} key={contract.id}>
-							<ContractCard
-								contract={contract}
-								onClick={handleDeploy}
-								ctaText="Deploy Contract"
-							/>
+		<Page>
+			<form onSubmit={form.onSubmit(async values => {})}>
+				<Title>Contracts</Title>
+				<Space h={8} />
+				<Text>Search for contracts and deploy.</Text>
+				<Space h={8} />
+				<Select
+					label="Contract Type"
+					placeholder="Pick one"
+					data={[
+						{
+							value: MeemAPI.ContractType.Regular,
+							label: 'Regular Contract'
+						},
+						{
+							value: MeemAPI.ContractType.DiamondProxy,
+							label: 'Diamond Proxy (EIP-2535)'
+						},
+						{
+							value: MeemAPI.ContractType.DiamondFacet,
+							label: 'Diamond Facet (EIP-2535)'
+						}
+					]}
+					{...form.getInputProps('contractType')}
+				/>
+				<Space h={8} />
+				<TextInput
+					{...form.getInputProps('searchText')}
+					disabled={form.values.contractType.length === 0}
+					placeholder="Access Control"
+				/>
+			</form>
+			<Space h={24} />
+			<Grid>
+				{loading &&
+					[...Array(6)].map((_, i) => (
+						<Grid.Col md={6} key={`col-${i}`}>
+							<Skeleton height="295px" width="100%" />
 							<Space h={8} />
 						</Grid.Col>
 					))}
-				</Grid>
-			</Container>
+				{contracts?.Contracts.map(contract => (
+					<Grid.Col md={6} key={contract.id}>
+						<ContractCard
+							contract={contract}
+							onClick={handleDeploy}
+							ctaText="Deploy Contract"
+						/>
+						<Space h={8} />
+					</Grid.Col>
+				))}
+			</Grid>
 			<Modal opened={isOpen} onClose={() => setIsOpen(false)}>
 				<DeployContract contract={selectedContract} />
 			</Modal>
-		</>
+		</Page>
 	)
 }

@@ -4391,14 +4391,14 @@ export type GetMyContractsSubscriptionSubscriptionVariables = Exact<{
 }>;
 
 
-export type GetMyContractsSubscriptionSubscription = { __typename?: 'subscription_root', Wallets: Array<{ __typename?: 'Wallets', id: any, WalletContractInstances: Array<{ __typename?: 'WalletContractInstances', id: any, ContractInstance?: { __typename?: 'ContractInstances', address: string, Contract?: { __typename?: 'Contracts', id: any, name: string, description: string, abi: any, bytecode: string, contractType: string, functionSelectors: any, CreatorId?: any | null, ContractInstances: Array<{ __typename?: 'ContractInstances', chainId: number, address: string }>, Creator?: { __typename?: 'Wallets', address: string } | null } | null } | null }> }> };
+export type GetMyContractsSubscriptionSubscription = { __typename?: 'subscription_root', Wallets: Array<{ __typename?: 'Wallets', id: any, WalletContractInstances: Array<{ __typename?: 'WalletContractInstances', id: any, note?: string | null, name?: string | null, ContractInstance?: { __typename?: 'ContractInstances', id: any, address: string, chainId: number, Contract?: { __typename?: 'Contracts', id: any, name: string, description: string, abi: any, bytecode: string, contractType: string, functionSelectors: any, CreatorId?: any | null, ContractInstances: Array<{ __typename?: 'ContractInstances', chainId: number, address: string }>, Creator?: { __typename?: 'Wallets', address: string } | null } | null } | null }> }> };
 
 export type GetMyContractsQueryVariables = Exact<{
   address: Scalars['String'];
 }>;
 
 
-export type GetMyContractsQuery = { __typename?: 'query_root', Wallets: Array<{ __typename?: 'Wallets', id: any, WalletContractInstances: Array<{ __typename?: 'WalletContractInstances', id: any, note?: string | null, name?: string | null, ContractInstance?: { __typename?: 'ContractInstances', address: string, chainId: number, Contract?: { __typename?: 'Contracts', id: any, name: string, description: string, abi: any, bytecode: string, contractType: string, functionSelectors: any, CreatorId?: any | null, ContractInstances: Array<{ __typename?: 'ContractInstances', chainId: number, address: string }>, Creator?: { __typename?: 'Wallets', address: string } | null } | null } | null }> }> };
+export type GetMyContractsQuery = { __typename?: 'query_root', Wallets: Array<{ __typename?: 'Wallets', id: any, WalletContractInstances: Array<{ __typename?: 'WalletContractInstances', id: any, note?: string | null, name?: string | null, ContractInstance?: { __typename?: 'ContractInstances', id: any, address: string, chainId: number, Contract?: { __typename?: 'Contracts', id: any, name: string, description: string, abi: any, bytecode: string, contractType: string, functionSelectors: any, CreatorId?: any | null, ContractInstances: Array<{ __typename?: 'ContractInstances', chainId: number, address: string }>, Creator?: { __typename?: 'Wallets', address: string } | null } | null } | null }> }> };
 
 export const ContractPartsFragmentDoc = gql`
     fragment ContractParts on Contracts {
@@ -4502,8 +4502,12 @@ export const GetMyContractsSubscriptionDocument = gql`
     id
     WalletContractInstances {
       id
+      note
+      name
       ContractInstance {
+        id
         address
+        chainId
         Contract {
           ...ContractParts
         }
@@ -4544,6 +4548,7 @@ export const GetMyContractsDocument = gql`
       note
       name
       ContractInstance {
+        id
         address
         chainId
         Contract {

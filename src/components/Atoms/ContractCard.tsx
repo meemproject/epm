@@ -58,6 +58,11 @@ export const ContractCard: React.FC<IProps> = ({
 				<Accordion.Item label="Details">
 					<Title order={4}>Deployments</Title>
 					<Space h={16} />
+					{contract.ContractInstances.length === 0 && (
+						<Text color="dimmed">
+							This contract has not been deployed yet
+						</Text>
+					)}
 					{contract.ContractInstances.map(ci => {
 						return (
 							<Address

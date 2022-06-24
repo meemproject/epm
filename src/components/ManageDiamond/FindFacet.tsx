@@ -110,13 +110,14 @@ export const FindFacet: React.FC<IProps> = ({ onClick }) => {
 				{loading &&
 					[...Array(6)].map((_, i) => (
 						<Grid.Col md={6} key={`col-${i}`}>
-							<Skeleton height="290px" width="100%" />
 							<Space h={8} />
+							<Skeleton height="290px" width="100%" />
 						</Grid.Col>
 					))}
 				{facets?.Contracts.map(facet => (
 					<Grid.Col key={facet.id} md={6}>
 						<ContractCard contract={facet}>
+							<Space h={8} />
 							<Button onClick={() => onClick(facet)}>
 								Select
 							</Button>

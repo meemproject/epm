@@ -1,14 +1,13 @@
 import type { NextPage } from 'next'
-import Head from 'next/head'
 import React from 'react'
-import { ContractsPage } from '../components/Contracts/ContractsPage'
+import { ContractsContainer } from '../components/Contracts/ContractsContainer'
 import { HeaderMenu } from '../components/Header/Header'
 
 const Home: NextPage = () => {
 	return (
 		<>
 			<HeaderMenu />
-			<ContractsPage />
+			<ContractsContainer />
 		</>
 	)
 }

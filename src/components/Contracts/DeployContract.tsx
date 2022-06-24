@@ -59,6 +59,8 @@ export const DeployContract: React.FC<IProps> = ({ contract }) => {
 		return null
 	}
 
+	console.log({ signer, chainId })
+
 	const constructorAbi =
 		contract.abi &&
 		Array.isArray(contract.abi) &&

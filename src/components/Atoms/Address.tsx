@@ -1,13 +1,4 @@
-import {
-	Button,
-	Chip,
-	Chips,
-	createStyles,
-	Space,
-	Text,
-	Tooltip,
-	UnstyledButton
-} from '@mantine/core'
+import { createStyles, Space, Text, Tooltip } from '@mantine/core'
 import { useClipboard } from '@mantine/hooks'
 import { showNotification } from '@mantine/notifications'
 import { chains } from '@meemproject/api'
@@ -51,44 +42,32 @@ export const Address: React.FC<IProps> = ({ address, chainId }) => {
 			? `${chain?.explorers[0].url}/address/${address}`
 			: ''
 
-	const inner = (
-		<>
-			{chain && <Text weight={500}>{chain.name}</Text>}
-			<Space w={8} />
-			<Text>{quickTruncate(address)}</Text>
-		</>
-	)
-
 	return (
 		<div className={classes.row}>
-			{href && (
-				<Link href={href}>
-					<a target="_blank" className={classes.row}>
-						{inner}
-					</a>
-				</Link>
-			)}
-			{!href && inner}
-			<Space w={8} />
 			<Tooltip label="Copy Address" withArrow>
 				<IconButton
 					icon={<ClipboardText size={24} />}
 					onClick={handleClipboardClick}
 				/>
 			</Tooltip>
-			{chain && (
-				<Tooltip label="View on Block Explorer" withArrow>
-					<Link
-						href={`${
-							chain?.explorers && chain?.explorers[0].url
-						}/address/${address}`}
-					>
-						<a target="_blank">
+			<Space w={8} />
+			{href && (
+				<Link href={href}>
+					<a target="_blank" className={classes.row}>
+						<Tooltip
+							label="View on Block Explorer"
+							withArrow
+							className={classes.row}
+						>
+							{chain && <Text weight={500}>{chain.name}</Text>}
+							<Space w={8} />
+							<Text>{quickTruncate(address)}</Text>
 							<ExternalLink size={24} />
-						</a>
-					</Link>
-				</Tooltip>
+						</Tooltip>
+					</a>
+				</Link>
 			)}
+			{!href && <Text>{quickTruncate(address)}</Text>}
 		</div>
 	)
 }

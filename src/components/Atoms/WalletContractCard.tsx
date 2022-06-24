@@ -50,19 +50,19 @@ export const WalletContractCard: React.FC<IProps> = ({
 	walletContract,
 	ctaText,
 	onClick,
-	children,
-	href
+	children
+	// href
 }) => {
 	const { classes } = useStyles()
 
 	const [isEditing, setIsEditing] = useState(false)
 
-	const form = useForm({
+	const { values, setValues, onSubmit, getInputProps } = useForm({
 		initialValues: {
 			name: '',
 			note: ''
-		},
-		validate: {}
+		}
+		// validate: {}
 	})
 
 	const handleSave = async () => {
@@ -76,12 +76,12 @@ export const WalletContractCard: React.FC<IProps> = ({
 			})
 			await updateWalletContractInstance(
 				MeemAPI.v1.UpdateWalletContractInstance.path({
-					contractInstanceId: walletContract?.ContractInstance.id
+					contractInstanceId: walletContract?.ContractInstance?.id
 				}),
 				undefined,
 				{
-					name: form.values.name,
-					note: form.values.note
+					name: values.name,
+					note: values.note
 				}
 			)
 		} catch (e) {
@@ -90,11 +90,13 @@ export const WalletContractCard: React.FC<IProps> = ({
 	}
 
 	useEffect(() => {
-		form.setValues({
-			name: walletContract.name ?? '',
-			note: walletContract.note ?? ''
-		})
-	}, [walletContract, form])
+		if (walletContract) {
+			setValues({
+				name: walletContract.name ?? '',
+				note: walletContract.note ?? ''
+			})
+		}
+	}, [walletContract, setValues])
 
 	if (!walletContract) {
 		return null
@@ -142,8 +144,13 @@ export const WalletContractCard: React.FC<IProps> = ({
 						<Space h={24} />
 						<Button
 							onClick={() => {
-								if (onClick) {
-									onClick(contract)
+								if (
+									onClick &&
+									walletContract.ContractInstance?.Contract
+								) {
+									onClick(
+										walletContract.ContractInstance.Contract
+									)
 								}
 							}}
 						>
@@ -158,7 +165,7 @@ export const WalletContractCard: React.FC<IProps> = ({
 				opened={isEditing}
 				onClose={() => setIsEditing(false)}
 			>
-				<form onSubmit={form.onSubmit(async _values => {})}>
+				<form onSubmit={onSubmit(async _values => {})}>
 					<Text>
 						Change the name or set the description of your contract.
 					</Text>
@@ -170,7 +177,7 @@ export const WalletContractCard: React.FC<IProps> = ({
 						maxLength={140}
 						placeholder="Meem Permissions"
 						required
-						{...form.getInputProps('name')}
+						{...getInputProps('name')}
 					/>
 					<Space h={8} />
 					<Textarea
@@ -183,7 +190,7 @@ export const WalletContractCard: React.FC<IProps> = ({
 						maxLength={5000}
 						placeholder="This contract does something..."
 						required
-						{...form.getInputProps('note')}
+						{...getInputProps('note')}
 					/>
 					<Space h={8} />
 					<Button type="submit" onClick={handleSave}>

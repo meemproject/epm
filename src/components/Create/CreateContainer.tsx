@@ -13,7 +13,8 @@ import {
 	TextInput,
 	Space,
 	Select,
-	JsonInput
+	JsonInput,
+	Title
 } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { showNotification } from '@mantine/notifications'
@@ -28,6 +29,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react'
 import Resizer from 'react-image-file-resizer'
 import { ArrowLeft, Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
+import { Page } from '../../styles/Page'
 import { CookieKeys } from '../../utils/cookies'
 
 const useStyles = createStyles(theme => ({
@@ -136,7 +138,7 @@ const useStyles = createStyles(theme => ({
 	}
 }))
 
-export const CreateComponent: React.FC = () => {
+export const CreateContainer: React.FC = () => {
 	const router = useRouter()
 	const { classes } = useStyles()
 
@@ -162,53 +164,55 @@ export const CreateComponent: React.FC = () => {
 		useWallet()
 
 	return (
-		<form
-			onSubmit={form.onSubmit(async values => {
-				try {
-					setIsSubmitting(true)
-					const createContract = makeFetcher<
-						MeemAPI.v1.CreateContract.IQueryParams,
-						MeemAPI.v1.CreateContract.IRequestBody,
-						MeemAPI.v1.CreateContract.IResponseBody
-					>({
-						method: MeemAPI.v1.CreateContract.method
-					})
-					await createContract(
-						MeemAPI.v1.CreateContract.path(),
-						undefined,
-						{
-							...values,
-							contractType:
-								values.contractType as MeemAPI.ContractType,
-							abi: JSON.parse(values.abi),
-							functionSelectors:
-								values.functionSelectors.length > 0
-									? values.functionSelectors
-											.split('\n')
-											.map(v => v.trim())
-									: []
-						}
-					)
+		<Page>
+			<Title>Create Contract</Title>
+			<Space h={8} />
+			<Text>
+				Upload your contract to easily deploy and manage instances of
+				it.
+			</Text>
+			<Space h={8} />
+			<form
+				onSubmit={form.onSubmit(async values => {
+					try {
+						setIsSubmitting(true)
+						const createContract = makeFetcher<
+							MeemAPI.v1.CreateContract.IQueryParams,
+							MeemAPI.v1.CreateContract.IRequestBody,
+							MeemAPI.v1.CreateContract.IResponseBody
+						>({
+							method: MeemAPI.v1.CreateContract.method
+						})
+						await createContract(
+							MeemAPI.v1.CreateContract.path(),
+							undefined,
+							{
+								...values,
+								contractType:
+									values.contractType as MeemAPI.ContractType,
+								abi: JSON.parse(values.abi),
+								functionSelectors:
+									values.functionSelectors.length > 0
+										? values.functionSelectors
+												.split('\n')
+												.map(v => v.trim())
+										: []
+							}
+						)
 
-					form.reset()
+						form.reset()
 
-					showNotification({
-						title: 'Contract created',
-						message:
-							'The contract was saved and can now be deployed.'
-					})
-					console.log(values)
-				} catch (e) {
-					console.log(e)
-				}
-				setIsSubmitting(false)
-			})}
-		>
-			<div className={classes.header}>
-				<Text className={classes.headerPrompt}>Add a contract</Text>
-			</div>
-
-			<Container>
+						showNotification({
+							title: 'Contract created',
+							message:
+								'The contract was saved and can now be deployed.'
+						})
+					} catch (e) {
+						console.log(e)
+					}
+					setIsSubmitting(false)
+				})}
+			>
 				<Select
 					label="Contract Type"
 					placeholder="Pick one"
@@ -229,9 +233,7 @@ export const CreateComponent: React.FC = () => {
 					]}
 					{...form.getInputProps('contractType')}
 				/>
-			</Container>
 
-			<Container>
 				<TextInput
 					label="Name"
 					radius="lg"
@@ -241,9 +243,9 @@ export const CreateComponent: React.FC = () => {
 					required
 					{...form.getInputProps('name')}
 				/>
-			</Container>
-			<Space h={8} />
-			<Container>
+
+				<Space h={8} />
+
 				<Textarea
 					label="Description"
 					radius="lg"
@@ -256,8 +258,7 @@ export const CreateComponent: React.FC = () => {
 					required
 					{...form.getInputProps('description')}
 				/>
-			</Container>
-			<Container>
+
 				<JsonInput
 					radius="lg"
 					label="ABI"
@@ -280,8 +281,7 @@ export const CreateComponent: React.FC = () => {
 ]`}
 					{...form.getInputProps('abi')}
 				/>
-			</Container>
-			<Container>
+
 				<Textarea
 					label="Bytecode"
 					radius="lg"
@@ -292,10 +292,10 @@ export const CreateComponent: React.FC = () => {
 					placeholder="0x..."
 					{...form.getInputProps('bytecode')}
 				/>
-			</Container>
-			{form.values.contractType === MeemAPI.ContractType.DiamondFacet && (
-				<>
-					<Container>
+
+				{form.values.contractType ===
+					MeemAPI.ContractType.DiamondFacet && (
+					<>
 						<Textarea
 							label="Function Selectors (1 per line)"
 							radius="lg"
@@ -312,18 +312,18 @@ export const CreateComponent: React.FC = () => {
 0xe107c137`}
 							{...form.getInputProps('functionSelectors')}
 						/>
-					</Container>
-				</>
-			)}
-			<Center>
-				<Button
-					type="submit"
-					loading={isSubmitting}
-					className={classes.buttonCreate}
-				>
-					Continue
-				</Button>
-			</Center>
-		</form>
+					</>
+				)}
+				<Center>
+					<Button
+						type="submit"
+						loading={isSubmitting}
+						className={classes.buttonCreate}
+					>
+						Continue
+					</Button>
+				</Center>
+			</form>
+		</Page>
 	)
 }
