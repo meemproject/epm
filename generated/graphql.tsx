@@ -37,6 +37,408 @@ export type Boolean_Comparison_Exp = {
   _nin?: InputMaybe<Array<Scalars['Boolean']>>;
 };
 
+/** columns and relationships of "BundleContracts" */
+export type BundleContracts = {
+  __typename?: 'BundleContracts';
+  /** An object relationship */
+  Bundle?: Maybe<Bundles>;
+  BundleId?: Maybe<Scalars['uuid']>;
+  /** An object relationship */
+  Contract?: Maybe<Contracts>;
+  ContractId?: Maybe<Scalars['uuid']>;
+  createdAt: Scalars['timestamptz'];
+  deletedAt?: Maybe<Scalars['timestamptz']>;
+  id: Scalars['uuid'];
+  order: Scalars['Int'];
+  updatedAt: Scalars['timestamptz'];
+};
+
+/** aggregated selection of "BundleContracts" */
+export type BundleContracts_Aggregate = {
+  __typename?: 'BundleContracts_aggregate';
+  aggregate?: Maybe<BundleContracts_Aggregate_Fields>;
+  nodes: Array<BundleContracts>;
+};
+
+/** aggregate fields of "BundleContracts" */
+export type BundleContracts_Aggregate_Fields = {
+  __typename?: 'BundleContracts_aggregate_fields';
+  avg?: Maybe<BundleContracts_Avg_Fields>;
+  count: Scalars['Int'];
+  max?: Maybe<BundleContracts_Max_Fields>;
+  min?: Maybe<BundleContracts_Min_Fields>;
+  stddev?: Maybe<BundleContracts_Stddev_Fields>;
+  stddev_pop?: Maybe<BundleContracts_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<BundleContracts_Stddev_Samp_Fields>;
+  sum?: Maybe<BundleContracts_Sum_Fields>;
+  var_pop?: Maybe<BundleContracts_Var_Pop_Fields>;
+  var_samp?: Maybe<BundleContracts_Var_Samp_Fields>;
+  variance?: Maybe<BundleContracts_Variance_Fields>;
+};
+
+
+/** aggregate fields of "BundleContracts" */
+export type BundleContracts_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<BundleContracts_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** order by aggregate values of table "BundleContracts" */
+export type BundleContracts_Aggregate_Order_By = {
+  avg?: InputMaybe<BundleContracts_Avg_Order_By>;
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<BundleContracts_Max_Order_By>;
+  min?: InputMaybe<BundleContracts_Min_Order_By>;
+  stddev?: InputMaybe<BundleContracts_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<BundleContracts_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<BundleContracts_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<BundleContracts_Sum_Order_By>;
+  var_pop?: InputMaybe<BundleContracts_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<BundleContracts_Var_Samp_Order_By>;
+  variance?: InputMaybe<BundleContracts_Variance_Order_By>;
+};
+
+/** aggregate avg on columns */
+export type BundleContracts_Avg_Fields = {
+  __typename?: 'BundleContracts_avg_fields';
+  order?: Maybe<Scalars['Float']>;
+};
+
+/** order by avg() on columns of table "BundleContracts" */
+export type BundleContracts_Avg_Order_By = {
+  order?: InputMaybe<Order_By>;
+};
+
+/** Boolean expression to filter rows from the table "BundleContracts". All fields are combined with a logical 'AND'. */
+export type BundleContracts_Bool_Exp = {
+  Bundle?: InputMaybe<Bundles_Bool_Exp>;
+  BundleId?: InputMaybe<Uuid_Comparison_Exp>;
+  Contract?: InputMaybe<Contracts_Bool_Exp>;
+  ContractId?: InputMaybe<Uuid_Comparison_Exp>;
+  _and?: InputMaybe<Array<BundleContracts_Bool_Exp>>;
+  _not?: InputMaybe<BundleContracts_Bool_Exp>;
+  _or?: InputMaybe<Array<BundleContracts_Bool_Exp>>;
+  createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  deletedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  order?: InputMaybe<Int_Comparison_Exp>;
+  updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+};
+
+/** aggregate max on columns */
+export type BundleContracts_Max_Fields = {
+  __typename?: 'BundleContracts_max_fields';
+  BundleId?: Maybe<Scalars['uuid']>;
+  ContractId?: Maybe<Scalars['uuid']>;
+  createdAt?: Maybe<Scalars['timestamptz']>;
+  deletedAt?: Maybe<Scalars['timestamptz']>;
+  id?: Maybe<Scalars['uuid']>;
+  order?: Maybe<Scalars['Int']>;
+  updatedAt?: Maybe<Scalars['timestamptz']>;
+};
+
+/** order by max() on columns of table "BundleContracts" */
+export type BundleContracts_Max_Order_By = {
+  BundleId?: InputMaybe<Order_By>;
+  ContractId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  deletedAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  order?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type BundleContracts_Min_Fields = {
+  __typename?: 'BundleContracts_min_fields';
+  BundleId?: Maybe<Scalars['uuid']>;
+  ContractId?: Maybe<Scalars['uuid']>;
+  createdAt?: Maybe<Scalars['timestamptz']>;
+  deletedAt?: Maybe<Scalars['timestamptz']>;
+  id?: Maybe<Scalars['uuid']>;
+  order?: Maybe<Scalars['Int']>;
+  updatedAt?: Maybe<Scalars['timestamptz']>;
+};
+
+/** order by min() on columns of table "BundleContracts" */
+export type BundleContracts_Min_Order_By = {
+  BundleId?: InputMaybe<Order_By>;
+  ContractId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  deletedAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  order?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
+/** Ordering options when selecting data from "BundleContracts". */
+export type BundleContracts_Order_By = {
+  Bundle?: InputMaybe<Bundles_Order_By>;
+  BundleId?: InputMaybe<Order_By>;
+  Contract?: InputMaybe<Contracts_Order_By>;
+  ContractId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  deletedAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  order?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
+/** select columns of table "BundleContracts" */
+export enum BundleContracts_Select_Column {
+  /** column name */
+  BundleId = 'BundleId',
+  /** column name */
+  ContractId = 'ContractId',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  DeletedAt = 'deletedAt',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Order = 'order',
+  /** column name */
+  UpdatedAt = 'updatedAt'
+}
+
+/** aggregate stddev on columns */
+export type BundleContracts_Stddev_Fields = {
+  __typename?: 'BundleContracts_stddev_fields';
+  order?: Maybe<Scalars['Float']>;
+};
+
+/** order by stddev() on columns of table "BundleContracts" */
+export type BundleContracts_Stddev_Order_By = {
+  order?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_pop on columns */
+export type BundleContracts_Stddev_Pop_Fields = {
+  __typename?: 'BundleContracts_stddev_pop_fields';
+  order?: Maybe<Scalars['Float']>;
+};
+
+/** order by stddev_pop() on columns of table "BundleContracts" */
+export type BundleContracts_Stddev_Pop_Order_By = {
+  order?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_samp on columns */
+export type BundleContracts_Stddev_Samp_Fields = {
+  __typename?: 'BundleContracts_stddev_samp_fields';
+  order?: Maybe<Scalars['Float']>;
+};
+
+/** order by stddev_samp() on columns of table "BundleContracts" */
+export type BundleContracts_Stddev_Samp_Order_By = {
+  order?: InputMaybe<Order_By>;
+};
+
+/** aggregate sum on columns */
+export type BundleContracts_Sum_Fields = {
+  __typename?: 'BundleContracts_sum_fields';
+  order?: Maybe<Scalars['Int']>;
+};
+
+/** order by sum() on columns of table "BundleContracts" */
+export type BundleContracts_Sum_Order_By = {
+  order?: InputMaybe<Order_By>;
+};
+
+/** aggregate var_pop on columns */
+export type BundleContracts_Var_Pop_Fields = {
+  __typename?: 'BundleContracts_var_pop_fields';
+  order?: Maybe<Scalars['Float']>;
+};
+
+/** order by var_pop() on columns of table "BundleContracts" */
+export type BundleContracts_Var_Pop_Order_By = {
+  order?: InputMaybe<Order_By>;
+};
+
+/** aggregate var_samp on columns */
+export type BundleContracts_Var_Samp_Fields = {
+  __typename?: 'BundleContracts_var_samp_fields';
+  order?: Maybe<Scalars['Float']>;
+};
+
+/** order by var_samp() on columns of table "BundleContracts" */
+export type BundleContracts_Var_Samp_Order_By = {
+  order?: InputMaybe<Order_By>;
+};
+
+/** aggregate variance on columns */
+export type BundleContracts_Variance_Fields = {
+  __typename?: 'BundleContracts_variance_fields';
+  order?: Maybe<Scalars['Float']>;
+};
+
+/** order by variance() on columns of table "BundleContracts" */
+export type BundleContracts_Variance_Order_By = {
+  order?: InputMaybe<Order_By>;
+};
+
+/** columns and relationships of "Bundles" */
+export type Bundles = {
+  __typename?: 'Bundles';
+  /** An array relationship */
+  BundleContracts: Array<BundleContracts>;
+  /** An aggregate relationship */
+  BundleContracts_aggregate: BundleContracts_Aggregate;
+  /** An object relationship */
+  Creator?: Maybe<Wallets>;
+  CreatorId?: Maybe<Scalars['uuid']>;
+  createdAt: Scalars['timestamptz'];
+  deletedAt?: Maybe<Scalars['timestamptz']>;
+  description: Scalars['String'];
+  id: Scalars['uuid'];
+  name: Scalars['String'];
+  updatedAt: Scalars['timestamptz'];
+};
+
+
+/** columns and relationships of "Bundles" */
+export type BundlesBundleContractsArgs = {
+  distinct_on?: InputMaybe<Array<BundleContracts_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<BundleContracts_Order_By>>;
+  where?: InputMaybe<BundleContracts_Bool_Exp>;
+};
+
+
+/** columns and relationships of "Bundles" */
+export type BundlesBundleContracts_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<BundleContracts_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<BundleContracts_Order_By>>;
+  where?: InputMaybe<BundleContracts_Bool_Exp>;
+};
+
+/** aggregated selection of "Bundles" */
+export type Bundles_Aggregate = {
+  __typename?: 'Bundles_aggregate';
+  aggregate?: Maybe<Bundles_Aggregate_Fields>;
+  nodes: Array<Bundles>;
+};
+
+/** aggregate fields of "Bundles" */
+export type Bundles_Aggregate_Fields = {
+  __typename?: 'Bundles_aggregate_fields';
+  count: Scalars['Int'];
+  max?: Maybe<Bundles_Max_Fields>;
+  min?: Maybe<Bundles_Min_Fields>;
+};
+
+
+/** aggregate fields of "Bundles" */
+export type Bundles_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Bundles_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** order by aggregate values of table "Bundles" */
+export type Bundles_Aggregate_Order_By = {
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Bundles_Max_Order_By>;
+  min?: InputMaybe<Bundles_Min_Order_By>;
+};
+
+/** Boolean expression to filter rows from the table "Bundles". All fields are combined with a logical 'AND'. */
+export type Bundles_Bool_Exp = {
+  BundleContracts?: InputMaybe<BundleContracts_Bool_Exp>;
+  Creator?: InputMaybe<Wallets_Bool_Exp>;
+  CreatorId?: InputMaybe<Uuid_Comparison_Exp>;
+  _and?: InputMaybe<Array<Bundles_Bool_Exp>>;
+  _not?: InputMaybe<Bundles_Bool_Exp>;
+  _or?: InputMaybe<Array<Bundles_Bool_Exp>>;
+  createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  deletedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  description?: InputMaybe<String_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  name?: InputMaybe<String_Comparison_Exp>;
+  updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+};
+
+/** aggregate max on columns */
+export type Bundles_Max_Fields = {
+  __typename?: 'Bundles_max_fields';
+  CreatorId?: Maybe<Scalars['uuid']>;
+  createdAt?: Maybe<Scalars['timestamptz']>;
+  deletedAt?: Maybe<Scalars['timestamptz']>;
+  description?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['uuid']>;
+  name?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['timestamptz']>;
+};
+
+/** order by max() on columns of table "Bundles" */
+export type Bundles_Max_Order_By = {
+  CreatorId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  deletedAt?: InputMaybe<Order_By>;
+  description?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type Bundles_Min_Fields = {
+  __typename?: 'Bundles_min_fields';
+  CreatorId?: Maybe<Scalars['uuid']>;
+  createdAt?: Maybe<Scalars['timestamptz']>;
+  deletedAt?: Maybe<Scalars['timestamptz']>;
+  description?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['uuid']>;
+  name?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['timestamptz']>;
+};
+
+/** order by min() on columns of table "Bundles" */
+export type Bundles_Min_Order_By = {
+  CreatorId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  deletedAt?: InputMaybe<Order_By>;
+  description?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
+/** Ordering options when selecting data from "Bundles". */
+export type Bundles_Order_By = {
+  BundleContracts_aggregate?: InputMaybe<BundleContracts_Aggregate_Order_By>;
+  Creator?: InputMaybe<Wallets_Order_By>;
+  CreatorId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  deletedAt?: InputMaybe<Order_By>;
+  description?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
+/** select columns of table "Bundles" */
+export enum Bundles_Select_Column {
+  /** column name */
+  CreatorId = 'CreatorId',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  DeletedAt = 'deletedAt',
+  /** column name */
+  Description = 'description',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Name = 'name',
+  /** column name */
+  UpdatedAt = 'updatedAt'
+}
+
 /** columns and relationships of "Clippings" */
 export type Clippings = {
   __typename?: 'Clippings';
@@ -404,6 +806,10 @@ export type ContractInstances_Variance_Order_By = {
 export type Contracts = {
   __typename?: 'Contracts';
   /** An array relationship */
+  BundleContracts: Array<BundleContracts>;
+  /** An aggregate relationship */
+  BundleContracts_aggregate: BundleContracts_Aggregate;
+  /** An array relationship */
   ContractInstances: Array<ContractInstances>;
   /** An aggregate relationship */
   ContractInstances_aggregate: ContractInstances_Aggregate;
@@ -421,6 +827,26 @@ export type Contracts = {
   name: Scalars['String'];
   updatedAt: Scalars['timestamptz'];
   version: Scalars['Int'];
+};
+
+
+/** columns and relationships of "Contracts" */
+export type ContractsBundleContractsArgs = {
+  distinct_on?: InputMaybe<Array<BundleContracts_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<BundleContracts_Order_By>>;
+  where?: InputMaybe<BundleContracts_Bool_Exp>;
+};
+
+
+/** columns and relationships of "Contracts" */
+export type ContractsBundleContracts_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<BundleContracts_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<BundleContracts_Order_By>>;
+  where?: InputMaybe<BundleContracts_Bool_Exp>;
 };
 
 
@@ -477,6 +903,7 @@ export type Contracts_Avg_Order_By = {
 
 /** Boolean expression to filter rows from the table "Contracts". All fields are combined with a logical 'AND'. */
 export type Contracts_Bool_Exp = {
+  BundleContracts?: InputMaybe<BundleContracts_Bool_Exp>;
   ContractInstances?: InputMaybe<ContractInstances_Bool_Exp>;
   Creator?: InputMaybe<Wallets_Bool_Exp>;
   CreatorId?: InputMaybe<Uuid_Comparison_Exp>;
@@ -526,6 +953,7 @@ export type Contracts_Min_Order_By = {
 
 /** Ordering options when selecting data from "Contracts". */
 export type Contracts_Order_By = {
+  BundleContracts_aggregate?: InputMaybe<BundleContracts_Aggregate_Order_By>;
   ContractInstances_aggregate?: InputMaybe<ContractInstances_Aggregate_Order_By>;
   Creator?: InputMaybe<Wallets_Order_By>;
   CreatorId?: InputMaybe<Order_By>;
@@ -3319,6 +3747,10 @@ export enum WalletContractInstances_Select_Column {
 export type Wallets = {
   __typename?: 'Wallets';
   /** An array relationship */
+  Bundles: Array<Bundles>;
+  /** An aggregate relationship */
+  Bundles_aggregate: Bundles_Aggregate;
+  /** An array relationship */
   Contracts: Array<Contracts>;
   /** An array relationship */
   MeemContractWallets: Array<MeemContractWallets>;
@@ -3335,6 +3767,26 @@ export type Wallets = {
   id: Scalars['uuid'];
   isDefault: Scalars['Boolean'];
   updatedAt: Scalars['timestamptz'];
+};
+
+
+/** columns and relationships of "Wallets" */
+export type WalletsBundlesArgs = {
+  distinct_on?: InputMaybe<Array<Bundles_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Bundles_Order_By>>;
+  where?: InputMaybe<Bundles_Bool_Exp>;
+};
+
+
+/** columns and relationships of "Wallets" */
+export type WalletsBundles_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Bundles_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Bundles_Order_By>>;
+  where?: InputMaybe<Bundles_Bool_Exp>;
 };
 
 
@@ -3386,6 +3838,7 @@ export type Wallets_Aggregate_Order_By = {
 
 /** Boolean expression to filter rows from the table "Wallets". All fields are combined with a logical 'AND'. */
 export type Wallets_Bool_Exp = {
+  Bundles?: InputMaybe<Bundles_Bool_Exp>;
   Contracts?: InputMaybe<Contracts_Bool_Exp>;
   MeemContractWallets?: InputMaybe<MeemContractWallets_Bool_Exp>;
   MeemIdentification?: InputMaybe<MeemIdentifications_Bool_Exp>;
@@ -3424,6 +3877,7 @@ export type Wallets_Min_Order_By = {
 
 /** Ordering options when selecting data from "Wallets". */
 export type Wallets_Order_By = {
+  Bundles_aggregate?: InputMaybe<Bundles_Aggregate_Order_By>;
   Contracts_aggregate?: InputMaybe<Contracts_Aggregate_Order_By>;
   MeemContractWallets_aggregate?: InputMaybe<MeemContractWallets_Aggregate_Order_By>;
   MeemIdentification?: InputMaybe<MeemIdentifications_Order_By>;
@@ -3501,6 +3955,18 @@ export enum Order_By {
 
 export type Query_Root = {
   __typename?: 'query_root';
+  /** An array relationship */
+  BundleContracts: Array<BundleContracts>;
+  /** An aggregate relationship */
+  BundleContracts_aggregate: BundleContracts_Aggregate;
+  /** fetch data from the table: "BundleContracts" using primary key columns */
+  BundleContracts_by_pk?: Maybe<BundleContracts>;
+  /** An array relationship */
+  Bundles: Array<Bundles>;
+  /** An aggregate relationship */
+  Bundles_aggregate: Bundles_Aggregate;
+  /** fetch data from the table: "Bundles" using primary key columns */
+  Bundles_by_pk?: Maybe<Bundles>;
   /** An array relationship */
   Clippings: Array<Clippings>;
   /** fetch data from the table: "Clippings" using primary key columns */
@@ -3589,6 +4055,52 @@ export type Query_Root = {
   Wallets: Array<Wallets>;
   /** fetch data from the table: "Wallets" using primary key columns */
   Wallets_by_pk?: Maybe<Wallets>;
+};
+
+
+export type Query_RootBundleContractsArgs = {
+  distinct_on?: InputMaybe<Array<BundleContracts_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<BundleContracts_Order_By>>;
+  where?: InputMaybe<BundleContracts_Bool_Exp>;
+};
+
+
+export type Query_RootBundleContracts_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<BundleContracts_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<BundleContracts_Order_By>>;
+  where?: InputMaybe<BundleContracts_Bool_Exp>;
+};
+
+
+export type Query_RootBundleContracts_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+export type Query_RootBundlesArgs = {
+  distinct_on?: InputMaybe<Array<Bundles_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Bundles_Order_By>>;
+  where?: InputMaybe<Bundles_Bool_Exp>;
+};
+
+
+export type Query_RootBundles_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Bundles_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Bundles_Order_By>>;
+  where?: InputMaybe<Bundles_Bool_Exp>;
+};
+
+
+export type Query_RootBundles_By_PkArgs = {
+  id: Scalars['uuid'];
 };
 
 
@@ -3910,6 +4422,18 @@ export type Query_RootWallets_By_PkArgs = {
 export type Subscription_Root = {
   __typename?: 'subscription_root';
   /** An array relationship */
+  BundleContracts: Array<BundleContracts>;
+  /** An aggregate relationship */
+  BundleContracts_aggregate: BundleContracts_Aggregate;
+  /** fetch data from the table: "BundleContracts" using primary key columns */
+  BundleContracts_by_pk?: Maybe<BundleContracts>;
+  /** An array relationship */
+  Bundles: Array<Bundles>;
+  /** An aggregate relationship */
+  Bundles_aggregate: Bundles_Aggregate;
+  /** fetch data from the table: "Bundles" using primary key columns */
+  Bundles_by_pk?: Maybe<Bundles>;
+  /** An array relationship */
   Clippings: Array<Clippings>;
   /** fetch data from the table: "Clippings" using primary key columns */
   Clippings_by_pk?: Maybe<Clippings>;
@@ -3997,6 +4521,52 @@ export type Subscription_Root = {
   Wallets: Array<Wallets>;
   /** fetch data from the table: "Wallets" using primary key columns */
   Wallets_by_pk?: Maybe<Wallets>;
+};
+
+
+export type Subscription_RootBundleContractsArgs = {
+  distinct_on?: InputMaybe<Array<BundleContracts_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<BundleContracts_Order_By>>;
+  where?: InputMaybe<BundleContracts_Bool_Exp>;
+};
+
+
+export type Subscription_RootBundleContracts_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<BundleContracts_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<BundleContracts_Order_By>>;
+  where?: InputMaybe<BundleContracts_Bool_Exp>;
+};
+
+
+export type Subscription_RootBundleContracts_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+export type Subscription_RootBundlesArgs = {
+  distinct_on?: InputMaybe<Array<Bundles_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Bundles_Order_By>>;
+  where?: InputMaybe<Bundles_Bool_Exp>;
+};
+
+
+export type Subscription_RootBundles_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Bundles_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Bundles_Order_By>>;
+  where?: InputMaybe<Bundles_Bool_Exp>;
+};
+
+
+export type Subscription_RootBundles_By_PkArgs = {
+  id: Scalars['uuid'];
 };
 
 
@@ -4386,6 +4956,13 @@ export type GetContractsByAddressesQueryVariables = Exact<{
 
 export type GetContractsByAddressesQuery = { __typename?: 'query_root', ContractInstances: Array<{ __typename?: 'ContractInstances', id: any, address: string, Contract?: { __typename?: 'Contracts', id: any, name: string, description: string, abi: any, bytecode: string, contractType: string, functionSelectors: any, CreatorId?: any | null, ContractInstances: Array<{ __typename?: 'ContractInstances', chainId: number, address: string }>, Creator?: { __typename?: 'Wallets', address: string } | null } | null }> };
 
+export type GetContractsByIdQueryVariables = Exact<{
+  ids?: InputMaybe<Array<Scalars['uuid']> | Scalars['uuid']>;
+}>;
+
+
+export type GetContractsByIdQuery = { __typename?: 'query_root', Contracts: Array<{ __typename?: 'Contracts', id: any, name: string, description: string, abi: any, bytecode: string, contractType: string, functionSelectors: any, CreatorId?: any | null, ContractInstances: Array<{ __typename?: 'ContractInstances', chainId: number, address: string }>, Creator?: { __typename?: 'Wallets', address: string } | null }> };
+
 export type GetMyContractsSubscriptionSubscriptionVariables = Exact<{
   address: Scalars['String'];
 }>;
@@ -4399,6 +4976,20 @@ export type GetMyContractsQueryVariables = Exact<{
 
 
 export type GetMyContractsQuery = { __typename?: 'query_root', Wallets: Array<{ __typename?: 'Wallets', id: any, WalletContractInstances: Array<{ __typename?: 'WalletContractInstances', id: any, note?: string | null, name?: string | null, ContractInstance?: { __typename?: 'ContractInstances', id: any, address: string, chainId: number, Contract?: { __typename?: 'Contracts', id: any, name: string, description: string, abi: any, bytecode: string, contractType: string, functionSelectors: any, CreatorId?: any | null, ContractInstances: Array<{ __typename?: 'ContractInstances', chainId: number, address: string }>, Creator?: { __typename?: 'Wallets', address: string } | null } | null } | null }> }> };
+
+export type SearchBundlesQueryVariables = Exact<{
+  searchTerm?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type SearchBundlesQuery = { __typename?: 'query_root', Bundles: Array<{ __typename?: 'Bundles', id: any, name: string, description: string, BundleContracts: Array<{ __typename?: 'BundleContracts', order: number, Contract?: { __typename?: 'Contracts', id: any, name: string, description: string, abi: any, bytecode: string, contractType: string, functionSelectors: any, CreatorId?: any | null, ContractInstances: Array<{ __typename?: 'ContractInstances', chainId: number, address: string }>, Creator?: { __typename?: 'Wallets', address: string } | null } | null }>, Creator?: { __typename?: 'Wallets', address: string } | null }> };
+
+export type GetBundleByIdQueryVariables = Exact<{
+  id: Scalars['uuid'];
+}>;
+
+
+export type GetBundleByIdQuery = { __typename?: 'query_root', Bundles: Array<{ __typename?: 'Bundles', id: any, name: string, description: string, BundleContracts: Array<{ __typename?: 'BundleContracts', order: number, Contract?: { __typename?: 'Contracts', id: any, name: string, description: string, abi: any, bytecode: string, contractType: string, functionSelectors: any, CreatorId?: any | null, ContractInstances: Array<{ __typename?: 'ContractInstances', chainId: number, address: string }>, Creator?: { __typename?: 'Wallets', address: string } | null } | null }>, Creator?: { __typename?: 'Wallets', address: string } | null }> };
 
 export const ContractPartsFragmentDoc = gql`
     fragment ContractParts on Contracts {
@@ -4496,6 +5087,41 @@ export function useGetContractsByAddressesLazyQuery(baseOptions?: Apollo.LazyQue
 export type GetContractsByAddressesQueryHookResult = ReturnType<typeof useGetContractsByAddressesQuery>;
 export type GetContractsByAddressesLazyQueryHookResult = ReturnType<typeof useGetContractsByAddressesLazyQuery>;
 export type GetContractsByAddressesQueryResult = Apollo.QueryResult<GetContractsByAddressesQuery, GetContractsByAddressesQueryVariables>;
+export const GetContractsByIdDocument = gql`
+    query GetContractsById($ids: [uuid!]) {
+  Contracts(where: {id: {_in: $ids}}) {
+    ...ContractParts
+  }
+}
+    ${ContractPartsFragmentDoc}`;
+
+/**
+ * __useGetContractsByIdQuery__
+ *
+ * To run a query within a React component, call `useGetContractsByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetContractsByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetContractsByIdQuery({
+ *   variables: {
+ *      ids: // value for 'ids'
+ *   },
+ * });
+ */
+export function useGetContractsByIdQuery(baseOptions?: Apollo.QueryHookOptions<GetContractsByIdQuery, GetContractsByIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetContractsByIdQuery, GetContractsByIdQueryVariables>(GetContractsByIdDocument, options);
+      }
+export function useGetContractsByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetContractsByIdQuery, GetContractsByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetContractsByIdQuery, GetContractsByIdQueryVariables>(GetContractsByIdDocument, options);
+        }
+export type GetContractsByIdQueryHookResult = ReturnType<typeof useGetContractsByIdQuery>;
+export type GetContractsByIdLazyQueryHookResult = ReturnType<typeof useGetContractsByIdLazyQuery>;
+export type GetContractsByIdQueryResult = Apollo.QueryResult<GetContractsByIdQuery, GetContractsByIdQueryVariables>;
 export const GetMyContractsSubscriptionDocument = gql`
     subscription GetMyContractsSubscription($address: String!) {
   Wallets(where: {address: {_ilike: $address}}) {
@@ -4587,3 +5213,97 @@ export function useGetMyContractsLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type GetMyContractsQueryHookResult = ReturnType<typeof useGetMyContractsQuery>;
 export type GetMyContractsLazyQueryHookResult = ReturnType<typeof useGetMyContractsLazyQuery>;
 export type GetMyContractsQueryResult = Apollo.QueryResult<GetMyContractsQuery, GetMyContractsQueryVariables>;
+export const SearchBundlesDocument = gql`
+    query SearchBundles($searchTerm: String) {
+  Bundles(
+    where: {_or: [{name: {_ilike: $searchTerm}}, {description: {_ilike: $searchTerm}}]}
+  ) {
+    id
+    name
+    description
+    BundleContracts {
+      order
+      Contract {
+        ...ContractParts
+      }
+    }
+    Creator {
+      address
+    }
+  }
+}
+    ${ContractPartsFragmentDoc}`;
+
+/**
+ * __useSearchBundlesQuery__
+ *
+ * To run a query within a React component, call `useSearchBundlesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchBundlesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchBundlesQuery({
+ *   variables: {
+ *      searchTerm: // value for 'searchTerm'
+ *   },
+ * });
+ */
+export function useSearchBundlesQuery(baseOptions?: Apollo.QueryHookOptions<SearchBundlesQuery, SearchBundlesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SearchBundlesQuery, SearchBundlesQueryVariables>(SearchBundlesDocument, options);
+      }
+export function useSearchBundlesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchBundlesQuery, SearchBundlesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SearchBundlesQuery, SearchBundlesQueryVariables>(SearchBundlesDocument, options);
+        }
+export type SearchBundlesQueryHookResult = ReturnType<typeof useSearchBundlesQuery>;
+export type SearchBundlesLazyQueryHookResult = ReturnType<typeof useSearchBundlesLazyQuery>;
+export type SearchBundlesQueryResult = Apollo.QueryResult<SearchBundlesQuery, SearchBundlesQueryVariables>;
+export const GetBundleByIdDocument = gql`
+    query GetBundleById($id: uuid!) {
+  Bundles(where: {id: {_eq: $id}}) {
+    id
+    name
+    description
+    BundleContracts {
+      order
+      Contract {
+        ...ContractParts
+      }
+    }
+    Creator {
+      address
+    }
+  }
+}
+    ${ContractPartsFragmentDoc}`;
+
+/**
+ * __useGetBundleByIdQuery__
+ *
+ * To run a query within a React component, call `useGetBundleByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetBundleByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetBundleByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetBundleByIdQuery(baseOptions: Apollo.QueryHookOptions<GetBundleByIdQuery, GetBundleByIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetBundleByIdQuery, GetBundleByIdQueryVariables>(GetBundleByIdDocument, options);
+      }
+export function useGetBundleByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetBundleByIdQuery, GetBundleByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetBundleByIdQuery, GetBundleByIdQueryVariables>(GetBundleByIdDocument, options);
+        }
+export type GetBundleByIdQueryHookResult = ReturnType<typeof useGetBundleByIdQuery>;
+export type GetBundleByIdLazyQueryHookResult = ReturnType<typeof useGetBundleByIdLazyQuery>;
+export type GetBundleByIdQueryResult = Apollo.QueryResult<GetBundleByIdQuery, GetBundleByIdQueryVariables>;

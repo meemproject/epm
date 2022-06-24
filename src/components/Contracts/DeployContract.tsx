@@ -59,8 +59,6 @@ export const DeployContract: React.FC<IProps> = ({ contract }) => {
 		return null
 	}
 
-	console.log({ signer, chainId })
-
 	const constructorAbi =
 		contract.abi &&
 		Array.isArray(contract.abi) &&
@@ -126,38 +124,36 @@ export const DeployContract: React.FC<IProps> = ({ contract }) => {
 
 	return (
 		<div className={classes.wrapper}>
-			<Title order={2}>Deploy Contract</Title>
 			<Title order={3}>{contract.name}</Title>
 			<Text>{contract.description}</Text>
-			<Container size={900} className={classes.inner}>
-				{inputs.length > 0 && (
-					<Title order={3}>Constructor Arguments</Title>
-				)}
-				<form
-					onSubmit={form.onSubmit(async _values => {
-						handleDeploy()
-					})}
-				>
-					{inputs.map((input, i) => {
-						return (
-							<TextInput
-								key={`input-${name}`}
-								label={input.name}
-								placeholder={
-									input.type === 'address' ? '0x...' : ''
-								}
-								// @ts-ignore
-								{...form.getInputProps(`args${i}`)}
-							/>
-						)
-					})}
-					<Space h={8} />
-					<Button
-						loading={isLoading}
-						type="submit"
-					>{`Deploy to ${chain?.name}`}</Button>
-				</form>
-			</Container>
+			<Space h={24} />
+			{inputs.length > 0 && (
+				<Title order={3}>Constructor Arguments</Title>
+			)}
+			<form
+				onSubmit={form.onSubmit(async _values => {
+					handleDeploy()
+				})}
+			>
+				{inputs.map((input, i) => {
+					return (
+						<TextInput
+							key={`input-${name}`}
+							label={input.name}
+							placeholder={
+								input.type === 'address' ? '0x...' : ''
+							}
+							// @ts-ignore
+							{...form.getInputProps(`args${i}`)}
+						/>
+					)
+				})}
+				<Space h={8} />
+				<Button
+					loading={isLoading}
+					type="submit"
+				>{`Deploy to ${chain?.name}`}</Button>
+			</form>
 		</div>
 	)
 }

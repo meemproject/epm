@@ -8,7 +8,6 @@ import {
 	TextInput,
 	Space,
 	Modal,
-	Group,
 	Timeline,
 	ThemeIcon,
 	Title,
@@ -22,26 +21,27 @@ import { useWallet } from '@meemproject/react'
 import { ethers } from 'ethers'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import {
 	Bulb,
 	BulbOff,
 	Check,
 	CirclePlus,
-	CircleX,
 	Diamond,
 	DiamondOff,
-	FaceIdError,
-	GripVertical
+	FaceIdError
 } from 'tabler-icons-react'
-import { GetContractsByAddressesQuery } from '../../../generated/graphql'
+import {
+	Bundles,
+	ContractInstances,
+	GetContractsByAddressesQuery
+} from '../../../generated/graphql'
 import { GET_CONTRACTS_BY_ADDRESS } from '../../graphql/contracts'
 import { diamondABI } from '../../lib/diamond'
 import { Page } from '../../styles/Page'
 import { Address } from '../Atoms/Address'
-import { ContractCard } from '../Atoms/ContractCard'
-import { IconButton } from '../Atoms/IconButton'
-import { FindFacet, IProps as IFindFacetProps } from './FindFacet'
+import { FacetList } from '../Atoms/FacetList'
+import { FindFacet, IProps as IFindFacetProps } from '../Atoms/FindFacet'
+import { FindBundle } from '../Bundles/FindBundle'
 
 const useStyles = createStyles(_theme => ({
 	section_wrapper: {
@@ -77,6 +77,7 @@ export const ManageDiamondContainer: React.FC = () => {
 	const [bytecode, setBytecode] = useState<string>()
 
 	const [isOpen, setIsOpen] = useState(false)
+	const [isBundleOpen, setIsBundleOpen] = useState(false)
 	const [fetchedAddress, setFetchedAddress] = useState<string>()
 	const [fetchedChainId, setFetchedChainId] = useState<number>()
 	const [facets, setFacets] = useState<
@@ -135,6 +136,40 @@ export const ManageDiamondContainer: React.FC = () => {
 			target: contract.ContractInstances[0].address
 		})
 		setIsOpen(false)
+	}
+
+	const handleBundleSelect = async (bundle: Bundles) => {
+		log.debug('!!!!!!! handleBundleSelect')
+
+		bundle.BundleContracts.forEach(bc => {
+			const contract = bc.Contract
+			if (contract) {
+				const instance = contract.ContractInstances.find(
+					c => c.chainId === chainId
+				)
+				if (!instance) {
+					showNotification({
+						title: 'Contract Not Deployed',
+						message: 'The contract has not been deployed yet!'
+					})
+
+					return
+				}
+
+				const existingFacet = form.values.facets.find(
+					f => f.target === instance.address
+				)
+
+				if (!existingFacet) {
+					form.addListItem('facets', {
+						selectors: contract.functionSelectors,
+						target: contract.ContractInstances[0].address
+					})
+				}
+			}
+		})
+
+		setIsBundleOpen(false)
 	}
 
 	const handleSave = async () => {
@@ -329,8 +364,6 @@ export const ManageDiamondContainer: React.FC = () => {
 	return (
 		<Page>
 			<form onSubmit={form.onSubmit(() => handleSave())}>
-				<Space h={24} />
-
 				<Title>Contract Info</Title>
 				<Space h={12} />
 				<TextInput
@@ -474,119 +507,24 @@ export const ManageDiamondContainer: React.FC = () => {
 									>
 										Add Facet
 									</Button>
+									<Space w={12} />
+									<Button
+										disabled={isLoading || isSaving}
+										onClick={() => setIsBundleOpen(true)}
+										leftIcon={<CirclePlus />}
+									>
+										Add Bundle
+									</Button>
 								</div>
 								<Space h={12} />
-								{form.values.facets.length > 1 && (
-									<Text size="md" color="dimmed">
-										Drag &amp; drop facets to re-order.
-										Facets closest to the top will take
-										priority over those below
-									</Text>
-								)}
-								{form.values.facets.length === 1 && (
-									<Text size="md" color="dimmed">
-										Add facets to your contract to enable
-										additional functionality.
-									</Text>
-								)}
+								<FacetList
+									form={form}
+									contractInstances={
+										data?.ContractInstances as ContractInstances[]
+									}
+									isLoading={isLoading}
+								/>
 
-								<DragDropContext
-									onDragEnd={({ destination, source }) => {
-										if (destination) {
-											form.reorderListItem('facets', {
-												from: source.index,
-												to: destination.index
-											})
-										}
-									}}
-								>
-									<Droppable
-										droppableId="dnd-list"
-										direction="vertical"
-									>
-										{provided => (
-											<div
-												{...provided.droppableProps}
-												ref={provided.innerRef}
-											>
-												{form.values.facets.map(
-													(facet, i) => {
-														const contract =
-															data?.ContractInstances.find(
-																c =>
-																	c.address?.toLowerCase() ===
-																	facet.target.toLowerCase()
-															)
-														return (
-															<Draggable
-																key={i}
-																index={i}
-																draggableId={i.toString()}
-															>
-																{p => {
-																	return (
-																		<Group
-																			ref={
-																				p.innerRef
-																			}
-																			mt="xs"
-																			{...p.draggableProps}
-																		>
-																			<Center
-																				className={
-																					classes.facet_container
-																				}
-																				{...p.dragHandleProps}
-																			>
-																				<div>
-																					<GripVertical
-																						size={
-																							18
-																						}
-																					/>
-																				</div>
-																				{isLoading && (
-																					<Skeleton
-																						width="100%"
-																						height={
-																							235
-																						}
-																					/>
-																				)}
-																				<ContractCard
-																					contract={
-																						contract?.Contract
-																					}
-																				/>
-																				<div>
-																					<IconButton
-																						tooltip="Remove Facet"
-																						onClick={() => {
-																							form.removeListItem(
-																								'facets',
-																								[
-																									i
-																								]
-																							)
-																						}}
-																						icon={
-																							<CircleX color="red" />
-																						}
-																					/>
-																				</div>
-																			</Center>
-																		</Group>
-																	)
-																}}
-															</Draggable>
-														)
-													}
-												)}
-												{provided.placeholder}
-											</div>
-										)}
-									</Droppable>
-								</DragDropContext>
 								{isDirty && (
 									<div>
 										<Space h={24} />
@@ -612,6 +550,14 @@ export const ManageDiamondContainer: React.FC = () => {
 					title={<Title>Find a Facet</Title>}
 				>
 					<FindFacet onClick={handleFacetSelect} />
+				</Modal>
+				<Modal
+					opened={isBundleOpen}
+					onClose={() => setIsOpen(false)}
+					size={900}
+					title={<Title>Find a Bundle</Title>}
+				>
+					<FindBundle onSelect={handleBundleSelect} />
 				</Modal>
 			</form>
 		</Page>

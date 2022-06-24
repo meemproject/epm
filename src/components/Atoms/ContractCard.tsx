@@ -8,6 +8,7 @@ import {
 	Title,
 	Space
 } from '@mantine/core'
+import cx from 'classnames'
 import Link from 'next/link'
 import React from 'react'
 import { SearchContractsQuery } from '../../../generated/graphql'
@@ -26,9 +27,11 @@ export interface IProps {
 	) => void
 	href?: string
 	children?: React.ReactNode
+	className?: string
 }
 
 export const ContractCard: React.FC<IProps> = ({
+	className,
 	contract,
 	ctaText,
 	onClick,
@@ -42,7 +45,12 @@ export const ContractCard: React.FC<IProps> = ({
 	}
 
 	return (
-		<Card key={contract.id} shadow="sm" p="lg" className={classes.card}>
+		<Card
+			key={contract.id}
+			shadow="sm"
+			p="lg"
+			className={cx(classes.card, className)}
+		>
 			{href && (
 				<Link href={href}>
 					<a>

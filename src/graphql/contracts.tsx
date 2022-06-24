@@ -69,6 +69,16 @@ export const GET_CONTRACTS_BY_ADDRESS = gql`
 	${CONTRACT_PARTS}
 `
 
+export const GET_CONTRACTS_BY_ID = gql`
+	query GetContractsById($ids: [uuid!]) {
+		Contracts(where: { id: { _in: $ids } }) {
+			...ContractParts
+		}
+	}
+
+	${CONTRACT_PARTS}
+`
+
 export const GET_MY_CONTRACTS_SUBSCRIPTION = gql`
 	subscription GetMyContractsSubscription($address: String!) {
 		Wallets(where: { address: { _ilike: $address } }) {
@@ -108,6 +118,55 @@ export const GET_MY_CONTRACTS = gql`
 						...ContractParts
 					}
 				}
+			}
+		}
+	}
+
+	${CONTRACT_PARTS}
+`
+
+export const SEARCH_BUNDLES = gql`
+	query SearchBundles($searchTerm: String) {
+		Bundles(
+			where: {
+				_or: [
+					{ name: { _ilike: $searchTerm } }
+					{ description: { _ilike: $searchTerm } }
+				]
+			}
+		) {
+			id
+			name
+			description
+			BundleContracts {
+				order
+				Contract {
+					...ContractParts
+				}
+			}
+			Creator {
+				address
+			}
+		}
+	}
+
+	${CONTRACT_PARTS}
+`
+
+export const GET_BUNDLE_BY_ID = gql`
+	query GetBundleById($id: uuid!) {
+		Bundles(where: { id: { _eq: $id } }) {
+			id
+			name
+			description
+			BundleContracts(order_by: { order: asc }) {
+				order
+				Contract {
+					...ContractParts
+				}
+			}
+			Creator {
+				address
 			}
 		}
 	}

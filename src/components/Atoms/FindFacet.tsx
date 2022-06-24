@@ -48,7 +48,7 @@ import { SEARCH_CONTRACTS } from '../../graphql/contracts'
 import { diamondABI } from '../../lib/diamond'
 import { ArrayElement } from '../../lib/utils'
 import { CookieKeys } from '../../utils/cookies'
-import { ContractCard } from '../Atoms/ContractCard'
+import { ContractCard } from './ContractCard'
 
 const useStyles = createStyles(theme => ({
 	clickable: {
