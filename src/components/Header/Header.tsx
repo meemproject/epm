@@ -329,6 +329,16 @@ export function HeaderMenu() {
 								<a>Deploy Contract</a>
 							</Link>
 						</Menu.Item>
+						<Menu.Item className={classes.menuItem}>
+							<Link href="/bundles">
+								<a>Bundles</a>
+							</Link>
+						</Menu.Item>
+						<Menu.Item className={classes.menuItem}>
+							<Link href="/createbundle">
+								<a>Create Bundle</a>
+							</Link>
+						</Menu.Item>
 
 						<Menu.Item
 							onClick={handleTwitter}

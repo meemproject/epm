@@ -13,7 +13,10 @@ import React, { useState } from 'react'
 import { CirclePlus } from 'tabler-icons-react'
 import { Contracts } from '../../../generated/graphql'
 import { FacetList } from '../Atoms/FacetList'
-import { FindFacet, IProps as IFindFacetProps } from '../Atoms/FindFacet'
+import {
+	FindContract,
+	IProps as IFindContractProps
+} from '../Atoms/FindContract'
 
 const useStyles = createStyles(_theme => ({
 	section_wrapper: {
@@ -38,7 +41,7 @@ export const BundleForm: React.FC<IProps> = ({
 	const { classes } = useStyles()
 	const [isOpen, setIsOpen] = useState(false)
 
-	const handleFacetSelect: IFindFacetProps['onClick'] = async contract => {
+	const handleFacetSelect: IFindContractProps['onClick'] = async contract => {
 		form.addListItem('facets', {
 			selectors: contract.functionSelectors,
 			contractId: contract.id
@@ -90,7 +93,7 @@ export const BundleForm: React.FC<IProps> = ({
 				size={900}
 				title={<Title>Find a Facet</Title>}
 			>
-				<FindFacet onClick={handleFacetSelect} />
+				<FindContract onClick={handleFacetSelect} />
 			</Modal>
 		</>
 	)

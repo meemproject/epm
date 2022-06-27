@@ -46,7 +46,10 @@ import { Page } from '../../styles/Page'
 import { Address } from '../Atoms/Address'
 import { ContractCard } from '../Atoms/ContractCard'
 import { FacetList } from '../Atoms/FacetList'
-import { FindFacet, IProps as IFindFacetProps } from '../Atoms/FindFacet'
+import {
+	FindContract,
+	IProps as IFindContractProps
+} from '../Atoms/FindContract'
 import { IconButton } from '../Atoms/IconButton'
 
 const useStyles = createStyles(_theme => ({
@@ -86,7 +89,7 @@ export const CreateBundleContainer: React.FC = () => {
 		}
 	)
 
-	const handleFacetSelect: IFindFacetProps['onClick'] = async contract => {
+	const handleFacetSelect: IFindContractProps['onClick'] = async contract => {
 		form.addListItem('facets', {
 			selectors: contract.functionSelectors,
 			contractId: contract.id
@@ -213,7 +216,7 @@ export const CreateBundleContainer: React.FC = () => {
 					size={900}
 					title={<Title>Find a Facet</Title>}
 				>
-					<FindFacet onClick={handleFacetSelect} />
+					<FindContract onClick={handleFacetSelect} />
 				</Modal>
 			</form>
 		</Page>

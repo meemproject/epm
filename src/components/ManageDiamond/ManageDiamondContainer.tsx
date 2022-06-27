@@ -40,7 +40,10 @@ import { diamondABI } from '../../lib/diamond'
 import { Page } from '../../styles/Page'
 import { Address } from '../Atoms/Address'
 import { FacetList } from '../Atoms/FacetList'
-import { FindFacet, IProps as IFindFacetProps } from '../Atoms/FindFacet'
+import {
+	FindContract,
+	IProps as IFindContractProps
+} from '../Atoms/FindContract'
 import { FindBundle } from '../Bundles/FindBundle'
 
 const useStyles = createStyles(_theme => ({
@@ -105,7 +108,7 @@ export const ManageDiamondContainer: React.FC = () => {
 		}
 	})
 
-	const handleFacetSelect: IFindFacetProps['onClick'] = async contract => {
+	const handleFacetSelect: IFindContractProps['onClick'] = async contract => {
 		const instance = contract.ContractInstances.find(
 			c => c.chainId === chainId
 		)
@@ -198,7 +201,6 @@ export const ManageDiamondContainer: React.FC = () => {
 			})
 
 			await upgrade({
-				chain: MeemAPI.Chain.Rinkeby,
 				signer,
 				proxyContractAddress: fetchedAddress,
 				fromVersion,
@@ -428,7 +430,7 @@ export const ManageDiamondContainer: React.FC = () => {
 							>
 								{!isValidAddress && (
 									<Text color="dimmed" size="sm">
-										This
+										This address is not valid
 									</Text>
 								)}
 							</Timeline.Item>
@@ -549,7 +551,7 @@ export const ManageDiamondContainer: React.FC = () => {
 					size={900}
 					title={<Title>Find a Facet</Title>}
 				>
-					<FindFacet onClick={handleFacetSelect} />
+					<FindContract onClick={handleFacetSelect} />
 				</Modal>
 				<Modal
 					opened={isBundleOpen}

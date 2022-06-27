@@ -5267,7 +5267,7 @@ export const GetBundleByIdDocument = gql`
     id
     name
     description
-    BundleContracts {
+    BundleContracts(order_by: {order: asc}) {
       order
       Contract {
         ...ContractParts

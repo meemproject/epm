@@ -11,6 +11,8 @@ import {
 } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { MeemAPI } from '@meemproject/api'
+import { useWallet } from '@meemproject/react'
+import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { Contracts, SearchContractsQuery } from '../../../generated/graphql'
 import { SEARCH_CONTRACTS } from '../../graphql/contracts'
@@ -21,6 +23,8 @@ import { DeployContract } from './DeployContract'
 export const ContractsContainer: React.FC = () => {
 	const [isOpen, setIsOpen] = useState(false)
 	const [selectedContract, setSelectedContract] = useState<Contracts>()
+	const { chainId } = useWallet()
+	const router = useRouter()
 
 	const form = useForm({
 		initialValues: {
@@ -101,7 +105,18 @@ export const ContractsContainer: React.FC = () => {
 				opened={isOpen}
 				onClose={() => setIsOpen(false)}
 			>
-				<DeployContract contract={selectedContract} />
+				<DeployContract
+					contract={selectedContract}
+					onDeployed={tx => {
+						router.push({
+							pathname: `/manage`,
+							query: {
+								address: tx.address,
+								chainId
+							}
+						})
+					}}
+				/>
 			</Modal>
 		</Page>
 	)

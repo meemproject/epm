@@ -47,7 +47,6 @@ import { Page } from '../../styles/Page'
 import { Address } from '../Atoms/Address'
 import { ContractCard } from '../Atoms/ContractCard'
 import { FacetList } from '../Atoms/FacetList'
-import { FindFacet, IProps as IFindFacetProps } from '../Atoms/FindFacet'
 import { IconButton } from '../Atoms/IconButton'
 import { BundleForm } from './BundleForm'
 
@@ -98,14 +97,6 @@ export const BundleContainer: React.FC = () => {
 			ids: form.values.facets.map(f => f.contractId)
 		}
 	})
-
-	// const handleFacetSelect: IFindFacetProps['onClick'] = async contract => {
-	// 	form.addListItem('facets', {
-	// 		selectors: contract.functionSelectors,
-	// 		contractId: contract.id
-	// 	})
-	// 	setIsOpen(false)
-	// }
 
 	const handleSave = async (values: typeof form.values) => {
 		try {

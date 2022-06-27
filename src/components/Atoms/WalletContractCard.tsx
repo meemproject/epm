@@ -56,6 +56,7 @@ export const WalletContractCard: React.FC<IProps> = ({
 	const { classes } = useStyles()
 
 	const [isEditing, setIsEditing] = useState(false)
+	const [isLoading, setIsLoading] = useState(false)
 
 	const { values, setValues, onSubmit, getInputProps } = useForm({
 		initialValues: {
@@ -67,6 +68,7 @@ export const WalletContractCard: React.FC<IProps> = ({
 
 	const handleSave = async () => {
 		try {
+			setIsLoading(true)
 			const updateWalletContractInstance = makeFetcher<
 				MeemAPI.v1.UpdateWalletContractInstance.IQueryParams,
 				MeemAPI.v1.UpdateWalletContractInstance.IRequestBody,
@@ -84,9 +86,11 @@ export const WalletContractCard: React.FC<IProps> = ({
 					note: values.note
 				}
 			)
+			setIsEditing(false)
 		} catch (e) {
 			log.warn(e)
 		}
+		setIsLoading(false)
 	}
 
 	useEffect(() => {
@@ -193,7 +197,11 @@ export const WalletContractCard: React.FC<IProps> = ({
 						{...getInputProps('note')}
 					/>
 					<Space h={8} />
-					<Button type="submit" onClick={handleSave}>
+					<Button
+						type="submit"
+						onClick={handleSave}
+						loading={isLoading}
+					>
 						Save
 					</Button>
 				</form>

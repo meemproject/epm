@@ -32,7 +32,6 @@ export const FindBundle: React.FC<IProps> = ({ onSelect, ctaText }) => {
 		<>
 			<form onSubmit={form.onSubmit(_values => {})}>
 				<TextInput
-					label="Name"
 					radius="lg"
 					size="md"
 					placeholder="My Bundle"

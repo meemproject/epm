@@ -58,9 +58,10 @@ const useStyles = createStyles(theme => ({
 
 export interface IProps {
 	onClick: (contract: ArrayElement<SearchContractsQuery['Contracts']>) => void
+	contractType?: MeemAPI.ContractType
 }
 
-export const FindFacet: React.FC<IProps> = ({ onClick }) => {
+export const FindContract: React.FC<IProps> = ({ contractType, onClick }) => {
 	const router = useRouter()
 	const { classes } = useStyles()
 
@@ -71,33 +72,25 @@ export const FindFacet: React.FC<IProps> = ({ onClick }) => {
 		validate: {}
 	})
 
-	const [isLoading, setIsLoading] = useState(false)
+	// const [isLoading, setIsLoading] = useState(false)
 	const { web3Provider, accounts, signer, isConnected, connectWallet } =
 		useWallet()
 
 	const handleSubmit = async () => {}
 
 	const {
-		loading,
+		loading: isLoading,
 		error,
 		data: facets
 	} = useQuery<SearchContractsQuery>(SEARCH_CONTRACTS, {
 		variables: {
-			contractType: MeemAPI.ContractType.DiamondFacet,
+			contractType: contractType ?? MeemAPI.ContractType.DiamondFacet,
 			searchTerm: `%${form.values.searchTerm}%`
 		}
 	})
 
 	return (
-		<form
-			onSubmit={form.onSubmit(async values => {
-				try {
-					console.log(values)
-				} catch (e) {
-					console.log(e)
-				}
-			})}
-		>
+		<form onSubmit={form.onSubmit(async _values => {})}>
 			<TextInput
 				// label="Find a Contract"
 				radius="lg"
@@ -107,7 +100,7 @@ export const FindFacet: React.FC<IProps> = ({ onClick }) => {
 				{...form.getInputProps('searchTerm')}
 			/>
 			<Grid>
-				{loading &&
+				{isLoading &&
 					[...Array(6)].map((_, i) => (
 						<Grid.Col md={6} key={`col-${i}`}>
 							<Space h={8} />

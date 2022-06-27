@@ -8,6 +8,7 @@ import {
 	Title,
 	Space
 } from '@mantine/core'
+import { useWallet } from '@meemproject/react'
 import cx from 'classnames'
 import Link from 'next/link'
 import React from 'react'
@@ -16,7 +17,14 @@ import { ArrayElement } from '../../lib/utils'
 import { Address } from './Address'
 
 const useStyles = createStyles(_theme => ({
-	card: {}
+	row: {
+		alignItems: 'center',
+		display: 'flex',
+		width: '100%'
+	},
+	card: {
+		width: '100%'
+	}
 }))
 
 export interface IProps {
@@ -28,6 +36,8 @@ export interface IProps {
 	href?: string
 	children?: React.ReactNode
 	className?: string
+	isCompact?: boolean
+	shouldShowDeployOnCurrentChain?: boolean
 }
 
 export const ContractCard: React.FC<IProps> = ({
@@ -36,34 +46,42 @@ export const ContractCard: React.FC<IProps> = ({
 	ctaText,
 	onClick,
 	children,
-	href
+	href,
+	isCompact,
+	shouldShowDeployOnCurrentChain
 }) => {
 	const { classes } = useStyles()
+
+	const { chainId } = useWallet()
 
 	if (!contract) {
 		return null
 	}
 
-	return (
-		<Card
-			key={contract.id}
-			shadow="sm"
-			p="lg"
-			className={cx(classes.card, className)}
-		>
-			{href && (
-				<Link href={href}>
-					<a>
-						<Text size="xl">{contract.name}</Text>
-					</a>
-				</Link>
+	const isDeployedOnCurrentChain = !!contract.ContractInstances.find(
+		ci => ci.chainId === chainId
+	)
+
+	const cardDetails = (
+		<>
+			{!isCompact && (
+				<>
+					{href && (
+						<Link href={href}>
+							<a>
+								<Text size={'xl'}>{contract.name}</Text>
+							</a>
+						</Link>
+					)}
+					{!href && <Text size={'xl'}>{contract.name}</Text>}
+					{/* {isCompact &&} */}
+				</>
 			)}
-			{!href && <Text size="xl">{contract.name}</Text>}
 			<Spoiler maxHeight={50} showLabel="Show more" hideLabel="hide">
 				{contract.description}
 			</Spoiler>
-			<Accordion>
-				<Accordion.Item label="Details">
+			<Accordion title="Facets">
+				<Accordion.Item label="Details" iconPosition="right">
 					<Title order={4}>Deployments</Title>
 					<Space h={16} />
 					{contract.ContractInstances.length === 0 && (
@@ -102,6 +120,36 @@ export const ContractCard: React.FC<IProps> = ({
 				</>
 			)}
 			{children}
+		</>
+	)
+
+	return isCompact ? (
+		<Accordion key={contract.id} className={classes.card}>
+			<Accordion.Item
+				className={classes.card}
+				label={
+					<div className={classes.row}>
+						<Text>{contract.name}</Text>
+						<Space w={16} />
+						{!isDeployedOnCurrentChain &&
+							shouldShowDeployOnCurrentChain && (
+								<Button>Deploy</Button>
+							)}
+					</div>
+				}
+				iconPosition="right"
+			>
+				{cardDetails}
+			</Accordion.Item>
+		</Accordion>
+	) : (
+		<Card
+			key={contract.id}
+			shadow="sm"
+			p="lg"
+			className={cx(classes.card, className)}
+		>
+			{cardDetails}
 		</Card>
 	)
 }

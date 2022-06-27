@@ -139,6 +139,7 @@ export const SEARCH_BUNDLES = gql`
 			name
 			description
 			BundleContracts {
+				id
 				order
 				Contract {
 					...ContractParts
@@ -160,6 +161,7 @@ export const GET_BUNDLE_BY_ID = gql`
 			name
 			description
 			BundleContracts(order_by: { order: asc }) {
+				id
 				order
 				Contract {
 					...ContractParts

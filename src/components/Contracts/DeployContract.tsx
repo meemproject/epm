@@ -1,7 +1,6 @@
 import log from '@kengoldfarb/log'
 import {
 	createStyles,
-	Container,
 	Text,
 	Button,
 	TextInput,
@@ -12,41 +11,18 @@ import { useForm } from '@mantine/form'
 import { chains, MeemAPI } from '@meemproject/api'
 import { makeFetcher, useWallet } from '@meemproject/react'
 import { ethers } from 'ethers'
-import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { Contracts } from '../../../generated/graphql'
 
-const useStyles = createStyles(theme => ({
-	wrapper: {
-		position: 'relative',
-		boxSizing: 'border-box',
-		backgroundColor:
-			theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.white
-	},
-
-	inner: {
-		display: 'flex',
-		flexDirection: 'column',
-		position: 'relative',
-		paddingTop: 0,
-		paddingBottom: 120,
-		marginTop: 120,
-
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			paddingBottom: 80,
-			paddingTop: 0,
-			marginTop: 80
-		}
-	}
-}))
+const useStyles = createStyles(_theme => ({}))
 
 export interface IProps {
 	contract?: Contracts
+	onDeployed?: (contract: ethers.Contract) => void
 }
 
-export const DeployContract: React.FC<IProps> = ({ contract }) => {
+export const DeployContract: React.FC<IProps> = ({ contract, onDeployed }) => {
 	const { classes } = useStyles()
-	const router = useRouter()
 	const { signer, chainId } = useWallet()
 	const [isLoading, setIsLoading] = useState(false)
 
@@ -107,12 +83,9 @@ export const DeployContract: React.FC<IProps> = ({ contract }) => {
 					chainId
 				}
 			)
-			router.push(`/manage`, {
-				query: {
-					address: tx.address,
-					chainId
-				}
-			})
+			if (onDeployed) {
+				onDeployed(tx)
+			}
 		} catch (e) {
 			log.warn(e)
 		}
@@ -123,7 +96,7 @@ export const DeployContract: React.FC<IProps> = ({ contract }) => {
 	const chain = chains.find(c => c.chainId === chainId)
 
 	return (
-		<div className={classes.wrapper}>
+		<div>
 			<Title order={3}>{contract.name}</Title>
 			<Text>{contract.description}</Text>
 			<Space h={24} />
