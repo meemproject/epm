@@ -8,49 +8,24 @@ import {
 	TextInput,
 	Space,
 	Modal,
-	Group,
-	Timeline,
-	ThemeIcon,
 	Title,
-	Skeleton,
 	Textarea
 } from '@mantine/core'
 import { formList, useForm } from '@mantine/form'
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
-import { getCuts, IVersion, upgrade } from '@meemproject/meem-contracts'
-import { makeFetcher, useWallet } from '@meemproject/react'
-import { ethers } from 'ethers'
+import { makeFetcher } from '@meemproject/react'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
-import {
-	Bulb,
-	BulbOff,
-	Check,
-	CirclePlus,
-	CircleX,
-	Diamond,
-	DiamondOff,
-	FaceIdError,
-	GripVertical
-} from 'tabler-icons-react'
-import {
-	Contracts,
-	GetContractsByAddressesQuery,
-	GetContractsByIdQuery
-} from '../../../generated/graphql'
+import React, { useState } from 'react'
+import { CirclePlus } from 'tabler-icons-react'
+import { Contracts, GetContractsByIdQuery } from '../../../generated/graphql'
 import { GET_CONTRACTS_BY_ID } from '../../graphql/contracts'
-import { diamondABI } from '../../lib/diamond'
 import { Page } from '../../styles/Page'
-import { Address } from '../Atoms/Address'
-import { ContractCard } from '../Atoms/ContractCard'
 import { FacetList } from '../Atoms/FacetList'
 import {
 	FindContract,
 	IProps as IFindContractProps
 } from '../Atoms/FindContract'
-import { IconButton } from '../Atoms/IconButton'
 
 const useStyles = createStyles(_theme => ({
 	section_wrapper: {
@@ -74,11 +49,9 @@ export const CreateBundleContainer: React.FC = () => {
 		validate: {}
 	})
 
-	const [hasInitialized, setHasInitialized] = useState(false)
 	const [isSaving, setIsSaving] = useState(false)
 
 	const [isOpen, setIsOpen] = useState(false)
-	const { signer, chainId, setChain } = useWallet()
 
 	const { loading: isLoading, data } = useQuery<GetContractsByIdQuery>(
 		GET_CONTRACTS_BY_ID,
@@ -132,11 +105,11 @@ export const CreateBundleContainer: React.FC = () => {
 				color: 'green'
 			})
 
-			// router.push('/bundles', {
-			// 	query: {
-			// 		bundleId
-			// 	}
-			// })
+			router.push('/bundles', {
+				query: {
+					bundleId
+				}
+			})
 		} catch (e) {
 			log.crit(e)
 			showNotification({

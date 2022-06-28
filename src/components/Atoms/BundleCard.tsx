@@ -1,47 +1,15 @@
-import log from '@kengoldfarb/log'
-import {
-	createStyles,
-	Text,
-	Button,
-	Card,
-	Spoiler,
-	Accordion,
-	Title,
-	Space,
-	Tooltip,
-	Modal,
-	Textarea,
-	TextInput
-} from '@mantine/core'
-import { useForm } from '@mantine/hooks'
-import { MeemAPI } from '@meemproject/api'
-import { makeFetcher } from '@meemproject/react'
+import { Text, Button, Card, Accordion, Title, Space } from '@mantine/core'
 import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
-import { Pencil } from 'tabler-icons-react'
-import {
-	GetMyContractsQuery,
-	SearchBundlesQuery,
-	SearchContractsQuery
-} from '../../../generated/graphql'
-import { ArrayElement } from '../../lib/utils'
+import React from 'react'
+import { Bundles } from '../../../generated/graphql'
 import { Address } from './Address'
 import { ContractCard } from './ContractCard'
-import { IconButton } from './IconButton'
-
-const useStyles = createStyles(_theme => ({
-	row: {
-		display: 'flex'
-	}
-}))
 
 export interface IProps {
-	bundle?: ArrayElement<SearchBundlesQuery['Bundles']> | null
+	bundle?: Bundles | null
 
 	ctaText?: string
-	onClick?: (
-		contract: ArrayElement<SearchContractsQuery['Contracts']>
-	) => void
+	onClick?: (bundle: Bundles) => void
 	href?: string
 	children?: React.ReactNode
 }
@@ -52,8 +20,6 @@ export const BundleCard: React.FC<IProps> = ({
 	ctaText,
 	onClick
 }) => {
-	const { classes } = useStyles()
-
 	if (!bundle) {
 		return null
 	}

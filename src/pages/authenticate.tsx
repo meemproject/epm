@@ -7,6 +7,9 @@ import { HeaderMenu } from '../components/Header/Header'
 const AuthenticatePage: NextPage = () => {
 	return (
 		<>
+			<Head>
+				<title>Authenticate | EPM</title>
+			</Head>
 			<HeaderMenu />
 			<Authenticate />
 		</>

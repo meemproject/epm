@@ -1,19 +1,16 @@
 import log from '@kengoldfarb/log'
 import {
-	createStyles,
 	Text,
 	Button,
-	TextInput,
 	Space,
 	Title,
 	Timeline,
 	ThemeIcon,
 	Modal
 } from '@mantine/core'
-import { useForm } from '@mantine/form'
 import { chains, MeemAPI } from '@meemproject/api'
 import { IVersion, upgrade } from '@meemproject/meem-contracts'
-import { makeFetcher, useWallet } from '@meemproject/react'
+import { useWallet } from '@meemproject/react'
 import { ethers } from 'ethers'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -27,24 +24,14 @@ import {
 import { ArrayElement } from '../../lib/utils'
 import { Address } from '../Atoms/Address'
 import { ContractCard } from '../Atoms/ContractCard'
-import {
-	FindContract,
-	IProps as IFindContractProps
-} from '../Atoms/FindContract'
+import { FindContract } from '../Atoms/FindContract'
 import { DeployContract } from '../Contracts/DeployContract'
-
-const useStyles = createStyles(theme => ({
-	row: {
-		display: 'flex'
-	}
-}))
 
 export interface IProps {
 	bundle?: Bundles | null
 }
 
 export const DeployBundle: React.FC<IProps> = ({ bundle }) => {
-	const { classes } = useStyles()
 	const router = useRouter()
 	const { signer, chainId } = useWallet()
 	const [isLoading, setIsLoading] = useState(false)
@@ -85,6 +72,7 @@ export const DeployBundle: React.FC<IProps> = ({ bundle }) => {
 				fromVersion: {},
 				toVersion
 			})
+			setIsInitialized(true)
 			router.push({
 				pathname: `/manage`,
 				query: {
@@ -101,7 +89,7 @@ export const DeployBundle: React.FC<IProps> = ({ bundle }) => {
 
 	const chain = chains.find(c => c.chainId === chainId)
 
-	let areAllFacetsDeployed = true
+	let isAllFacetsDeployed = true
 
 	bundle.BundleContracts.forEach(bc => {
 		const isDeployedOnCurrentChain = !!bc.Contract?.ContractInstances.find(
@@ -109,7 +97,7 @@ export const DeployBundle: React.FC<IProps> = ({ bundle }) => {
 		)
 
 		if (!isDeployedOnCurrentChain) {
-			areAllFacetsDeployed = false
+			isAllFacetsDeployed = false
 		}
 	})
 
@@ -153,9 +141,9 @@ export const DeployBundle: React.FC<IProps> = ({ bundle }) => {
 					active
 					bullet={
 						<ThemeIcon
-							color={areAllFacetsDeployed ? 'green' : 'red'}
+							color={isAllFacetsDeployed ? 'green' : 'red'}
 						>
-							{areAllFacetsDeployed ? (
+							{isAllFacetsDeployed ? (
 								<Check size={20} />
 							) : (
 								<CircleX size={20} />
@@ -163,16 +151,16 @@ export const DeployBundle: React.FC<IProps> = ({ bundle }) => {
 						</ThemeIcon>
 					}
 					title={
-						areAllFacetsDeployed
+						isAllFacetsDeployed
 							? 'All Facets Deployed'
 							: 'Some Facets Not Deployed'
 					}
 				>
-					{!areAllFacetsDeployed && (
+					{!isAllFacetsDeployed && (
 						<Text color="dimmed" size="sm">
-							Some facets (contracts) have not been deployed to
-							your current chain ({chain?.name}). Deploy the
-							missing facets or switch chains to continue.
+							Some facets have not been deployed to your current
+							chain ({chain?.name}). Deploy each of the missing
+							facets or switch chains to continue.
 						</Text>
 					)}
 				</Timeline.Item>
@@ -193,6 +181,7 @@ export const DeployBundle: React.FC<IProps> = ({ bundle }) => {
 						) : (
 							<Button
 								loading={isLoading}
+								disabled={!isAllFacetsDeployed}
 								onClick={() => {
 									setIsOpen(true)
 								}}

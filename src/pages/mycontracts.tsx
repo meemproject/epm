@@ -8,7 +8,7 @@ const CreatePage: NextPage = () => {
 	return (
 		<>
 			<Head>
-				<title>My Contracts | Meem</title>
+				<title>My Contracts | EPM</title>
 			</Head>
 			<HeaderMenu />
 			<MyContractsContainer />

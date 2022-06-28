@@ -1,31 +1,26 @@
-import log from '@kengoldfarb/log'
 import {
 	createStyles,
 	Text,
 	Button,
 	Card,
-	Spoiler,
-	Accordion,
 	Title,
 	Space,
 	Tooltip,
-	Modal,
-	Textarea,
-	TextInput
+	Modal
 } from '@mantine/core'
 import { useForm } from '@mantine/hooks'
-import { MeemAPI } from '@meemproject/api'
-import { makeFetcher } from '@meemproject/react'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { Pencil } from 'tabler-icons-react'
 import {
 	GetMyContractsQuery,
-	SearchContractsQuery
+	SearchContractsQuery,
+	WalletContractInstances
 } from '../../../generated/graphql'
 import { ArrayElement } from '../../lib/utils'
 import { Address } from './Address'
 import { ContractCard } from './ContractCard'
+import { EditWalletContract } from './EditWalletContract'
 import { IconButton } from './IconButton'
 
 const useStyles = createStyles(_theme => ({
@@ -51,47 +46,18 @@ export const WalletContractCard: React.FC<IProps> = ({
 	ctaText,
 	onClick,
 	children
-	// href
 }) => {
 	const { classes } = useStyles()
 
 	const [isEditing, setIsEditing] = useState(false)
-	const [isLoading, setIsLoading] = useState(false)
 
-	const { values, setValues, onSubmit, getInputProps } = useForm({
+	const { setValues } = useForm({
 		initialValues: {
 			name: '',
 			note: ''
 		}
 		// validate: {}
 	})
-
-	const handleSave = async () => {
-		try {
-			setIsLoading(true)
-			const updateWalletContractInstance = makeFetcher<
-				MeemAPI.v1.UpdateWalletContractInstance.IQueryParams,
-				MeemAPI.v1.UpdateWalletContractInstance.IRequestBody,
-				MeemAPI.v1.UpdateWalletContractInstance.IResponseBody
-			>({
-				method: MeemAPI.v1.UpdateWalletContractInstance.method
-			})
-			await updateWalletContractInstance(
-				MeemAPI.v1.UpdateWalletContractInstance.path({
-					contractInstanceId: walletContract?.ContractInstance?.id
-				}),
-				undefined,
-				{
-					name: values.name,
-					note: values.note
-				}
-			)
-			setIsEditing(false)
-		} catch (e) {
-			log.warn(e)
-		}
-		setIsLoading(false)
-	}
 
 	useEffect(() => {
 		if (walletContract) {
@@ -108,12 +74,7 @@ export const WalletContractCard: React.FC<IProps> = ({
 
 	return (
 		<>
-			<Card
-				key={walletContract.id}
-				shadow="sm"
-				p="lg"
-				className={classes.card}
-			>
+			<Card key={walletContract.id} shadow="sm" p="lg">
 				<div className={classes.row}>
 					<Link
 						href={`/manage?address=${walletContract.ContractInstance?.address}&chainId=${walletContract.ContractInstance?.chainId}`}
@@ -141,6 +102,7 @@ export const WalletContractCard: React.FC<IProps> = ({
 
 				<ContractCard
 					contract={walletContract.ContractInstance?.Contract}
+					isCompact
 				/>
 
 				{ctaText && (
@@ -169,42 +131,10 @@ export const WalletContractCard: React.FC<IProps> = ({
 				opened={isEditing}
 				onClose={() => setIsEditing(false)}
 			>
-				<form onSubmit={onSubmit(async _values => {})}>
-					<Text>
-						Change the name or set the description of your contract.
-					</Text>
-					<Space h={8} />
-					<TextInput
-						label="Name"
-						radius="lg"
-						size="md"
-						maxLength={140}
-						placeholder="Meem Permissions"
-						required
-						{...getInputProps('name')}
-					/>
-					<Space h={8} />
-					<Textarea
-						label="Description"
-						radius="lg"
-						size="md"
-						autosize
-						minRows={3}
-						maxRows={5}
-						maxLength={5000}
-						placeholder="This contract does something..."
-						required
-						{...getInputProps('note')}
-					/>
-					<Space h={8} />
-					<Button
-						type="submit"
-						onClick={handleSave}
-						loading={isLoading}
-					>
-						Save
-					</Button>
-				</form>
+				<EditWalletContract
+					walletContract={walletContract as WalletContractInstances}
+					onSave={() => setIsEditing(false)}
+				/>
 			</Modal>
 		</>
 	)

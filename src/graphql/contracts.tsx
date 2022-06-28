@@ -1,22 +1,5 @@
 import { gql } from '@apollo/client'
 
-// export const GET_CONTRACTS_BY_TYPE = gql`
-// 	query GetContracts($contractType: String) {
-// 		Contracts(where: { contractType: { _eq: $contractType } }) {
-// 			id
-// 			name
-// 			description
-// 			abi
-// 			bytecode
-// 			contractType
-// 			CreatorId
-// 			Creator {
-// 				address
-// 			}
-// 		}
-// 	}
-// `
-
 export const CONTRACT_PARTS = gql`
 	fragment ContractParts on Contracts {
 		id
@@ -29,6 +12,11 @@ export const CONTRACT_PARTS = gql`
 		ContractInstances {
 			chainId
 			address
+
+			WalletContractInstances {
+				name
+				note
+			}
 		}
 		CreatorId
 		Creator {
@@ -60,6 +48,16 @@ export const GET_CONTRACTS_BY_ADDRESS = gql`
 		ContractInstances(where: { address: { _in: $addresses } }) {
 			id
 			address
+			WalletContractInstances {
+				name
+				note
+
+				ContractInstance {
+					id
+					address
+					chainId
+				}
+			}
 			Contract {
 				...ContractParts
 			}
@@ -156,6 +154,135 @@ export const SEARCH_BUNDLES = gql`
 
 export const GET_BUNDLE_BY_ID = gql`
 	query GetBundleById($id: uuid!) {
+		Bundles(where: { id: { _eq: $id } }) {
+			id
+			name
+			description
+			BundleContracts(order_by: { order: asc }) {
+				id
+				order
+				Contract {
+					...ContractParts
+				}
+			}
+			Creator {
+				address
+			}
+		}
+	}
+
+	${CONTRACT_PARTS}
+`
+
+export const SUB_SEARCH_CONTRACTS = gql`
+	subscription SubSearchContracts(
+		$contractType: String
+		$searchTerm: String
+	) {
+		Contracts(
+			where: {
+				contractType: { _eq: $contractType }
+				_or: [
+					{ name: { _ilike: $searchTerm } }
+					{ description: { _ilike: $searchTerm } }
+				]
+			}
+		) {
+			...ContractParts
+		}
+	}
+
+	${CONTRACT_PARTS}
+`
+
+export const SUB_GET_CONTRACTS_BY_ADDRESS = gql`
+	subscription SubGetContractsByAddresses($addresses: [String!]) {
+		ContractInstances(where: { address: { _in: $addresses } }) {
+			id
+			address
+			WalletContractInstances {
+				name
+				note
+
+				ContractInstance {
+					id
+					address
+					chainId
+				}
+			}
+			Contract {
+				...ContractParts
+			}
+		}
+	}
+
+	${CONTRACT_PARTS}
+`
+
+export const SUB_GET_CONTRACTS_BY_ID = gql`
+	subscription SubGetContractsById($ids: [uuid!]) {
+		Contracts(where: { id: { _in: $ids } }) {
+			...ContractParts
+		}
+	}
+
+	${CONTRACT_PARTS}
+`
+
+export const SUB_GET_MY_CONTRACTS = gql`
+	subscription SubGetMyContracts($address: String!) {
+		Wallets(where: { address: { _ilike: $address } }) {
+			id
+			WalletContractInstances {
+				id
+				note
+				name
+				ContractInstance {
+					id
+					address
+					chainId
+					Contract {
+						...ContractParts
+					}
+				}
+			}
+		}
+	}
+
+	${CONTRACT_PARTS}
+`
+
+export const SUB_SEARCH_BUNDLES = gql`
+	subscription SubSearchBundles($searchTerm: String) {
+		Bundles(
+			where: {
+				_or: [
+					{ name: { _ilike: $searchTerm } }
+					{ description: { _ilike: $searchTerm } }
+				]
+			}
+		) {
+			id
+			name
+			description
+			BundleContracts {
+				id
+				order
+				Contract {
+					...ContractParts
+				}
+			}
+			Creator {
+				address
+			}
+		}
+	}
+
+	${CONTRACT_PARTS}
+`
+
+export const SUB_GET_BUNDLE_BY_ID = gql`
+	subscription SubGetBundleById($id: uuid!) {
 		Bundles(where: { id: { _eq: $id } }) {
 			id
 			name

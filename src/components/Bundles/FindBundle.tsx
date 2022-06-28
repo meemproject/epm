@@ -52,9 +52,9 @@ export const FindBundle: React.FC<IProps> = ({ onSelect, ctaText }) => {
 						<Grid.Col md={6} key={`col-${b.id}`}>
 							<BundleCard
 								key={`bundle-${b.id}`}
-								bundle={b}
+								bundle={b as Bundles}
 								ctaText={ctaText ?? 'Select'}
-								onClick={() => onSelect(b)}
+								onClick={() => onSelect(b as Bundles)}
 							/>
 						</Grid.Col>
 						<Space h={16} />

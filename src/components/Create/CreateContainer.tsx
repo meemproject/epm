@@ -208,7 +208,7 @@ export const CreateContainer: React.FC = () => {
 								'The contract was saved and can now be deployed.'
 						})
 					} catch (e) {
-						console.log(e)
+						log.crit(e)
 					}
 					setIsSubmitting(false)
 				})}

@@ -1,15 +1,7 @@
-import { createStyles, Select } from '@mantine/core'
+import { Select } from '@mantine/core'
 import { UseFormReturnType } from '@mantine/form/lib/use-form'
 import { chains } from '@meemproject/api'
-import { useWallet } from '@meemproject/react'
-import React, { useEffect, useState } from 'react'
-import request from 'superagent'
-import { SearchContractsQuery } from '../../../generated/graphql'
-import { ArrayElement } from '../../lib/utils'
-
-const useStyles = createStyles(_theme => ({
-	card: {}
-}))
+import React from 'react'
 
 export interface IProps {
 	onChange?: (chainId: number) => void
@@ -41,15 +33,12 @@ export interface IChain {
 }
 
 export const ChainSelect: React.FC<IProps> = ({ chainId, onChange, form }) => {
-	const { classes } = useStyles()
-
-	// const { setChain, chainId } = useWallet()
 	const formProps = form?.getInputProps('chainId')
 	const props = {
 		...formProps,
 		onChange: (val: string) => {
 			form?.setFieldValue('chainId', val)
-			console.log(form?.values)
+
 			if (onChange && val) {
 				onChange(+val)
 			}

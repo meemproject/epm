@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client'
+import { useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import {
 	Text,
@@ -16,19 +16,21 @@ import { makeFetcher, useWallet } from '@meemproject/react'
 import { ethers } from 'ethers'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
-import { GetMyContractsQuery } from '../../../generated/graphql'
-import { GET_MY_CONTRACTS } from '../../graphql/contracts'
+import { SubGetMyContractsSubscription } from '../../../generated/graphql'
+import { SUB_GET_MY_CONTRACTS } from '../../graphql/contracts'
 import { Page } from '../../styles/Page'
 import { ChainSelect } from '../Atoms/ChainSelect'
 import { WalletContractCard } from '../Atoms/WalletContractCard'
 
 export const MyContractsContainer: React.FC = () => {
-	const { signer, accounts, chainId } = useWallet()
+	const { accounts, chainId } = useWallet()
 	const [isOpen, setIsOpen] = useState(false)
 	const [isChainSet, setIsChainSet] = useState(false)
 
 	const { loading: isLoading, data: contractQueryResult } =
-		useQuery<GetMyContractsQuery>(GET_MY_CONTRACTS, {
+		useSubscription<SubGetMyContractsSubscription>(SUB_GET_MY_CONTRACTS, {
+			shouldResubscribe: true,
+			fetchPolicy: 'no-cache',
 			variables: {
 				address: accounts && accounts[0]
 			}

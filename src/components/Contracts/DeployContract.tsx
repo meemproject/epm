@@ -1,12 +1,5 @@
 import log from '@kengoldfarb/log'
-import {
-	createStyles,
-	Text,
-	Button,
-	TextInput,
-	Space,
-	Title
-} from '@mantine/core'
+import { Text, Button, TextInput, Space, Title } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { chains, MeemAPI } from '@meemproject/api'
 import { makeFetcher, useWallet } from '@meemproject/react'
@@ -14,15 +7,12 @@ import { ethers } from 'ethers'
 import React, { useState } from 'react'
 import { Contracts } from '../../../generated/graphql'
 
-const useStyles = createStyles(_theme => ({}))
-
 export interface IProps {
 	contract?: Contracts
 	onDeployed?: (contract: ethers.Contract) => void
 }
 
 export const DeployContract: React.FC<IProps> = ({ contract, onDeployed }) => {
-	const { classes } = useStyles()
 	const { signer, chainId } = useWallet()
 	const [isLoading, setIsLoading] = useState(false)
 

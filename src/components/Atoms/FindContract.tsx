@@ -1,60 +1,12 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useQuery } from '@apollo/client'
-import log from '@kengoldfarb/log'
-import {
-	createStyles,
-	Container,
-	Text,
-	Center,
-	Image,
-	Loader,
-	Button,
-	Textarea,
-	TextInput,
-	Space,
-	Select,
-	JsonInput,
-	Grid,
-	Card,
-	Skeleton
-} from '@mantine/core'
+import { Button, TextInput, Space, Grid, Skeleton } from '@mantine/core'
 import { useForm } from '@mantine/form'
-import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
-import * as meemContracts from '@meemproject/meem-contracts'
-import { makeFetcher, useWallet } from '@meemproject/react'
-import { base64StringToBlob } from 'blob-util'
-import { ethers } from 'ethers'
-// eslint-disable-next-line import/no-extraneous-dependencies
-import Cookies from 'js-cookie'
-import { useRouter } from 'next/router'
-import React, {
-	useCallback,
-	useContext,
-	useEffect,
-	useRef,
-	useState
-} from 'react'
-import Resizer from 'react-image-file-resizer'
-import { ArrowLeft, Upload } from 'tabler-icons-react'
-import { useFilePicker } from 'use-file-picker'
-import {
-	Contracts,
-	GetContractsQuery,
-	SearchContractsQuery
-} from '../../../generated/graphql'
+import React from 'react'
+import { SearchContractsQuery } from '../../../generated/graphql'
 import { SEARCH_CONTRACTS } from '../../graphql/contracts'
-import { diamondABI } from '../../lib/diamond'
 import { ArrayElement } from '../../lib/utils'
-import { CookieKeys } from '../../utils/cookies'
 import { ContractCard } from './ContractCard'
-
-const useStyles = createStyles(theme => ({
-	clickable: {
-		cursor: 'pointer'
-	}
-}))
 
 export interface IProps {
 	onClick: (contract: ArrayElement<SearchContractsQuery['Contracts']>) => void
@@ -62,9 +14,6 @@ export interface IProps {
 }
 
 export const FindContract: React.FC<IProps> = ({ contractType, onClick }) => {
-	const router = useRouter()
-	const { classes } = useStyles()
-
 	const form = useForm({
 		initialValues: {
 			searchTerm: ''
@@ -72,22 +21,15 @@ export const FindContract: React.FC<IProps> = ({ contractType, onClick }) => {
 		validate: {}
 	})
 
-	// const [isLoading, setIsLoading] = useState(false)
-	const { web3Provider, accounts, signer, isConnected, connectWallet } =
-		useWallet()
-
-	const handleSubmit = async () => {}
-
-	const {
-		loading: isLoading,
-		error,
-		data: facets
-	} = useQuery<SearchContractsQuery>(SEARCH_CONTRACTS, {
-		variables: {
-			contractType: contractType ?? MeemAPI.ContractType.DiamondFacet,
-			searchTerm: `%${form.values.searchTerm}%`
+	const { loading: isLoading, data: facets } = useQuery<SearchContractsQuery>(
+		SEARCH_CONTRACTS,
+		{
+			variables: {
+				contractType: contractType ?? MeemAPI.ContractType.DiamondFacet,
+				searchTerm: `%${form.values.searchTerm}%`
+			}
 		}
-	})
+	)
 
 	return (
 		<form onSubmit={form.onSubmit(async _values => {})}>
@@ -118,14 +60,6 @@ export const FindContract: React.FC<IProps> = ({ contractType, onClick }) => {
 					</Grid.Col>
 				))}
 			</Grid>
-
-			{/* <Container>
-				<Center>
-					<Button type="submit" loading={loading} disabled={loading}>
-						Continue
-					</Button>
-				</Center>
-			</Container> */}
 		</form>
 	)
 }

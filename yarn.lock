@@ -1925,13 +1925,13 @@
     prop-types "^15.7.2"
     react-is "^16.8.0 || ^17.0.0"
 
-"@meemproject/api@0.6.5-pre-7f8faed.0", "@meemproject/api@^0.6.5-pre-7f8faed.0":
-  version "0.6.5-pre-7f8faed.0"
-  resolved "https://registry.yarnpkg.com/@meemproject/api/-/api-0.6.5-pre-7f8faed.0.tgz#c666bfcb86c129a15f1f48580b79eae000860774"
-  integrity sha512-xrkywT2vPy9t/jYrLdZRGBRhpR3ti7jtK0MZIukB2GncuoZbR71N/8EkU+za/EsZaC2sh4pPpPmplBRWYqnTzw==
+"@meemproject/api@0.6.5-pre-8f38b75.0", "@meemproject/api@^0.6.5-pre-8f38b75.0":
+  version "0.6.5-pre-8f38b75.0"
+  resolved "https://registry.yarnpkg.com/@meemproject/api/-/api-0.6.5-pre-8f38b75.0.tgz#26b8d35d1789185ccdf408920edd073699ef8b91"
+  integrity sha512-IHDwQyRYTBrUGhKbgkF7+1X3Zw+xTQyUZ1bsG9IuK6nlxAb2TMjpcNxgp9WhLTFkn3WDMf0UoSnq6wG0bKDnyg==
   dependencies:
     "@kengoldfarb/log" "^1.0.5"
-    "@meemproject/meem-contracts" "^0.6.5-pre-7f8faed.0"
+    "@meemproject/meem-contracts" "^0.6.5-pre-8f38b75.0"
     "@typechain/ethers-v5" "^10.0.0"
     "@types/js-cookie" "^3.0.1"
     "@types/luxon" "^2.3.1"
@@ -1943,25 +1943,25 @@
     tsnd "^1.0.2"
     typechain "^8.0.0"
 
-"@meemproject/meem-contracts@0.6.5-pre-7f8faed.0", "@meemproject/meem-contracts@^0.6.5-pre-7f8faed.0":
-  version "0.6.5-pre-7f8faed.0"
-  resolved "https://registry.yarnpkg.com/@meemproject/meem-contracts/-/meem-contracts-0.6.5-pre-7f8faed.0.tgz#9ef7fb5913a78aa331a5741b2c6ce95777201fcd"
-  integrity sha512-SbUSSqy3dI6GNEXNiqbNH1Me4xK+IsnDmJF2bAYmRlmCwnE6wvxpqW1zqCgItfbDhTPsR2nDFuZXzkQIPTFBng==
+"@meemproject/meem-contracts@0.6.5-pre-8f38b75.0", "@meemproject/meem-contracts@^0.6.5-pre-8f38b75.0":
+  version "0.6.5-pre-8f38b75.0"
+  resolved "https://registry.yarnpkg.com/@meemproject/meem-contracts/-/meem-contracts-0.6.5-pre-8f38b75.0.tgz#d27e5c8e7d80b7bb805dd7a3a680cd872a9c9407"
+  integrity sha512-/Vpy531BVwygnl1/Gi/iMuNfWsE2XZr583Hvuil0a1F+ZCQNxshS/NvyKfsgVcOxNG96PWvIetWj9HX1vz30lA==
   dependencies:
     "@kengoldfarb/log" "^1.0.5"
     ethers "^5.6.4"
 
-"@meemproject/react@0.6.5-pre-7f8faed.0":
-  version "0.6.5-pre-7f8faed.0"
-  resolved "https://registry.yarnpkg.com/@meemproject/react/-/react-0.6.5-pre-7f8faed.0.tgz#6cf3b10a3140e59f52ec83efa00b33a5c097d6a7"
-  integrity sha512-eFifP/Dyp+/8WM0ajs+Pm9gB1C7sFgBcuc4njWX1jN+njJQ2htEMzOmNvgRneL3RRI1LwpdBjNQEMDqi5x3DPw==
+"@meemproject/react@0.6.5-pre-8f38b75.0":
+  version "0.6.5-pre-8f38b75.0"
+  resolved "https://registry.yarnpkg.com/@meemproject/react/-/react-0.6.5-pre-8f38b75.0.tgz#38a19c38d141cc7055cb0e1390a9b6e10709f345"
+  integrity sha512-0TVIhFMHt5FG6MCtrbOudY3eTUDc++APzeEnbvYJM6p7VrmAunIF2pFt8rHFVVCmJcY0lIgEcbLoKIa5ekp2QA==
   dependencies:
     "@kengoldfarb/log" "^1.0.5"
     "@material-ui/core" "^4.12.4"
     "@material-ui/lab" "^4.0.0-alpha.61"
-    "@meemproject/api" "^0.6.5-pre-7f8faed.0"
-    "@meemproject/meem-contracts" "^0.6.5-pre-7f8faed.0"
-    "@meemproject/utils" "^0.6.5-pre-7f8faed.0"
+    "@meemproject/api" "^0.6.5-pre-8f38b75.0"
+    "@meemproject/meem-contracts" "^0.6.5-pre-8f38b75.0"
+    "@meemproject/utils" "^0.6.5-pre-8f38b75.0"
     "@mui/material" "^5.6.1"
     "@walletconnect/web3-provider" "^1.7.7"
     ethers "^5.6.4"
@@ -1972,13 +1972,13 @@
     swr "^1.3.0"
     web3modal "^1.9.6"
 
-"@meemproject/utils@^0.6.5-pre-7f8faed.0":
-  version "0.6.5-pre-7f8faed.0"
-  resolved "https://registry.yarnpkg.com/@meemproject/utils/-/utils-0.6.5-pre-7f8faed.0.tgz#0822c366865093e8417835a326b51ec11df06309"
-  integrity sha512-jqnwOr2HhR3Cqe4VhqMI2HICs4/J28eXwNmcPe84y1tESc1R1BG0LAzjWH5oiZgsRhRs1WQ3VI/DCK3IWPMEkg==
+"@meemproject/utils@^0.6.5-pre-8f38b75.0":
+  version "0.6.5-pre-8f38b75.0"
+  resolved "https://registry.yarnpkg.com/@meemproject/utils/-/utils-0.6.5-pre-8f38b75.0.tgz#263abaae740f99a35c9b93231ffaf1810f5eb797"
+  integrity sha512-PvZXgAGPrkM77mQt5l5yiPhVgMwSQyB603tB97V1CDR7P40x2NB0zdDO/qOpZA7ivJV7GRdAxhfVMit2momvPQ==
   dependencies:
     "@kengoldfarb/log" "^1.0.5"
-    "@meemproject/meem-contracts" "^0.6.5-pre-7f8faed.0"
+    "@meemproject/meem-contracts" "^0.6.5-pre-8f38b75.0"
     ethers "^5.6.4"
 
 "@metamask/safe-event-emitter@^2.0.0":

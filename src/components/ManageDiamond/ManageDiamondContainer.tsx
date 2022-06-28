@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client'
+import { useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import {
 	createStyles,
@@ -11,11 +11,11 @@ import {
 	Timeline,
 	ThemeIcon,
 	Title,
-	Skeleton
+	Skeleton,
+	Tooltip
 } from '@mantine/core'
 import { formList, useForm } from '@mantine/form'
 import { showNotification } from '@mantine/notifications'
-import { MeemAPI } from '@meemproject/api'
 import { getCuts, IVersion, upgrade } from '@meemproject/meem-contracts'
 import { useWallet } from '@meemproject/react'
 import { ethers } from 'ethers'
@@ -28,25 +28,34 @@ import {
 	CirclePlus,
 	Diamond,
 	DiamondOff,
-	FaceIdError
+	FaceIdError,
+	Pencil
 } from 'tabler-icons-react'
 import {
 	Bundles,
 	ContractInstances,
-	GetContractsByAddressesQuery
+	SubGetContractsByAddressesSubscription,
+	WalletContractInstances
 } from '../../../generated/graphql'
-import { GET_CONTRACTS_BY_ADDRESS } from '../../graphql/contracts'
+import { SUB_GET_CONTRACTS_BY_ADDRESS } from '../../graphql/contracts'
 import { diamondABI } from '../../lib/diamond'
 import { Page } from '../../styles/Page'
 import { Address } from '../Atoms/Address'
+import { EditWalletContract } from '../Atoms/EditWalletContract'
 import { FacetList } from '../Atoms/FacetList'
 import {
 	FindContract,
 	IProps as IFindContractProps
 } from '../Atoms/FindContract'
+import { IconButton } from '../Atoms/IconButton'
 import { FindBundle } from '../Bundles/FindBundle'
 
 const useStyles = createStyles(_theme => ({
+	row: {
+		alignItems: 'center',
+		display: 'flex',
+		flexDirection: 'row'
+	},
 	section_wrapper: {
 		display: 'flex'
 	},
@@ -75,6 +84,7 @@ export const ManageDiamondContainer: React.FC = () => {
 
 	const [isDiamond, setIsDiamond] = useState(false)
 	const [isDirty, setIsDirty] = useState(false)
+	const [isEditing, setIsEditing] = useState(false)
 	const [hasInitialized, setHasInitialized] = useState(false)
 	const [isSaving, setIsSaving] = useState(false)
 	const [bytecode, setBytecode] = useState<string>()
@@ -83,30 +93,53 @@ export const ManageDiamondContainer: React.FC = () => {
 	const [isBundleOpen, setIsBundleOpen] = useState(false)
 	const [fetchedAddress, setFetchedAddress] = useState<string>()
 	const [fetchedChainId, setFetchedChainId] = useState<number>()
+	const [contractOwner, setContractOwner] = useState<string>()
 	const [facets, setFacets] = useState<
 		{ selectors: string[]; target: string }[]
 	>([])
-	const { web3Provider, signer, chainId, setChain } = useWallet()
+	const { web3Provider, signer, chainId, setChain, accounts } = useWallet()
 
-	const {
-		loading: isLoading,
-		data,
-		refetch
-	} = useQuery<GetContractsByAddressesQuery>(GET_CONTRACTS_BY_ADDRESS, {
-		variables: {
-			addresses: [...form.values.facets]
-				.sort((a, b) => {
-					if (a.target < b.target) {
-						return -1
-					}
-					if (a.target > b.target) {
-						return 1
-					}
-					return 0
-				})
-				.map(f => f.target)
-		}
-	})
+	// const {
+	// 	loading: isLoading,
+	// 	data,
+	// 	refetch
+	// } = useQuery<GetContractsByAddressesQuery>(GET_CONTRACTS_BY_ADDRESS, {
+	// 	variables: {
+	// 		addresses: [...form.values.facets, { target: form.values.address }]
+	// 			.sort((a, b) => {
+	// 				if (a.target < b.target) {
+	// 					return -1
+	// 				}
+	// 				if (a.target > b.target) {
+	// 					return 1
+	// 				}
+	// 				return 0
+	// 			})
+	// 			.map(f => f.target)
+	// 	}
+	// })
+	const { loading: isLoading, data } =
+		useSubscription<SubGetContractsByAddressesSubscription>(
+			SUB_GET_CONTRACTS_BY_ADDRESS,
+			{
+				variables: {
+					addresses: [
+						...form.values.facets,
+						{ target: form.values.address }
+					]
+						.sort((a, b) => {
+							if (a.target < b.target) {
+								return -1
+							}
+							if (a.target > b.target) {
+								return 1
+							}
+							return 0
+						})
+						.map(f => f.target)
+				}
+			}
+		)
 
 	const handleFacetSelect: IFindContractProps['onClick'] = async contract => {
 		const instance = contract.ContractInstances.find(
@@ -142,8 +175,6 @@ export const ManageDiamondContainer: React.FC = () => {
 	}
 
 	const handleBundleSelect = async (bundle: Bundles) => {
-		log.debug('!!!!!!! handleBundleSelect')
-
 		bundle.BundleContracts.forEach(bc => {
 			const contract = bc.Contract
 			if (contract) {
@@ -206,7 +237,7 @@ export const ManageDiamondContainer: React.FC = () => {
 				fromVersion,
 				toVersion
 			})
-			refetch()
+			// refetch()
 			showNotification({
 				title: 'Success!',
 				message: 'The contract has been upgraded.',
@@ -227,10 +258,12 @@ export const ManageDiamondContainer: React.FC = () => {
 					signer
 				)
 
-				const [facetResult, bytecodeResult] = await Promise.allSettled([
-					diamond.facets(),
-					web3Provider?.getCode(form.values.address)
-				])
+				const [facetResult, bytecodeResult, ownerResult] =
+					await Promise.allSettled([
+						diamond.facets(),
+						web3Provider?.getCode(form.values.address),
+						diamond.owner()
+					])
 
 				const result =
 					facetResult.status === 'fulfilled' && facetResult.value
@@ -239,10 +272,13 @@ export const ManageDiamondContainer: React.FC = () => {
 					bytecodeResult.status === 'fulfilled' &&
 					bytecodeResult.value
 
+				const owner =
+					ownerResult.status === 'fulfilled' && ownerResult.value
+
 				form.values.facets.splice(0, form.values.facets.length)
 				// form.setFieldValue('facets', formList(result))
 				if (Array.isArray(result)) {
-					result.forEach((f, i) => {
+					result.forEach(f => {
 						if (
 							f.target.toLowerCase() !==
 							form.values.address.toLowerCase()
@@ -253,6 +289,7 @@ export const ManageDiamondContainer: React.FC = () => {
 
 				setFacets(result)
 				setBytecode(bc && bc !== '0x' ? bc : undefined)
+				setContractOwner(owner)
 				setFetchedAddress(form.values.address)
 				setFetchedChainId(chainId)
 				setIsDiamond(!!result)
@@ -284,7 +321,7 @@ export const ManageDiamondContainer: React.FC = () => {
 	}, [form, fetchedAddress, signer, web3Provider, chainId, fetchedChainId])
 
 	useEffect(() => {
-		if (!hasInitialized) {
+		if (!hasInitialized && chainId) {
 			if (
 				typeof router.query.address === 'string' &&
 				router.query.address !== form.values.address
@@ -305,9 +342,8 @@ export const ManageDiamondContainer: React.FC = () => {
 				setHasInitialized(true)
 			}
 		} else if (
-			// router.query.address !== form.values.address ||
-			!router.query.chainId ||
-			+router.query.chainId !== chainId
+			hasInitialized &&
+			(!router.query.chainId || +router.query.chainId !== chainId)
 		) {
 			router.push(
 				{
@@ -363,10 +399,43 @@ export const ManageDiamondContainer: React.FC = () => {
 		? ethers.utils.isAddress(fetchedAddress)
 		: false
 
+	const isContractOwner = !!(
+		accounts &&
+		contractOwner &&
+		accounts[0] &&
+		accounts[0].toLowerCase() === contractOwner?.toLowerCase()
+	)
+
+	const proxyContract = data?.ContractInstances.find(
+		ci => ci.address.toLowerCase() === form.values.address.toLowerCase()
+	)
+
+	const walletContract = proxyContract?.WalletContractInstances[0]
+
+	const facetContractInstances = data?.ContractInstances.filter(
+		ci => ci.address.toLowerCase() !== form.values.address.toLowerCase()
+	)
+
 	return (
 		<Page>
 			<form onSubmit={form.onSubmit(() => handleSave())}>
-				<Title>Contract Info</Title>
+				{!walletContract && <Title>Contract Info</Title>}
+				{walletContract && (
+					<>
+						<div className={classes.row}>
+							<Title>{walletContract.name ?? 'Contract'}</Title>
+							<Space w={8} />
+							<Tooltip label="Edit name / note" withArrow>
+								<IconButton
+									icon={<Pencil size={24} />}
+									onClick={() => setIsEditing(true)}
+								/>
+							</Tooltip>
+						</div>
+						<Text>{walletContract.note}</Text>
+					</>
+				)}
+
 				<Space h={12} />
 				<TextInput
 					label="Contract Address"
@@ -392,6 +461,12 @@ export const ManageDiamondContainer: React.FC = () => {
 					{...form.getInputProps('address')}
 				/>
 				<Space h={48} />
+
+				{!fetchedAddress && (
+					<Title order={4}>
+						Enter a contract address to continue
+					</Title>
+				)}
 
 				{isValidAddress && !fetchedAddress && (
 					<>
@@ -469,6 +544,43 @@ export const ManageDiamondContainer: React.FC = () => {
 									active
 									bullet={
 										<ThemeIcon
+											color={
+												isContractOwner
+													? 'green'
+													: 'red'
+											}
+										>
+											{isContractOwner ? (
+												<Check size={20} />
+											) : (
+												<FaceIdError size={20} />
+											)}
+										</ThemeIcon>
+									}
+									title={
+										isContractOwner
+											? 'Contract Owner'
+											: 'Not Contract Owner'
+									}
+								>
+									{isContractOwner && (
+										<Text color="dimmed" size="sm">
+											You are the owner of this contract.
+										</Text>
+									)}
+									{!isContractOwner && (
+										<Text color="dimmed" size="sm">
+											The connected account is not the
+											owner of the contract
+										</Text>
+									)}
+								</Timeline.Item>
+							)}
+							{bytecode && (
+								<Timeline.Item
+									active
+									bullet={
+										<ThemeIcon
 											color={isDiamond ? 'green' : 'red'}
 										>
 											{isDiamond ? (
@@ -498,33 +610,37 @@ export const ManageDiamondContainer: React.FC = () => {
 						{isDiamond && (
 							<>
 								<Space h={48} />
-
-								<div className={classes.section_wrapper}>
-									<Text size="xl">Facets</Text>
-									<Space w={12} />
-									<Button
-										disabled={isLoading || isSaving}
-										onClick={() => setIsOpen(true)}
-										leftIcon={<CirclePlus />}
-									>
-										Add Facet
-									</Button>
-									<Space w={12} />
-									<Button
-										disabled={isLoading || isSaving}
-										onClick={() => setIsBundleOpen(true)}
-										leftIcon={<CirclePlus />}
-									>
-										Add Bundle
-									</Button>
-								</div>
+								{isContractOwner && (
+									<div className={classes.section_wrapper}>
+										<Text size="xl">Facets</Text>
+										<Space w={12} />
+										<Button
+											disabled={isLoading || isSaving}
+											onClick={() => setIsOpen(true)}
+											leftIcon={<CirclePlus />}
+										>
+											Add Facet
+										</Button>
+										<Space w={12} />
+										<Button
+											disabled={isLoading || isSaving}
+											onClick={() =>
+												setIsBundleOpen(true)
+											}
+											leftIcon={<CirclePlus />}
+										>
+											Add Bundle
+										</Button>
+									</div>
+								)}
 								<Space h={12} />
 								<FacetList
 									form={form}
 									contractInstances={
-										data?.ContractInstances as ContractInstances[]
+										facetContractInstances as ContractInstances[]
 									}
 									isLoading={isLoading}
+									isEnabled={isContractOwner}
 								/>
 
 								{isDirty && (
@@ -560,6 +676,19 @@ export const ManageDiamondContainer: React.FC = () => {
 					title={<Title>Find a Bundle</Title>}
 				>
 					<FindBundle onSelect={handleBundleSelect} />
+				</Modal>
+				<Modal
+					opened={isEditing}
+					onClose={() => setIsEditing(false)}
+					size={900}
+					title={<Title>Edit Contract Info</Title>}
+				>
+					<EditWalletContract
+						walletContract={
+							walletContract as WalletContractInstances
+						}
+						onSave={() => setIsEditing(false)}
+					/>
 				</Modal>
 			</form>
 		</Page>

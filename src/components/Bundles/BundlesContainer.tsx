@@ -1,4 +1,5 @@
-import { Text, Space, Modal, Title } from '@mantine/core'
+import { Space, Modal, Title } from '@mantine/core'
+import Link from 'next/link'
 import React, { useState } from 'react'
 import { Bundles } from '../../../generated/graphql'
 import { Page } from '../../styles/Page'
@@ -14,8 +15,11 @@ export const BundlesContainer: React.FC = () => {
 		<Page>
 			<Title>Search Bundles</Title>
 			<Space h={16} />
-			<Text color="dimmed">Find a bundle</Text>
+			<Link href="/createbundle">
+				<a>Create a bundle</a>
+			</Link>
 			<Space h={16} />
+
 			<FindBundle
 				onSelect={bundle => {
 					setSelectedBundle(bundle)

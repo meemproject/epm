@@ -30,31 +30,35 @@ export interface IProps {
 	contractInstances?: ContractInstances[]
 	contracts?: Contracts[]
 	isLoading?: boolean
+	isEnabled?: boolean
 }
 
 export const FacetList: React.FC<IProps> = ({
 	form,
 	isLoading,
 	contractInstances,
-	contracts
+	contracts,
+	isEnabled
 }) => {
 	const { classes } = useStyles()
 
-	console.log('FACETLIST', { contracts, v: form.values })
-
 	return (
 		<div className="facet_container">
-			{form.values.facets.length > 1 && (
-				<Text size="md" color="dimmed">
-					Drag &amp; drop facets to re-order. Facets closest to the
-					top will take priority over those below
-				</Text>
-			)}
-			{form.values.facets.length === 1 && (
-				<Text size="md" color="dimmed">
-					Add facets to your contract to enable additional
-					functionality.
-				</Text>
+			{isEnabled && (
+				<>
+					{form.values.facets.length > 1 && (
+						<Text size="md" color="dimmed">
+							Drag &amp; drop facets to re-order. Facets closest
+							to the top will take priority over those below
+						</Text>
+					)}
+					{form.values.facets.length === 1 && (
+						<Text size="md" color="dimmed">
+							Add facets to your contract to enable additional
+							functionality.
+						</Text>
+					)}
+				</>
 			)}
 
 			<DragDropContext
@@ -103,6 +107,7 @@ export const FacetList: React.FC<IProps> = ({
 											key={i}
 											index={i}
 											draggableId={i.toString()}
+											isDragDisabled={!isEnabled}
 										>
 											{p => {
 												return (
@@ -117,11 +122,15 @@ export const FacetList: React.FC<IProps> = ({
 															}
 															{...p.dragHandleProps}
 														>
-															<div>
-																<GripVertical
-																	size={18}
-																/>
-															</div>
+															{isEnabled && (
+																<div>
+																	<GripVertical
+																		size={
+																			18
+																		}
+																	/>
+																</div>
+															)}
 															{isLoading && (
 																<Skeleton
 																	width="100%"
@@ -136,20 +145,24 @@ export const FacetList: React.FC<IProps> = ({
 																	contract
 																}
 															/>
-															<div>
-																<IconButton
-																	tooltip="Remove Facet"
-																	onClick={() => {
-																		form.removeListItem(
-																			'facets',
-																			[i]
-																		)
-																	}}
-																	icon={
-																		<CircleX color="red" />
-																	}
-																/>
-															</div>
+															{isEnabled && (
+																<div>
+																	<IconButton
+																		tooltip="Remove Facet"
+																		onClick={() => {
+																			form.removeListItem(
+																				'facets',
+																				[
+																					i
+																				]
+																			)
+																		}}
+																		icon={
+																			<CircleX color="red" />
+																		}
+																	/>
+																</div>
+															)}
 														</Center>
 													</Group>
 												)

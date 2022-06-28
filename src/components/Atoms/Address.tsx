@@ -1,4 +1,4 @@
-import { createStyles, Space, Text, Tooltip } from '@mantine/core'
+import { createStyles, Space, Text, Title, Tooltip } from '@mantine/core'
 import { useClipboard } from '@mantine/hooks'
 import { showNotification } from '@mantine/notifications'
 import { chains } from '@meemproject/api'
@@ -11,16 +11,24 @@ import { IconButton } from './IconButton'
 export interface IProps {
 	address?: string | null
 	chainId?: number
+	label?: string | null
+	labelLink?: string | null
 }
 
 const useStyles = createStyles(_theme => ({
 	row: {
+		alignItems: 'center',
 		display: 'flex',
 		flexDirection: 'row'
 	}
 }))
 
-export const Address: React.FC<IProps> = ({ address, chainId }) => {
+export const Address: React.FC<IProps> = ({
+	address,
+	chainId,
+	label,
+	labelLink
+}) => {
 	const { classes } = useStyles()
 	const clipboard = useClipboard({ timeout: 500 })
 	if (!address) {
@@ -51,23 +59,41 @@ export const Address: React.FC<IProps> = ({ address, chainId }) => {
 				/>
 			</Tooltip>
 			<Space w={8} />
-			{href && (
-				<Link href={href}>
-					<a target="_blank" className={classes.row}>
-						<Tooltip
-							label="View on Block Explorer"
-							withArrow
-							className={classes.row}
-						>
-							{chain && <Text weight={500}>{chain.name}</Text>}
-							<Space w={8} />
-							<Text>{quickTruncate(address)}</Text>
-							<ExternalLink size={24} />
-						</Tooltip>
-					</a>
-				</Link>
-			)}
-			{!href && <Text>{quickTruncate(address)}</Text>}
+			<div>
+				{label && !labelLink && <Title order={6}>{label}</Title>}
+				{label && labelLink && (
+					<Link href={labelLink}>
+						<a target="_blank" className={classes.row}>
+							<Tooltip
+								label="Manage Contract"
+								withArrow
+								className={classes.row}
+							>
+								<Title order={6}>{label}</Title>
+							</Tooltip>
+						</a>
+					</Link>
+				)}
+				{href && (
+					<Link href={href}>
+						<a target="_blank" className={classes.row}>
+							<Tooltip
+								label="View on Block Explorer"
+								withArrow
+								className={classes.row}
+							>
+								{chain && (
+									<Text weight={500}>{chain.name}</Text>
+								)}
+								<Space w={8} />
+								<Text>{quickTruncate(address)}</Text>
+								<ExternalLink size={24} />
+							</Tooltip>
+						</a>
+					</Link>
+				)}
+				{!href && <Text>{quickTruncate(address)}</Text>}
+			</div>
 		</div>
 	)
 }

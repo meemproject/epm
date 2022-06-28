@@ -6,14 +6,16 @@ import {
 	Spoiler,
 	Accordion,
 	Title,
-	Space
+	Space,
+	Modal
 } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
 import cx from 'classnames'
 import Link from 'next/link'
-import React from 'react'
-import { SearchContractsQuery } from '../../../generated/graphql'
+import React, { useState } from 'react'
+import { Contracts, SearchContractsQuery } from '../../../generated/graphql'
 import { ArrayElement } from '../../lib/utils'
+import { DeployContract } from '../Contracts/DeployContract'
 import { Address } from './Address'
 
 const useStyles = createStyles(_theme => ({
@@ -54,6 +56,8 @@ export const ContractCard: React.FC<IProps> = ({
 
 	const { chainId } = useWallet()
 
+	const [isOpen, setIsOpen] = useState(false)
+
 	if (!contract) {
 		return null
 	}
@@ -91,11 +95,20 @@ export const ContractCard: React.FC<IProps> = ({
 					)}
 					{contract.ContractInstances.map(ci => {
 						return (
-							<Address
-								key={ci.address}
-								address={ci.address}
-								chainId={ci.chainId}
-							/>
+							<>
+								<Address
+									key={`address-${ci.address}`}
+									address={ci.address}
+									chainId={ci.chainId}
+									label={
+										ci.WalletContractInstances &&
+										ci.WalletContractInstances[0] &&
+										ci.WalletContractInstances[0].name
+									}
+									labelLink={`/manage?address=${ci.address}&chainId=${ci.chainId}`}
+								/>
+								<Space h={16} />
+							</>
 						)
 					})}
 					<Space h={32} />
@@ -123,33 +136,57 @@ export const ContractCard: React.FC<IProps> = ({
 		</>
 	)
 
-	return isCompact ? (
-		<Accordion key={contract.id} className={classes.card}>
-			<Accordion.Item
-				className={classes.card}
-				label={
-					<div className={classes.row}>
-						<Text>{contract.name}</Text>
-						<Space w={16} />
-						{!isDeployedOnCurrentChain &&
-							shouldShowDeployOnCurrentChain && (
-								<Button>Deploy</Button>
-							)}
-					</div>
-				}
-				iconPosition="right"
+	return (
+		<>
+			{isCompact ? (
+				<Accordion key={contract.id} className={classes.card}>
+					<Accordion.Item
+						className={classes.card}
+						label={
+							<div className={classes.row}>
+								<Text>{contract.name}</Text>
+								<Space w={16} />
+								{!isDeployedOnCurrentChain &&
+									shouldShowDeployOnCurrentChain && (
+										<Button
+											onClick={(e: any) => {
+												e.preventDefault()
+												e.stopPropagation()
+												setIsOpen(true)
+											}}
+										>
+											Deploy
+										</Button>
+									)}
+							</div>
+						}
+						iconPosition="right"
+					>
+						{cardDetails}
+					</Accordion.Item>
+				</Accordion>
+			) : (
+				<Card
+					key={contract.id}
+					shadow="sm"
+					p="lg"
+					className={cx(classes.card, className)}
+				>
+					{cardDetails}
+				</Card>
+			)}
+			<Modal
+				title={<Title>Deploy Contract</Title>}
+				opened={isOpen}
+				onClose={() => setIsOpen(false)}
 			>
-				{cardDetails}
-			</Accordion.Item>
-		</Accordion>
-	) : (
-		<Card
-			key={contract.id}
-			shadow="sm"
-			p="lg"
-			className={cx(classes.card, className)}
-		>
-			{cardDetails}
-		</Card>
+				<DeployContract
+					contract={contract as Contracts}
+					onDeployed={() => {
+						setIsOpen(false)
+					}}
+				/>
+			</Modal>
+		</>
 	)
 }

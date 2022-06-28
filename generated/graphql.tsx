@@ -4939,7 +4939,7 @@ export type Uuid_Comparison_Exp = {
   _nin?: InputMaybe<Array<Scalars['uuid']>>;
 };
 
-export type ContractPartsFragment = { __typename?: 'Contracts', id: any, name: string, description: string, abi: any, bytecode: string, contractType: string, functionSelectors: any, CreatorId?: any | null, ContractInstances: Array<{ __typename?: 'ContractInstances', chainId: number, address: string }>, Creator?: { __typename?: 'Wallets', address: string } | null };
+export type ContractPartsFragment = { __typename?: 'Contracts', id: any, name: string, description: string, abi: any, bytecode: string, contractType: string, functionSelectors: any, CreatorId?: any | null, ContractInstances: Array<{ __typename?: 'ContractInstances', chainId: number, address: string, WalletContractInstances: Array<{ __typename?: 'WalletContractInstances', name?: string | null, note?: string | null }> }>, Creator?: { __typename?: 'Wallets', address: string } | null };
 
 export type SearchContractsQueryVariables = Exact<{
   contractType?: InputMaybe<Scalars['String']>;
@@ -4947,49 +4947,92 @@ export type SearchContractsQueryVariables = Exact<{
 }>;
 
 
-export type SearchContractsQuery = { __typename?: 'query_root', Contracts: Array<{ __typename?: 'Contracts', id: any, name: string, description: string, abi: any, bytecode: string, contractType: string, functionSelectors: any, CreatorId?: any | null, ContractInstances: Array<{ __typename?: 'ContractInstances', chainId: number, address: string }>, Creator?: { __typename?: 'Wallets', address: string } | null }> };
+export type SearchContractsQuery = { __typename?: 'query_root', Contracts: Array<{ __typename?: 'Contracts', id: any, name: string, description: string, abi: any, bytecode: string, contractType: string, functionSelectors: any, CreatorId?: any | null, ContractInstances: Array<{ __typename?: 'ContractInstances', chainId: number, address: string, WalletContractInstances: Array<{ __typename?: 'WalletContractInstances', name?: string | null, note?: string | null }> }>, Creator?: { __typename?: 'Wallets', address: string } | null }> };
 
 export type GetContractsByAddressesQueryVariables = Exact<{
   addresses?: InputMaybe<Array<Scalars['String']> | Scalars['String']>;
 }>;
 
 
-export type GetContractsByAddressesQuery = { __typename?: 'query_root', ContractInstances: Array<{ __typename?: 'ContractInstances', id: any, address: string, Contract?: { __typename?: 'Contracts', id: any, name: string, description: string, abi: any, bytecode: string, contractType: string, functionSelectors: any, CreatorId?: any | null, ContractInstances: Array<{ __typename?: 'ContractInstances', chainId: number, address: string }>, Creator?: { __typename?: 'Wallets', address: string } | null } | null }> };
+export type GetContractsByAddressesQuery = { __typename?: 'query_root', ContractInstances: Array<{ __typename?: 'ContractInstances', id: any, address: string, WalletContractInstances: Array<{ __typename?: 'WalletContractInstances', name?: string | null, note?: string | null, ContractInstance?: { __typename?: 'ContractInstances', id: any, address: string, chainId: number } | null }>, Contract?: { __typename?: 'Contracts', id: any, name: string, description: string, abi: any, bytecode: string, contractType: string, functionSelectors: any, CreatorId?: any | null, ContractInstances: Array<{ __typename?: 'ContractInstances', chainId: number, address: string, WalletContractInstances: Array<{ __typename?: 'WalletContractInstances', name?: string | null, note?: string | null }> }>, Creator?: { __typename?: 'Wallets', address: string } | null } | null }> };
 
 export type GetContractsByIdQueryVariables = Exact<{
   ids?: InputMaybe<Array<Scalars['uuid']> | Scalars['uuid']>;
 }>;
 
 
-export type GetContractsByIdQuery = { __typename?: 'query_root', Contracts: Array<{ __typename?: 'Contracts', id: any, name: string, description: string, abi: any, bytecode: string, contractType: string, functionSelectors: any, CreatorId?: any | null, ContractInstances: Array<{ __typename?: 'ContractInstances', chainId: number, address: string }>, Creator?: { __typename?: 'Wallets', address: string } | null }> };
+export type GetContractsByIdQuery = { __typename?: 'query_root', Contracts: Array<{ __typename?: 'Contracts', id: any, name: string, description: string, abi: any, bytecode: string, contractType: string, functionSelectors: any, CreatorId?: any | null, ContractInstances: Array<{ __typename?: 'ContractInstances', chainId: number, address: string, WalletContractInstances: Array<{ __typename?: 'WalletContractInstances', name?: string | null, note?: string | null }> }>, Creator?: { __typename?: 'Wallets', address: string } | null }> };
 
 export type GetMyContractsSubscriptionSubscriptionVariables = Exact<{
   address: Scalars['String'];
 }>;
 
 
-export type GetMyContractsSubscriptionSubscription = { __typename?: 'subscription_root', Wallets: Array<{ __typename?: 'Wallets', id: any, WalletContractInstances: Array<{ __typename?: 'WalletContractInstances', id: any, note?: string | null, name?: string | null, ContractInstance?: { __typename?: 'ContractInstances', id: any, address: string, chainId: number, Contract?: { __typename?: 'Contracts', id: any, name: string, description: string, abi: any, bytecode: string, contractType: string, functionSelectors: any, CreatorId?: any | null, ContractInstances: Array<{ __typename?: 'ContractInstances', chainId: number, address: string }>, Creator?: { __typename?: 'Wallets', address: string } | null } | null } | null }> }> };
+export type GetMyContractsSubscriptionSubscription = { __typename?: 'subscription_root', Wallets: Array<{ __typename?: 'Wallets', id: any, WalletContractInstances: Array<{ __typename?: 'WalletContractInstances', id: any, note?: string | null, name?: string | null, ContractInstance?: { __typename?: 'ContractInstances', id: any, address: string, chainId: number, Contract?: { __typename?: 'Contracts', id: any, name: string, description: string, abi: any, bytecode: string, contractType: string, functionSelectors: any, CreatorId?: any | null, ContractInstances: Array<{ __typename?: 'ContractInstances', chainId: number, address: string, WalletContractInstances: Array<{ __typename?: 'WalletContractInstances', name?: string | null, note?: string | null }> }>, Creator?: { __typename?: 'Wallets', address: string } | null } | null } | null }> }> };
 
 export type GetMyContractsQueryVariables = Exact<{
   address: Scalars['String'];
 }>;
 
 
-export type GetMyContractsQuery = { __typename?: 'query_root', Wallets: Array<{ __typename?: 'Wallets', id: any, WalletContractInstances: Array<{ __typename?: 'WalletContractInstances', id: any, note?: string | null, name?: string | null, ContractInstance?: { __typename?: 'ContractInstances', id: any, address: string, chainId: number, Contract?: { __typename?: 'Contracts', id: any, name: string, description: string, abi: any, bytecode: string, contractType: string, functionSelectors: any, CreatorId?: any | null, ContractInstances: Array<{ __typename?: 'ContractInstances', chainId: number, address: string }>, Creator?: { __typename?: 'Wallets', address: string } | null } | null } | null }> }> };
+export type GetMyContractsQuery = { __typename?: 'query_root', Wallets: Array<{ __typename?: 'Wallets', id: any, WalletContractInstances: Array<{ __typename?: 'WalletContractInstances', id: any, note?: string | null, name?: string | null, ContractInstance?: { __typename?: 'ContractInstances', id: any, address: string, chainId: number, Contract?: { __typename?: 'Contracts', id: any, name: string, description: string, abi: any, bytecode: string, contractType: string, functionSelectors: any, CreatorId?: any | null, ContractInstances: Array<{ __typename?: 'ContractInstances', chainId: number, address: string, WalletContractInstances: Array<{ __typename?: 'WalletContractInstances', name?: string | null, note?: string | null }> }>, Creator?: { __typename?: 'Wallets', address: string } | null } | null } | null }> }> };
 
 export type SearchBundlesQueryVariables = Exact<{
   searchTerm?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type SearchBundlesQuery = { __typename?: 'query_root', Bundles: Array<{ __typename?: 'Bundles', id: any, name: string, description: string, BundleContracts: Array<{ __typename?: 'BundleContracts', order: number, Contract?: { __typename?: 'Contracts', id: any, name: string, description: string, abi: any, bytecode: string, contractType: string, functionSelectors: any, CreatorId?: any | null, ContractInstances: Array<{ __typename?: 'ContractInstances', chainId: number, address: string }>, Creator?: { __typename?: 'Wallets', address: string } | null } | null }>, Creator?: { __typename?: 'Wallets', address: string } | null }> };
+export type SearchBundlesQuery = { __typename?: 'query_root', Bundles: Array<{ __typename?: 'Bundles', id: any, name: string, description: string, BundleContracts: Array<{ __typename?: 'BundleContracts', id: any, order: number, Contract?: { __typename?: 'Contracts', id: any, name: string, description: string, abi: any, bytecode: string, contractType: string, functionSelectors: any, CreatorId?: any | null, ContractInstances: Array<{ __typename?: 'ContractInstances', chainId: number, address: string, WalletContractInstances: Array<{ __typename?: 'WalletContractInstances', name?: string | null, note?: string | null }> }>, Creator?: { __typename?: 'Wallets', address: string } | null } | null }>, Creator?: { __typename?: 'Wallets', address: string } | null }> };
 
 export type GetBundleByIdQueryVariables = Exact<{
   id: Scalars['uuid'];
 }>;
 
 
-export type GetBundleByIdQuery = { __typename?: 'query_root', Bundles: Array<{ __typename?: 'Bundles', id: any, name: string, description: string, BundleContracts: Array<{ __typename?: 'BundleContracts', order: number, Contract?: { __typename?: 'Contracts', id: any, name: string, description: string, abi: any, bytecode: string, contractType: string, functionSelectors: any, CreatorId?: any | null, ContractInstances: Array<{ __typename?: 'ContractInstances', chainId: number, address: string }>, Creator?: { __typename?: 'Wallets', address: string } | null } | null }>, Creator?: { __typename?: 'Wallets', address: string } | null }> };
+export type GetBundleByIdQuery = { __typename?: 'query_root', Bundles: Array<{ __typename?: 'Bundles', id: any, name: string, description: string, BundleContracts: Array<{ __typename?: 'BundleContracts', id: any, order: number, Contract?: { __typename?: 'Contracts', id: any, name: string, description: string, abi: any, bytecode: string, contractType: string, functionSelectors: any, CreatorId?: any | null, ContractInstances: Array<{ __typename?: 'ContractInstances', chainId: number, address: string, WalletContractInstances: Array<{ __typename?: 'WalletContractInstances', name?: string | null, note?: string | null }> }>, Creator?: { __typename?: 'Wallets', address: string } | null } | null }>, Creator?: { __typename?: 'Wallets', address: string } | null }> };
+
+export type SubSearchContractsSubscriptionVariables = Exact<{
+  contractType?: InputMaybe<Scalars['String']>;
+  searchTerm?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type SubSearchContractsSubscription = { __typename?: 'subscription_root', Contracts: Array<{ __typename?: 'Contracts', id: any, name: string, description: string, abi: any, bytecode: string, contractType: string, functionSelectors: any, CreatorId?: any | null, ContractInstances: Array<{ __typename?: 'ContractInstances', chainId: number, address: string, WalletContractInstances: Array<{ __typename?: 'WalletContractInstances', name?: string | null, note?: string | null }> }>, Creator?: { __typename?: 'Wallets', address: string } | null }> };
+
+export type SubGetContractsByAddressesSubscriptionVariables = Exact<{
+  addresses?: InputMaybe<Array<Scalars['String']> | Scalars['String']>;
+}>;
+
+
+export type SubGetContractsByAddressesSubscription = { __typename?: 'subscription_root', ContractInstances: Array<{ __typename?: 'ContractInstances', id: any, address: string, WalletContractInstances: Array<{ __typename?: 'WalletContractInstances', name?: string | null, note?: string | null, ContractInstance?: { __typename?: 'ContractInstances', id: any, address: string, chainId: number } | null }>, Contract?: { __typename?: 'Contracts', id: any, name: string, description: string, abi: any, bytecode: string, contractType: string, functionSelectors: any, CreatorId?: any | null, ContractInstances: Array<{ __typename?: 'ContractInstances', chainId: number, address: string, WalletContractInstances: Array<{ __typename?: 'WalletContractInstances', name?: string | null, note?: string | null }> }>, Creator?: { __typename?: 'Wallets', address: string } | null } | null }> };
+
+export type SubGetContractsByIdSubscriptionVariables = Exact<{
+  ids?: InputMaybe<Array<Scalars['uuid']> | Scalars['uuid']>;
+}>;
+
+
+export type SubGetContractsByIdSubscription = { __typename?: 'subscription_root', Contracts: Array<{ __typename?: 'Contracts', id: any, name: string, description: string, abi: any, bytecode: string, contractType: string, functionSelectors: any, CreatorId?: any | null, ContractInstances: Array<{ __typename?: 'ContractInstances', chainId: number, address: string, WalletContractInstances: Array<{ __typename?: 'WalletContractInstances', name?: string | null, note?: string | null }> }>, Creator?: { __typename?: 'Wallets', address: string } | null }> };
+
+export type SubGetMyContractsSubscriptionVariables = Exact<{
+  address: Scalars['String'];
+}>;
+
+
+export type SubGetMyContractsSubscription = { __typename?: 'subscription_root', Wallets: Array<{ __typename?: 'Wallets', id: any, WalletContractInstances: Array<{ __typename?: 'WalletContractInstances', id: any, note?: string | null, name?: string | null, ContractInstance?: { __typename?: 'ContractInstances', id: any, address: string, chainId: number, Contract?: { __typename?: 'Contracts', id: any, name: string, description: string, abi: any, bytecode: string, contractType: string, functionSelectors: any, CreatorId?: any | null, ContractInstances: Array<{ __typename?: 'ContractInstances', chainId: number, address: string, WalletContractInstances: Array<{ __typename?: 'WalletContractInstances', name?: string | null, note?: string | null }> }>, Creator?: { __typename?: 'Wallets', address: string } | null } | null } | null }> }> };
+
+export type SubSearchBundlesSubscriptionVariables = Exact<{
+  searchTerm?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type SubSearchBundlesSubscription = { __typename?: 'subscription_root', Bundles: Array<{ __typename?: 'Bundles', id: any, name: string, description: string, BundleContracts: Array<{ __typename?: 'BundleContracts', id: any, order: number, Contract?: { __typename?: 'Contracts', id: any, name: string, description: string, abi: any, bytecode: string, contractType: string, functionSelectors: any, CreatorId?: any | null, ContractInstances: Array<{ __typename?: 'ContractInstances', chainId: number, address: string, WalletContractInstances: Array<{ __typename?: 'WalletContractInstances', name?: string | null, note?: string | null }> }>, Creator?: { __typename?: 'Wallets', address: string } | null } | null }>, Creator?: { __typename?: 'Wallets', address: string } | null }> };
+
+export type SubGetBundleByIdSubscriptionVariables = Exact<{
+  id: Scalars['uuid'];
+}>;
+
+
+export type SubGetBundleByIdSubscription = { __typename?: 'subscription_root', Bundles: Array<{ __typename?: 'Bundles', id: any, name: string, description: string, BundleContracts: Array<{ __typename?: 'BundleContracts', id: any, order: number, Contract?: { __typename?: 'Contracts', id: any, name: string, description: string, abi: any, bytecode: string, contractType: string, functionSelectors: any, CreatorId?: any | null, ContractInstances: Array<{ __typename?: 'ContractInstances', chainId: number, address: string, WalletContractInstances: Array<{ __typename?: 'WalletContractInstances', name?: string | null, note?: string | null }> }>, Creator?: { __typename?: 'Wallets', address: string } | null } | null }>, Creator?: { __typename?: 'Wallets', address: string } | null }> };
 
 export const ContractPartsFragmentDoc = gql`
     fragment ContractParts on Contracts {
@@ -5003,6 +5046,10 @@ export const ContractPartsFragmentDoc = gql`
   ContractInstances {
     chainId
     address
+    WalletContractInstances {
+      name
+      note
+    }
   }
   CreatorId
   Creator {
@@ -5053,6 +5100,15 @@ export const GetContractsByAddressesDocument = gql`
   ContractInstances(where: {address: {_in: $addresses}}) {
     id
     address
+    WalletContractInstances {
+      name
+      note
+      ContractInstance {
+        id
+        address
+        chainId
+      }
+    }
     Contract {
       ...ContractParts
     }
@@ -5222,6 +5278,7 @@ export const SearchBundlesDocument = gql`
     name
     description
     BundleContracts {
+      id
       order
       Contract {
         ...ContractParts
@@ -5268,6 +5325,7 @@ export const GetBundleByIdDocument = gql`
     name
     description
     BundleContracts(order_by: {order: asc}) {
+      id
       order
       Contract {
         ...ContractParts
@@ -5307,3 +5365,238 @@ export function useGetBundleByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type GetBundleByIdQueryHookResult = ReturnType<typeof useGetBundleByIdQuery>;
 export type GetBundleByIdLazyQueryHookResult = ReturnType<typeof useGetBundleByIdLazyQuery>;
 export type GetBundleByIdQueryResult = Apollo.QueryResult<GetBundleByIdQuery, GetBundleByIdQueryVariables>;
+export const SubSearchContractsDocument = gql`
+    subscription SubSearchContracts($contractType: String, $searchTerm: String) {
+  Contracts(
+    where: {contractType: {_eq: $contractType}, _or: [{name: {_ilike: $searchTerm}}, {description: {_ilike: $searchTerm}}]}
+  ) {
+    ...ContractParts
+  }
+}
+    ${ContractPartsFragmentDoc}`;
+
+/**
+ * __useSubSearchContractsSubscription__
+ *
+ * To run a query within a React component, call `useSubSearchContractsSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useSubSearchContractsSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSubSearchContractsSubscription({
+ *   variables: {
+ *      contractType: // value for 'contractType'
+ *      searchTerm: // value for 'searchTerm'
+ *   },
+ * });
+ */
+export function useSubSearchContractsSubscription(baseOptions?: Apollo.SubscriptionHookOptions<SubSearchContractsSubscription, SubSearchContractsSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<SubSearchContractsSubscription, SubSearchContractsSubscriptionVariables>(SubSearchContractsDocument, options);
+      }
+export type SubSearchContractsSubscriptionHookResult = ReturnType<typeof useSubSearchContractsSubscription>;
+export type SubSearchContractsSubscriptionResult = Apollo.SubscriptionResult<SubSearchContractsSubscription>;
+export const SubGetContractsByAddressesDocument = gql`
+    subscription SubGetContractsByAddresses($addresses: [String!]) {
+  ContractInstances(where: {address: {_in: $addresses}}) {
+    id
+    address
+    WalletContractInstances {
+      name
+      note
+      ContractInstance {
+        id
+        address
+        chainId
+      }
+    }
+    Contract {
+      ...ContractParts
+    }
+  }
+}
+    ${ContractPartsFragmentDoc}`;
+
+/**
+ * __useSubGetContractsByAddressesSubscription__
+ *
+ * To run a query within a React component, call `useSubGetContractsByAddressesSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useSubGetContractsByAddressesSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSubGetContractsByAddressesSubscription({
+ *   variables: {
+ *      addresses: // value for 'addresses'
+ *   },
+ * });
+ */
+export function useSubGetContractsByAddressesSubscription(baseOptions?: Apollo.SubscriptionHookOptions<SubGetContractsByAddressesSubscription, SubGetContractsByAddressesSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<SubGetContractsByAddressesSubscription, SubGetContractsByAddressesSubscriptionVariables>(SubGetContractsByAddressesDocument, options);
+      }
+export type SubGetContractsByAddressesSubscriptionHookResult = ReturnType<typeof useSubGetContractsByAddressesSubscription>;
+export type SubGetContractsByAddressesSubscriptionResult = Apollo.SubscriptionResult<SubGetContractsByAddressesSubscription>;
+export const SubGetContractsByIdDocument = gql`
+    subscription SubGetContractsById($ids: [uuid!]) {
+  Contracts(where: {id: {_in: $ids}}) {
+    ...ContractParts
+  }
+}
+    ${ContractPartsFragmentDoc}`;
+
+/**
+ * __useSubGetContractsByIdSubscription__
+ *
+ * To run a query within a React component, call `useSubGetContractsByIdSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useSubGetContractsByIdSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSubGetContractsByIdSubscription({
+ *   variables: {
+ *      ids: // value for 'ids'
+ *   },
+ * });
+ */
+export function useSubGetContractsByIdSubscription(baseOptions?: Apollo.SubscriptionHookOptions<SubGetContractsByIdSubscription, SubGetContractsByIdSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<SubGetContractsByIdSubscription, SubGetContractsByIdSubscriptionVariables>(SubGetContractsByIdDocument, options);
+      }
+export type SubGetContractsByIdSubscriptionHookResult = ReturnType<typeof useSubGetContractsByIdSubscription>;
+export type SubGetContractsByIdSubscriptionResult = Apollo.SubscriptionResult<SubGetContractsByIdSubscription>;
+export const SubGetMyContractsDocument = gql`
+    subscription SubGetMyContracts($address: String!) {
+  Wallets(where: {address: {_ilike: $address}}) {
+    id
+    WalletContractInstances {
+      id
+      note
+      name
+      ContractInstance {
+        id
+        address
+        chainId
+        Contract {
+          ...ContractParts
+        }
+      }
+    }
+  }
+}
+    ${ContractPartsFragmentDoc}`;
+
+/**
+ * __useSubGetMyContractsSubscription__
+ *
+ * To run a query within a React component, call `useSubGetMyContractsSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useSubGetMyContractsSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSubGetMyContractsSubscription({
+ *   variables: {
+ *      address: // value for 'address'
+ *   },
+ * });
+ */
+export function useSubGetMyContractsSubscription(baseOptions: Apollo.SubscriptionHookOptions<SubGetMyContractsSubscription, SubGetMyContractsSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<SubGetMyContractsSubscription, SubGetMyContractsSubscriptionVariables>(SubGetMyContractsDocument, options);
+      }
+export type SubGetMyContractsSubscriptionHookResult = ReturnType<typeof useSubGetMyContractsSubscription>;
+export type SubGetMyContractsSubscriptionResult = Apollo.SubscriptionResult<SubGetMyContractsSubscription>;
+export const SubSearchBundlesDocument = gql`
+    subscription SubSearchBundles($searchTerm: String) {
+  Bundles(
+    where: {_or: [{name: {_ilike: $searchTerm}}, {description: {_ilike: $searchTerm}}]}
+  ) {
+    id
+    name
+    description
+    BundleContracts {
+      id
+      order
+      Contract {
+        ...ContractParts
+      }
+    }
+    Creator {
+      address
+    }
+  }
+}
+    ${ContractPartsFragmentDoc}`;
+
+/**
+ * __useSubSearchBundlesSubscription__
+ *
+ * To run a query within a React component, call `useSubSearchBundlesSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useSubSearchBundlesSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSubSearchBundlesSubscription({
+ *   variables: {
+ *      searchTerm: // value for 'searchTerm'
+ *   },
+ * });
+ */
+export function useSubSearchBundlesSubscription(baseOptions?: Apollo.SubscriptionHookOptions<SubSearchBundlesSubscription, SubSearchBundlesSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<SubSearchBundlesSubscription, SubSearchBundlesSubscriptionVariables>(SubSearchBundlesDocument, options);
+      }
+export type SubSearchBundlesSubscriptionHookResult = ReturnType<typeof useSubSearchBundlesSubscription>;
+export type SubSearchBundlesSubscriptionResult = Apollo.SubscriptionResult<SubSearchBundlesSubscription>;
+export const SubGetBundleByIdDocument = gql`
+    subscription SubGetBundleById($id: uuid!) {
+  Bundles(where: {id: {_eq: $id}}) {
+    id
+    name
+    description
+    BundleContracts(order_by: {order: asc}) {
+      id
+      order
+      Contract {
+        ...ContractParts
+      }
+    }
+    Creator {
+      address
+    }
+  }
+}
+    ${ContractPartsFragmentDoc}`;
+
+/**
+ * __useSubGetBundleByIdSubscription__
+ *
+ * To run a query within a React component, call `useSubGetBundleByIdSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useSubGetBundleByIdSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSubGetBundleByIdSubscription({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useSubGetBundleByIdSubscription(baseOptions: Apollo.SubscriptionHookOptions<SubGetBundleByIdSubscription, SubGetBundleByIdSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<SubGetBundleByIdSubscription, SubGetBundleByIdSubscriptionVariables>(SubGetBundleByIdDocument, options);
+      }
+export type SubGetBundleByIdSubscriptionHookResult = ReturnType<typeof useSubGetBundleByIdSubscription>;
+export type SubGetBundleByIdSubscriptionResult = Apollo.SubscriptionResult<SubGetBundleByIdSubscription>;
