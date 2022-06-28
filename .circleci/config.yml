@@ -74,7 +74,7 @@ workflows:
   do_build:
     jobs:
       - test:
-          context: clubs_sls_dev
+          context: epm_dev
           filters:
             branches:
               ignore:
@@ -90,19 +90,19 @@ workflows:
                 - stage
                 - master
       - deploy_dev:
-          context: clubs_sls_dev
+          context: epm_dev
           filters:
             branches:
               only:
                 - dev
       - deploy_stage:
-          context: clubs_sls_stage
+          context: epm_stage
           filters:
             branches:
               only:
                 - stage
       - deploy_prod:
-          context: clubs_sls_prod
+          context: epm_prod
           filters:
             branches:
               only:
