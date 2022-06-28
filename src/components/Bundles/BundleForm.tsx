@@ -9,6 +9,7 @@ import {
 	Title
 } from '@mantine/core'
 import { UseFormReturnType } from '@mantine/form/lib/use-form'
+import { showNotification } from '@mantine/notifications'
 import React, { useState } from 'react'
 import { CirclePlus } from 'tabler-icons-react'
 import { Contracts } from '../../../generated/graphql'
@@ -42,6 +43,17 @@ export const BundleForm: React.FC<IProps> = ({
 	const [isOpen, setIsOpen] = useState(false)
 
 	const handleFacetSelect: IFindContractProps['onClick'] = async contract => {
+		const existingFacet = form.values.facets.find(
+			f => f.contractId === contract.id
+		)
+		if (existingFacet) {
+			showNotification({
+				title: 'Contract already added',
+				message: 'That contract is already part of the bundle',
+				color: 'red'
+			})
+			return
+		}
 		form.addListItem('facets', {
 			selectors: contract.functionSelectors,
 			contractId: contract.id
@@ -86,6 +98,7 @@ export const BundleForm: React.FC<IProps> = ({
 				form={form}
 				contracts={contracts}
 				isLoading={isLoading}
+				isEnabled
 			/>
 			<Modal
 				opened={isOpen}

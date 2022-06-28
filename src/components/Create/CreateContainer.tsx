@@ -205,7 +205,8 @@ export const CreateContainer: React.FC = () => {
 						showNotification({
 							title: 'Contract created',
 							message:
-								'The contract was saved and can now be deployed.'
+								'The contract was saved and can now be deployed.',
+							color: 'green'
 						})
 					} catch (e) {
 						log.crit(e)

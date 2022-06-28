@@ -166,6 +166,7 @@ export const CreateBundleContainer: React.FC = () => {
 					form={form}
 					contracts={data?.Contracts as Contracts[]}
 					isLoading={isLoading}
+					isEnabled
 				/>
 
 				{form.values.facets.length > 0 && (
