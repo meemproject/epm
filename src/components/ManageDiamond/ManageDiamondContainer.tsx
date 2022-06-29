@@ -16,7 +16,7 @@ import {
 } from '@mantine/core'
 import { formList, useForm } from '@mantine/form'
 import { showNotification } from '@mantine/notifications'
-import { getCuts, IVersion, upgrade } from '@meemproject/meem-contracts'
+import { getCuts, IFacetVersion, upgrade } from '@meemproject/meem-contracts'
 import { useWallet } from '@meemproject/react'
 import { ethers } from 'ethers'
 import { useRouter } from 'next/router'
@@ -99,25 +99,6 @@ export const ManageDiamondContainer: React.FC = () => {
 	>([])
 	const { web3Provider, signer, chainId, setChain, accounts } = useWallet()
 
-	// const {
-	// 	loading: isLoading,
-	// 	data,
-	// 	refetch
-	// } = useQuery<GetContractsByAddressesQuery>(GET_CONTRACTS_BY_ADDRESS, {
-	// 	variables: {
-	// 		addresses: [...form.values.facets, { target: form.values.address }]
-	// 			.sort((a, b) => {
-	// 				if (a.target < b.target) {
-	// 					return -1
-	// 				}
-	// 				if (a.target > b.target) {
-	// 					return 1
-	// 				}
-	// 				return 0
-	// 			})
-	// 			.map(f => f.target)
-	// 	}
-	// })
 	const { loading: isLoading, data } =
 		useSubscription<SubGetContractsByAddressesSubscription>(
 			SUB_GET_CONTRACTS_BY_ADDRESS,
@@ -212,23 +193,19 @@ export const ManageDiamondContainer: React.FC = () => {
 				return
 			}
 			setIsSaving(true)
-			const fromVersion: IVersion = {}
+			const fromVersion: IFacetVersion[] = []
 			facets.forEach(facet => {
-				if (facet.target !== fetchedAddress) {
-					fromVersion[facet.target] = {
-						address: facet.target,
-						functionSelectors: facet.selectors
-					}
-				}
+				fromVersion.push({
+					address: facet.target,
+					functionSelectors: facet.selectors
+				})
 			})
-			const toVersion: IVersion = {}
+			const toVersion: IFacetVersion[] = []
 			form.values.facets.forEach(facet => {
-				if (facet.target !== fetchedAddress) {
-					toVersion[facet.target] = {
-						address: facet.target,
-						functionSelectors: facet.selectors
-					}
-				}
+				toVersion.push({
+					address: facet.target,
+					functionSelectors: facet.selectors
+				})
 			})
 
 			await upgrade({
@@ -363,22 +340,22 @@ export const ManageDiamondContainer: React.FC = () => {
 		if (!facets) {
 			return
 		}
-		const fromVersion: IVersion = {}
+		const fromVersion: IFacetVersion[] = []
 		facets.forEach(facet => {
 			if (facet.target !== fetchedAddress) {
-				fromVersion[facet.target] = {
+				fromVersion.push({
 					address: facet.target,
 					functionSelectors: facet.selectors
-				}
+				})
 			}
 		})
-		const toVersion: IVersion = {}
+		const toVersion: IFacetVersion[] = []
 		form.values.facets.forEach(facet => {
 			if (facet.target !== fetchedAddress) {
-				toVersion[facet.target] = {
+				toVersion.push({
 					address: facet.target,
 					functionSelectors: facet.selectors
-				}
+				})
 			}
 		})
 

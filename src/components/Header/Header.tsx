@@ -302,7 +302,7 @@ export function HeaderMenu() {
 							onClick={handlePoweredByMeem}
 							className={classes.menuItem}
 						>
-							Powered by{' '}
+							From{' '}
 							<span style={{ textDecoration: 'underline' }}>
 								Meem
 							</span>

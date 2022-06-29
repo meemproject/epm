@@ -15,6 +15,7 @@ import { MeemAPI } from '@meemproject/api'
 import { makeFetcher, useWallet } from '@meemproject/react'
 import { ethers } from 'ethers'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { SubGetMyContractsSubscription } from '../../../generated/graphql'
 import { SUB_GET_MY_CONTRACTS } from '../../graphql/contracts'
@@ -22,17 +23,19 @@ import { Page } from '../../styles/Page'
 import { ChainSelect } from '../Atoms/ChainSelect'
 import { WalletContractCard } from '../Atoms/WalletContractCard'
 
-export const MyContractsContainer: React.FC = () => {
-	const { accounts, chainId } = useWallet()
+export const AddressContractsContainer: React.FC = () => {
+	const { chainId } = useWallet()
 	const [isOpen, setIsOpen] = useState(false)
 	const [isChainSet, setIsChainSet] = useState(false)
+	const router = useRouter()
+	const address = router.query.address
 
 	const { loading: isLoading, data: contractQueryResult } =
 		useSubscription<SubGetMyContractsSubscription>(SUB_GET_MY_CONTRACTS, {
 			shouldResubscribe: true,
 			fetchPolicy: 'no-cache',
 			variables: {
-				address: accounts && accounts[0]
+				address
 			}
 		})
 
@@ -58,10 +61,6 @@ export const MyContractsContainer: React.FC = () => {
 
 	return (
 		<Page>
-			<Title>My Contracts</Title>
-			<Space h={8} />
-			<Text>All the contracts you&apos;ve deployed or tracked</Text>
-			<Space h={8} />
 			<Button onClick={() => setIsOpen(true)}>Track Contract</Button>
 
 			{contractQueryResult?.Wallets[0].WalletContractInstances.length ===
