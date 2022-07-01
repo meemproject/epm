@@ -13,11 +13,13 @@ import {
 	GetContractsByIdQuery
 } from '../../../generated/graphql'
 import { GET_BUNDLE_BY_ID, GET_CONTRACTS_BY_ID } from '../../graphql/contracts'
+import { downloadFile } from '../../lib/utils'
 import { Page } from '../../styles/Page'
 import { BundleForm } from './BundleForm'
 
 export const BundleContainer: React.FC = () => {
 	const router = useRouter()
+	const bundleId = router.query.bundleId as string
 
 	const form = useForm({
 		initialValues: {
@@ -37,7 +39,7 @@ export const BundleContainer: React.FC = () => {
 		refetch
 	} = useQuery<GetBundleByIdQuery>(GET_BUNDLE_BY_ID, {
 		variables: {
-			id: router.query.bundleId
+			id: bundleId
 		}
 	})
 
@@ -124,6 +126,36 @@ export const BundleContainer: React.FC = () => {
 					together
 				</Text>
 				<Space h={12} />
+				<Button
+					onClick={async () => {
+						const genTypes = makeFetcher<
+							MeemAPI.v1.GenerateTypes.IQueryParams,
+							MeemAPI.v1.GenerateTypes.IRequestBody,
+							MeemAPI.v1.GenerateTypes.IResponseBody
+						>({
+							method: MeemAPI.v1.GenerateTypes.method
+						})
+
+						const fileName =
+							data?.Bundles[0].name.replace(/\s/g, '') ??
+							'MyContract'
+
+						const { types } = await genTypes(
+							MeemAPI.v1.GenerateTypes.path(),
+							undefined,
+							{
+								bundleId,
+								name: fileName
+							}
+						)
+
+						console.log({ data })
+
+						downloadFile(`${fileName}.ts`, types)
+					}}
+				>
+					Download Types
+				</Button>
 				{!hasInitialized && (
 					<>
 						<Skeleton width="100%" height={200} />
