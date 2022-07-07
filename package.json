@@ -43,6 +43,7 @@
 		"@mantine/hooks": "4.2.2",
 		"@mantine/next": "4.2.2",
 		"@mantine/notifications": "4.2.2",
+		"@mantine/prism": "^4.2.11",
 		"@meemproject/api": "0.6.5-pre-c49d3f7.0",
 		"@meemproject/meem-contracts": "0.6.5-pre-c49d3f7.0",
 		"@meemproject/react": "0.6.5-pre-c49d3f7.0",

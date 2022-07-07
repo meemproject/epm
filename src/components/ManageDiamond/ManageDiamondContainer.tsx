@@ -16,8 +16,9 @@ import {
 } from '@mantine/core'
 import { formList, useForm } from '@mantine/form'
 import { showNotification } from '@mantine/notifications'
+import { MeemAPI } from '@meemproject/api'
 import { getCuts, IFacetVersion, upgrade } from '@meemproject/meem-contracts'
-import { useWallet } from '@meemproject/react'
+import { makeFetcher, useWallet } from '@meemproject/react'
 import { ethers } from 'ethers'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
@@ -28,6 +29,7 @@ import {
 	CirclePlus,
 	Diamond,
 	DiamondOff,
+	Download,
 	FaceIdError,
 	Pencil
 } from 'tabler-icons-react'
@@ -39,14 +41,17 @@ import {
 } from '../../../generated/graphql'
 import { SUB_GET_CONTRACTS_BY_ADDRESS } from '../../graphql/contracts'
 import { diamondABI } from '../../lib/diamond'
+import { downloadFile } from '../../lib/utils'
 import { Page } from '../../styles/Page'
 import { Address } from '../Atoms/Address'
+import { DemoCode } from '../Atoms/DemoCode'
 import { EditWalletContract } from '../Atoms/EditWalletContract'
 import { FacetList } from '../Atoms/FacetList'
 import {
 	FindContract,
 	IProps as IFindContractProps
 } from '../Atoms/FindContract'
+import { FunctionList } from '../Atoms/FunctionList'
 import { IconButton } from '../Atoms/IconButton'
 import { FindBundle } from '../Bundles/FindBundle'
 
@@ -121,6 +126,34 @@ export const ManageDiamondContainer: React.FC = () => {
 				}
 			}
 		)
+
+	const isValidAddress = fetchedAddress
+		? ethers.utils.isAddress(fetchedAddress)
+		: false
+
+	const isContractOwner = !!(
+		accounts &&
+		contractOwner &&
+		accounts[0] &&
+		accounts[0].toLowerCase() === contractOwner?.toLowerCase()
+	)
+
+	const proxyContract = data?.ContractInstances.find(
+		ci => ci.address.toLowerCase() === form.values.address.toLowerCase()
+	)
+
+	const walletContract = proxyContract?.WalletContractInstances[0]
+
+	const facetContractInstances = data?.ContractInstances.filter(
+		ci => ci.address.toLowerCase() !== form.values.address.toLowerCase()
+	)
+
+	let abi = proxyContract?.Contract?.abi ?? []
+	facetContractInstances?.forEach(fc => {
+		if (fc?.Contract?.abi) {
+			abi = [...abi, ...fc.Contract.abi]
+		}
+	})
 
 	const handleFacetSelect: IFindContractProps['onClick'] = async contract => {
 		const instance = contract.ContractInstances.find(
@@ -218,6 +251,65 @@ export const ManageDiamondContainer: React.FC = () => {
 			showNotification({
 				title: 'Success!',
 				message: 'The contract has been upgraded.',
+				color: 'green'
+			})
+		} catch (e) {
+			log.crit(e)
+		}
+		setIsSaving(false)
+	}
+
+	const handleDownloadTypes = async () => {
+		try {
+			if (!signer || !fetchedAddress) {
+				return
+			}
+			const genTypes = makeFetcher<
+				MeemAPI.v1.GenerateTypes.IQueryParams,
+				MeemAPI.v1.GenerateTypes.IRequestBody,
+				MeemAPI.v1.GenerateTypes.IResponseBody
+			>({
+				method: MeemAPI.v1.GenerateTypes.method
+			})
+
+			const fileName = proxyContract?.Contract?.name ?? 'MyContract'
+
+			const { types } = await genTypes(
+				MeemAPI.v1.GenerateTypes.path(),
+				undefined,
+				{
+					abi,
+					name: fileName
+				}
+			)
+
+			downloadFile(`${fileName}.ts`, types)
+			showNotification({
+				title: 'Success!',
+				message: 'Types file generated.',
+				color: 'green'
+			})
+		} catch (e) {
+			log.crit(e)
+		}
+		setIsSaving(false)
+	}
+
+	const handleDownloadABI = async () => {
+		try {
+			const fileName = proxyContract?.Contract?.name ?? 'MyContract'
+
+			let facetABI: Record<string, any>[] = []
+			facetContractInstances?.forEach(fc => {
+				if (fc.Contract?.abi) {
+					facetABI = facetABI.concat(fc.Contract?.abi)
+				}
+			})
+
+			downloadFile(`${fileName}.json`, JSON.stringify(facetABI))
+			showNotification({
+				title: 'Success!',
+				message: 'ABI file generated.',
 				color: 'green'
 			})
 		} catch (e) {
@@ -372,27 +464,6 @@ export const ManageDiamondContainer: React.FC = () => {
 		}
 	}, [facets, fetchedAddress, form.values.facets, form.values.address])
 
-	const isValidAddress = fetchedAddress
-		? ethers.utils.isAddress(fetchedAddress)
-		: false
-
-	const isContractOwner = !!(
-		accounts &&
-		contractOwner &&
-		accounts[0] &&
-		accounts[0].toLowerCase() === contractOwner?.toLowerCase()
-	)
-
-	const proxyContract = data?.ContractInstances.find(
-		ci => ci.address.toLowerCase() === form.values.address.toLowerCase()
-	)
-
-	const walletContract = proxyContract?.WalletContractInstances[0]
-
-	const facetContractInstances = data?.ContractInstances.filter(
-		ci => ci.address.toLowerCase() !== form.values.address.toLowerCase()
-	)
-
 	return (
 		<Page>
 			<form onSubmit={form.onSubmit(() => handleSave())}>
@@ -510,7 +581,55 @@ export const ManageDiamondContainer: React.FC = () => {
 										This address is not a smart contract.
 									</Text>
 								)}
+								{bytecode && (
+									<>
+										<Text color="dimmed" size="sm">
+											This address is a smart contract.
+											Generate types and take a peek at
+											the example code!
+										</Text>
+										<Space h={16} />
+										<Title order={4}>Generate Code</Title>
+										<Space h={8} />
+										<div className={classes.row}>
+											<Button
+												disabled={isLoading || isSaving}
+												onClick={handleDownloadTypes}
+												leftIcon={<Download />}
+											>
+												Download Types
+											</Button>
+											<Space w={16} />
+											<Button
+												disabled={isLoading || isSaving}
+												onClick={handleDownloadABI}
+												leftIcon={<Download />}
+											>
+												Download ABI
+											</Button>
+										</div>
+										<Space h={16} />
+										<DemoCode
+											name={
+												proxyContract?.Contract?.name ??
+												'MyContract'
+											}
+										/>
+										<Space h={16} />
+									</>
+								)}
+								<Title order={4}>Functions</Title>
+								<Space h={8} />
+								<Text color="dimmed" size="sm">
+									All functions that can be called on this
+									contract
+								</Text>
+								<Space h={8} />
+								<FunctionList abi={abi} />
+								<Space h={16} />
 
+								<Title order={4}>Info</Title>
+								<Space h={8} />
 								<Address
 									address={fetchedAddress}
 									chainId={chainId}

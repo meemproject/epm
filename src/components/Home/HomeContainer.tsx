@@ -1,4 +1,5 @@
 import { Text, Space, Grid, Title, Card, createStyles } from '@mantine/core'
+import { useWallet } from '@meemproject/react'
 import Link from 'next/link'
 import React from 'react'
 import {
@@ -27,6 +28,8 @@ const useStyles = createStyles(_theme => ({
 
 export const HomeContainer: React.FC = () => {
 	const { classes } = useStyles()
+
+	const { accounts } = useWallet()
 
 	return (
 		<Page>
@@ -119,7 +122,7 @@ export const HomeContainer: React.FC = () => {
 				</Grid.Col>
 				<Grid.Col md={6}>
 					<Card shadow="sm" p="lg">
-						<Link href="/mycontracts">
+						<Link href={`/tracked/${accounts[0]}`}>
 							<a className={classes.card_link}>
 								<div className={classes.row}>
 									<LayoutDashboard color="green" />

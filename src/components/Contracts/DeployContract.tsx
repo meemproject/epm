@@ -99,17 +99,22 @@ export const DeployContract: React.FC<IProps> = ({ contract, onDeployed }) => {
 				})}
 			>
 				{inputs.map((input, i) => {
-					return (
-						<TextInput
-							key={`input-${name}`}
-							label={input.name}
-							placeholder={
-								input.type === 'address' ? '0x...' : ''
-							}
-							// @ts-ignore
-							{...form.getInputProps(`args${i}`)}
-						/>
-					)
+					switch (input.type) {
+						case 'address':
+						default: {
+							return (
+								<TextInput
+									key={`input-${name}`}
+									label={input.name}
+									placeholder={
+										input.type === 'address' ? '0x...' : ''
+									}
+									// @ts-ignore
+									{...form.getInputProps(`args${i}`)}
+								/>
+							)
+						}
+					}
 				})}
 				<Space h={8} />
 				<Button

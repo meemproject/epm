@@ -15,6 +15,7 @@ import {
 import { GET_BUNDLE_BY_ID, GET_CONTRACTS_BY_ID } from '../../graphql/contracts'
 import { downloadFile } from '../../lib/utils'
 import { Page } from '../../styles/Page'
+import { DemoCode } from '../Atoms/DemoCode'
 import { BundleForm } from './BundleForm'
 
 export const BundleContainer: React.FC = () => {
@@ -125,7 +126,15 @@ export const BundleContainer: React.FC = () => {
 					Create a bundle of facets that you can easily deploy
 					together
 				</Text>
-				<Space h={12} />
+				<Space h={16} />
+				<Title order={4}>Example Code</Title>
+				<Space h={8} />
+				<DemoCode
+					name={
+						data?.Bundles[0].name.replace(/\s/g, '') ?? 'MyContract'
+					}
+				/>
+				<Space h={8} />
 				<Button
 					onClick={async () => {
 						const genTypes = makeFetcher<
@@ -149,13 +158,13 @@ export const BundleContainer: React.FC = () => {
 							}
 						)
 
-						console.log({ data })
-
 						downloadFile(`${fileName}.ts`, types)
 					}}
 				>
 					Download Types
 				</Button>
+
+				<Space h={16} />
 				{!hasInitialized && (
 					<>
 						<Skeleton width="100%" height={200} />
@@ -165,6 +174,7 @@ export const BundleContainer: React.FC = () => {
 				)}
 				{hasInitialized && (
 					<>
+						<Title order={3}>Bundle Info</Title>
 						<BundleForm
 							contracts={contractsData?.Contracts as Contracts[]}
 							form={form}

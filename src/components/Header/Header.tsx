@@ -156,7 +156,7 @@ const useStyles = createStyles(theme => ({
 	}
 }))
 
-export function HeaderMenu() {
+export const HeaderMenu: React.FC = () => {
 	// eslint-disable-next-line no-unused-vars
 	const [isMoreMenuOpened, setMoreMenuOpened] = useState(false)
 	const [isUserMenuOpened, setUserMenuOpened] = useState(false)
@@ -310,7 +310,7 @@ export function HeaderMenu() {
 
 						<Divider />
 						<Menu.Item className={classes.menuItem}>
-							<Link href="/mycontracts">
+							<Link href={`/tracked/${wallet.accounts[0]}`}>
 								<a>My Contracts</a>
 							</Link>
 						</Menu.Item>
