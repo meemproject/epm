@@ -1,6 +1,6 @@
-import { Text, Button, Space, Title } from '@mantine/core'
+import { Text, Space, Title } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
-import React, { useState } from 'react'
+import React from 'react'
 import { Page } from '../../styles/Page'
 import { AddressContracts } from './AddressContracts'
 
