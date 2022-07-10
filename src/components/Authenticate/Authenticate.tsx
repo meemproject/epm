@@ -93,7 +93,7 @@ const MAuthenticate: React.FC = () => {
 
 					router.push({
 						pathname: router.query.return
-							? (router.query.return as string)
+							? decodeURIComponent(router.query.return as string)
 							: '/'
 					})
 				} catch (e) {

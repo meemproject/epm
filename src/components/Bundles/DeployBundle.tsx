@@ -51,17 +51,17 @@ export const DeployBundle: React.FC<IProps> = ({ bundle }) => {
 			if (!deployedProxy || !signer) {
 				return
 			}
-			const toVersion: IVersion = {}
+			const toVersion: IVersion = []
 			bundle.BundleContracts.forEach(bc => {
 				const contract = bc.Contract
 				const contractInstance = bc.Contract?.ContractInstances.find(
 					ci => ci.chainId === chainId
 				)
 				if (contract && contractInstance) {
-					toVersion[contractInstance.address] = {
+					toVersion.push({
 						address: contractInstance.address,
 						functionSelectors: contract.functionSelectors
-					}
+					})
 				}
 			})
 
@@ -69,7 +69,7 @@ export const DeployBundle: React.FC<IProps> = ({ bundle }) => {
 			await upgrade({
 				signer,
 				proxyContractAddress: deployedProxy.address,
-				fromVersion: {},
+				fromVersion: [],
 				toVersion
 			})
 			setIsInitialized(true)

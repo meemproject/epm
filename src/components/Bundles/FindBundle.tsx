@@ -1,9 +1,13 @@
-import { useQuery } from '@apollo/client'
+import { useQuery, useSubscription } from '@apollo/client'
 import { TextInput, Space, Skeleton, Grid } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import React from 'react'
-import { Bundles, SearchBundlesQuery } from '../../../generated/graphql'
-import { SEARCH_BUNDLES } from '../../graphql/contracts'
+import {
+	Bundles,
+	SearchBundlesQuery,
+	SubSearchBundlesSubscription
+} from '../../../generated/graphql'
+import { SUB_SEARCH_BUNDLES } from '../../graphql/contracts'
 import { BundleCard } from '../Atoms/BundleCard'
 
 export interface IProps {
@@ -19,14 +23,12 @@ export const FindBundle: React.FC<IProps> = ({ onSelect, ctaText }) => {
 		validate: {}
 	})
 
-	const { loading: isLoading, data } = useQuery<SearchBundlesQuery>(
-		SEARCH_BUNDLES,
-		{
+	const { loading: isLoading, data } =
+		useSubscription<SubSearchBundlesSubscription>(SUB_SEARCH_BUNDLES, {
 			variables: {
 				searchTerm: `${form.values.searchTerm}%`
 			}
-		}
-	)
+		})
 
 	return (
 		<>

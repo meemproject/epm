@@ -21,7 +21,7 @@ import { getCuts, IFacetVersion, upgrade } from '@meemproject/meem-contracts'
 import { makeFetcher, useWallet } from '@meemproject/react'
 import { ethers } from 'ethers'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import {
 	Bulb,
 	BulbOff,
@@ -123,7 +123,8 @@ export const ManageDiamondContainer: React.FC = () => {
 							return 0
 						})
 						.map(f => f.target)
-				}
+				},
+				fetchPolicy: 'no-cache'
 			}
 		)
 
@@ -181,6 +182,8 @@ export const ManageDiamondContainer: React.FC = () => {
 			return
 		}
 
+		console.log({ contract })
+
 		form.addListItem('facets', {
 			selectors: contract.functionSelectors,
 			target: contract.ContractInstances[0].address
@@ -218,45 +221,6 @@ export const ManageDiamondContainer: React.FC = () => {
 		})
 
 		setIsBundleOpen(false)
-	}
-
-	const handleSave = async () => {
-		try {
-			if (!signer || !fetchedAddress) {
-				return
-			}
-			setIsSaving(true)
-			const fromVersion: IFacetVersion[] = []
-			facets.forEach(facet => {
-				fromVersion.push({
-					address: facet.target,
-					functionSelectors: facet.selectors
-				})
-			})
-			const toVersion: IFacetVersion[] = []
-			form.values.facets.forEach(facet => {
-				toVersion.push({
-					address: facet.target,
-					functionSelectors: facet.selectors
-				})
-			})
-
-			await upgrade({
-				signer,
-				proxyContractAddress: fetchedAddress,
-				fromVersion,
-				toVersion
-			})
-			// refetch()
-			showNotification({
-				title: 'Success!',
-				message: 'The contract has been upgraded.',
-				color: 'green'
-			})
-		} catch (e) {
-			log.crit(e)
-		}
-		setIsSaving(false)
 	}
 
 	const handleDownloadTypes = async () => {
@@ -318,66 +282,58 @@ export const ManageDiamondContainer: React.FC = () => {
 		setIsSaving(false)
 	}
 
-	useEffect(() => {
-		const fetchDiamondInfo = async () => {
-			try {
-				const diamond = new ethers.Contract(
-					form.values.address,
-					diamondABI,
-					signer
-				)
+	const fetchDiamondInfo = useCallback(async () => {
+		try {
+			const diamond = new ethers.Contract(
+				form.values.address,
+				diamondABI,
+				signer
+			)
 
-				const [facetResult, bytecodeResult, ownerResult] =
-					await Promise.allSettled([
-						diamond.facets(),
-						web3Provider?.getCode(form.values.address),
-						diamond.owner()
-					])
+			const [facetResult, bytecodeResult, ownerResult] =
+				await Promise.allSettled([
+					diamond.facets(),
+					web3Provider?.getCode(form.values.address),
+					diamond.owner()
+				])
 
-				const result =
-					facetResult.status === 'fulfilled' && facetResult.value
+			const result =
+				facetResult.status === 'fulfilled' && facetResult.value
 
-				const bc =
-					bytecodeResult.status === 'fulfilled' &&
-					bytecodeResult.value
+			const bc =
+				bytecodeResult.status === 'fulfilled' && bytecodeResult.value
 
-				const owner =
-					ownerResult.status === 'fulfilled' && ownerResult.value
+			const owner =
+				ownerResult.status === 'fulfilled' && ownerResult.value
 
-				form.values.facets.splice(0, form.values.facets.length)
-				// form.setFieldValue('facets', formList(result))
-				if (Array.isArray(result)) {
-					result.forEach(f => {
-						if (
-							f.target.toLowerCase() !==
-							form.values.address.toLowerCase()
-						)
-							form.values.facets.push(f)
-					})
-				}
-
-				setFacets(result)
-				setBytecode(bc && bc !== '0x' ? bc : undefined)
-				setContractOwner(owner)
-				setFetchedAddress(form.values.address)
-				setFetchedChainId(chainId)
-				setIsDiamond(!!result)
-			} catch (e) {
-				setIsDiamond(false)
-				setFetchedAddress(form.values.address)
+			form.values.facets.splice(0, form.values.facets.length)
+			// form.setFieldValue('facets', formList(result))
+			if (Array.isArray(result)) {
+				result.forEach(f => {
+					if (
+						f.target.toLowerCase() !==
+						form.values.address.toLowerCase()
+					)
+						form.values.facets.push(f)
+				})
 			}
+
+			setFacets(result)
+			setBytecode(bc && bc !== '0x' ? bc : undefined)
+			setContractOwner(owner)
+			setFetchedAddress(form.values.address)
+			setFetchedChainId(chainId)
+			setIsDiamond(!!result)
+
+			log.debug('Diamond Fetched')
+		} catch (e) {
+			log.crit(e)
+			setIsDiamond(false)
+			setFetchedAddress(form.values.address)
 		}
+	}, [form, signer, web3Provider, chainId])
 
-		log.debug('checking...', {
-			address: form.values.address,
-			fetchedAddress,
-			chainId,
-			fetchedChainId,
-			isAddress: ethers.utils.isAddress(form.values.address),
-			signer: !!signer,
-			diffAddress: form.values.address !== fetchedAddress
-		})
-
+	useEffect(() => {
 		if (
 			ethers.utils.isAddress(form.values.address) &&
 			!!signer &&
@@ -387,7 +343,71 @@ export const ManageDiamondContainer: React.FC = () => {
 			log.debug('Fetching diamond info')
 			fetchDiamondInfo()
 		}
-	}, [form, fetchedAddress, signer, web3Provider, chainId, fetchedChainId])
+	}, [
+		form,
+		fetchedAddress,
+		signer,
+		web3Provider,
+		chainId,
+		fetchedChainId,
+		fetchDiamondInfo
+	])
+
+	const handleSave = async () => {
+		try {
+			if (!signer || !fetchedAddress) {
+				return
+			}
+			setIsSaving(true)
+			const fromVersion: IFacetVersion[] = []
+			facets.forEach(facet => {
+				fromVersion.push({
+					address: facet.target,
+					functionSelectors: facet.selectors
+				})
+			})
+			const toVersion: IFacetVersion[] = []
+			// form.values.facets.forEach(facet => {
+			// 	toVersion.push({
+			// 		address: facet.target,
+			// 		functionSelectors: facet.selectors
+			// 	})
+			// })
+
+			form.values.facets.forEach(facet => {
+				if (facet.target !== fetchedAddress) {
+					const contractInstance = data?.ContractInstances.find(
+						ci => ci.address === facet.target
+					)
+					// console.log({ contractInstance })
+					if (contractInstance) {
+						toVersion.push({
+							address: facet.target,
+							functionSelectors:
+								contractInstance?.Contract?.functionSelectors
+						})
+					}
+				}
+			})
+
+			await upgrade({
+				signer,
+				proxyContractAddress: fetchedAddress,
+				fromVersion,
+				toVersion
+			})
+			// refetch()
+			fetchDiamondInfo()
+			showNotification({
+				title: 'Success!',
+				message: 'The contract has been upgraded.',
+				color: 'green'
+			})
+		} catch (e) {
+			log.crit(e)
+		}
+		setIsSaving(false)
+	}
 
 	useEffect(() => {
 		if (!hasInitialized && chainId) {
@@ -429,9 +449,12 @@ export const ManageDiamondContainer: React.FC = () => {
 	}, [router, form, setChain, chainId, hasInitialized])
 
 	useEffect(() => {
-		if (!facets) {
+		if (!facets || isLoading) {
 			return
 		}
+
+		console.log({ facets, data })
+
 		const fromVersion: IFacetVersion[] = []
 		facets.forEach(facet => {
 			if (facet.target !== fetchedAddress) {
@@ -444,10 +467,17 @@ export const ManageDiamondContainer: React.FC = () => {
 		const toVersion: IFacetVersion[] = []
 		form.values.facets.forEach(facet => {
 			if (facet.target !== fetchedAddress) {
-				toVersion.push({
-					address: facet.target,
-					functionSelectors: facet.selectors
-				})
+				const contractInstance = data?.ContractInstances.find(
+					ci => ci.address === facet.target
+				)
+				console.log({ contractInstance })
+				if (contractInstance) {
+					toVersion.push({
+						address: facet.target,
+						functionSelectors:
+							contractInstance?.Contract?.functionSelectors
+					})
+				}
 			}
 		})
 
@@ -462,7 +492,16 @@ export const ManageDiamondContainer: React.FC = () => {
 		} else {
 			setIsDirty(false)
 		}
-	}, [facets, fetchedAddress, form.values.facets, form.values.address])
+	}, [
+		facets,
+		fetchedAddress,
+		form.values.facets,
+		form.values.address,
+		data,
+		isLoading
+	])
+
+	console.log({ isLoading, data })
 
 	return (
 		<Page>

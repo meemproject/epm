@@ -29,7 +29,11 @@ function MyApp(props: AppProps) {
 			? new GraphQLWsLink(
 					createClient({
 						url: process.env.NEXT_PUBLIC_GRAPHQL_API_WS_URL ?? '',
-						keepAlive: 10_000
+						keepAlive: 10_000,
+						lazy: false,
+						onNonLazyError: err => {
+							log.crit(err)
+						}
 					})
 			  )
 			: null
