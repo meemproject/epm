@@ -1,5 +1,18 @@
-import { createStyles, Text, Center, Group, Skeleton } from '@mantine/core'
+import {
+	createStyles,
+	Text,
+	Center,
+	Group,
+	Skeleton,
+	Checkbox,
+	Switch,
+	Title,
+	Space
+} from '@mantine/core'
+import { formList } from '@mantine/form'
 import { UseFormReturnType } from '@mantine/form/lib/use-form'
+import { showNotification } from '@mantine/notifications'
+import { ethers } from 'ethers'
 import React from 'react'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { CircleX, GripVertical } from 'tabler-icons-react'
@@ -28,6 +41,7 @@ export interface IProps {
 	// }>
 	form: UseFormReturnType<any>
 	contractInstances?: ContractInstances[]
+	proxyContract?: ContractInstances
 	contracts?: Contracts[]
 	isLoading?: boolean
 	isEnabled?: boolean
@@ -37,10 +51,80 @@ export const FacetList: React.FC<IProps> = ({
 	form,
 	isLoading,
 	contractInstances,
-	contracts,
-	isEnabled
+	isEnabled,
+	proxyContract
 }) => {
 	const { classes } = useStyles()
+
+	const handleToggle = (options: {
+		functionName: string
+		facet: {
+			selectors: string[]
+			target: string
+		}
+		isChecked: boolean
+		selector: string
+	}) => {
+		const { functionName, facet, isChecked, selector } = options
+
+		if (proxyContract?.Contract?.functionSelectors.includes(selector)) {
+			showNotification({
+				title: 'Function implemented on proxy',
+				message: `${functionName} is implemented on the diamond contract and therefore is immutable.`,
+				color: 'red'
+			})
+			return
+		}
+
+		// console.log({ facet, contractInstances })
+		const updatedFacets: any[] = []
+
+		form.values.facets.forEach((formFacet: any) => {
+			const hasSelector = formFacet.selectors.includes(selector)
+			let updatedFacet = {
+				target: formFacet.target,
+				selectors: [...formFacet.selectors]
+			}
+
+			if (formFacet.target === facet.target) {
+				if (isChecked) {
+					updatedFacet = {
+						target: formFacet.target,
+						selectors: [...formFacet.selectors, selector]
+					}
+				} else {
+					const filteredSelectors = formFacet.selectors.filter(
+						(s: string) => s !== selector
+					)
+					updatedFacet = {
+						target: formFacet.target,
+						selectors: filteredSelectors
+					}
+				}
+			} else if (hasSelector) {
+				const contractInstance = contractInstances?.find(
+					c => c.address === formFacet.target
+				)
+				const filteredSelectors = formFacet.selectors.filter(
+					(s: string) => s !== selector
+				)
+				updatedFacet = {
+					target: formFacet.target,
+					selectors: filteredSelectors
+				}
+
+				showNotification({
+					title: 'Function implemented by multiple facets',
+					message: `${functionName} is also implemented on ${contractInstance?.Contract?.name} and will be disabled`,
+					color: 'yellow'
+				})
+			}
+
+			updatedFacets.push(updatedFacet)
+		})
+
+		form.setFieldValue('facets', formList(updatedFacets))
+	}
 
 	return (
 		<div className="facet_container">
@@ -102,6 +186,44 @@ export const FacetList: React.FC<IProps> = ({
 										)
 									}
 
+									const abiInterface =
+										new ethers.utils.Interface(
+											contract?.abi ?? []
+										)
+
+									const functions =
+										contract?.abi.filter(
+											a => a.type === 'function'
+										) ?? []
+
+									const functionSelectorNameHash: Record<
+										string,
+										string
+									> = {}
+
+									functions.forEach(f => {
+										const functionName = `${
+											f.name
+										}(${f.inputs
+											.map(
+												input =>
+													`${input.type}${
+														input.name
+															? ` ${input.name}`
+															: ''
+													}`
+											)
+											.join(', ')})`
+
+										functionSelectorNameHash[
+											abiInterface.getSighash(
+												ethers.utils.Fragment.from(f)
+											)
+										] = functionName
+									})
+
+									console.log({ abi: contract?.abi })
+
 									return (
 										<Draggable
 											key={i}
@@ -137,6 +259,7 @@ export const FacetList: React.FC<IProps> = ({
 																	height={235}
 																/>
 															)}
+
 															<ContractCard
 																className={
 																	classes.card
@@ -144,7 +267,64 @@ export const FacetList: React.FC<IProps> = ({
 																contract={
 																	contract
 																}
-															/>
+															>
+																<div>
+																	<Space
+																		h={16}
+																	/>
+																	<Title
+																		order={
+																			4
+																		}
+																	>
+																		Functions
+																	</Title>
+																	<Space
+																		h={8}
+																	/>
+																	{contract?.functionSelectors.map(
+																		(
+																			selector: string
+																		) => {
+																			const isInUse =
+																				facet.selectors.includes(
+																					selector
+																				)
+
+																			const name =
+																				functionSelectorNameHash[
+																					selector
+																				]
+
+																			return (
+																				<Switch
+																					key={`${contract?.id}-${selector}`}
+																					checked={
+																						isInUse
+																					}
+																					label={
+																						name
+																					}
+																					onChange={e => {
+																						handleToggle(
+																							{
+																								functionName:
+																									name,
+																								facet,
+																								isChecked:
+																									e
+																										.target
+																										.checked,
+																								selector
+																							}
+																						)
+																					}}
+																				/>
+																			)
+																		}
+																	)}
+																</div>
+															</ContractCard>
 															{isEnabled && (
 																<div>
 																	<IconButton

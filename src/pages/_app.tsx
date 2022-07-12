@@ -31,6 +31,11 @@ function MyApp(props: AppProps) {
 						url: process.env.NEXT_PUBLIC_GRAPHQL_API_WS_URL ?? '',
 						keepAlive: 10_000,
 						lazy: false,
+						connectionAckWaitTimeout: 10_000,
+						shouldRetry: err => {
+							console.log(err)
+							return true
+						},
 						onNonLazyError: err => {
 							log.crit(err)
 						}
@@ -60,7 +65,8 @@ function MyApp(props: AppProps) {
 
 	const client = new ApolloClient({
 		link: splitLink,
-		cache: new InMemoryCache()
+		cache: new InMemoryCache(),
+		queryDeduplication: true
 	})
 
 	React.useEffect(() => {

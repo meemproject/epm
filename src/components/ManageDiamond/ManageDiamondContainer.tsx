@@ -1,4 +1,4 @@
-import { useSubscription } from '@apollo/client'
+import { useQuery, useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import {
 	createStyles,
@@ -36,10 +36,14 @@ import {
 import {
 	Bundles,
 	ContractInstances,
+	GetContractsByAddressesQuery,
 	SubGetContractsByAddressesSubscription,
 	WalletContractInstances
 } from '../../../generated/graphql'
-import { SUB_GET_CONTRACTS_BY_ADDRESS } from '../../graphql/contracts'
+import {
+	GET_CONTRACTS_BY_ADDRESS,
+	SUB_GET_CONTRACTS_BY_ADDRESS
+} from '../../graphql/contracts'
 import { diamondABI } from '../../lib/diamond'
 import { downloadFile } from '../../lib/utils'
 import { Page } from '../../styles/Page'
@@ -99,34 +103,57 @@ export const ManageDiamondContainer: React.FC = () => {
 	const [fetchedAddress, setFetchedAddress] = useState<string>()
 	const [fetchedChainId, setFetchedChainId] = useState<number>()
 	const [contractOwner, setContractOwner] = useState<string>()
+	const [hasFoundAllFacets, setHasFoundAllFacets] = useState(false)
 	const [facets, setFacets] = useState<
 		{ selectors: string[]; target: string }[]
 	>([])
 	const { web3Provider, signer, chainId, setChain, accounts } = useWallet()
 
-	const { loading: isLoading, data } =
-		useSubscription<SubGetContractsByAddressesSubscription>(
-			SUB_GET_CONTRACTS_BY_ADDRESS,
-			{
-				variables: {
-					addresses: [
-						...form.values.facets,
-						{ target: form.values.address }
-					]
-						.sort((a, b) => {
-							if (a.target < b.target) {
-								return -1
-							}
-							if (a.target > b.target) {
-								return 1
-							}
-							return 0
-						})
-						.map(f => f.target)
-				},
-				fetchPolicy: 'no-cache'
-			}
-		)
+	// const { loading: isLoading, data } =
+	// 	useSubscription<SubGetContractsByAddressesSubscription>(
+	// 		SUB_GET_CONTRACTS_BY_ADDRESS,
+	// 		{
+	// 			variables: {
+	// 				addresses: [
+	// 					...form.values.facets,
+	// 					{ target: form.values.address }
+	// 				]
+	// 					.sort((a, b) => {
+	// 						if (a.target < b.target) {
+	// 							return -1
+	// 						}
+	// 						if (a.target > b.target) {
+	// 							return 1
+	// 						}
+	// 						return 0
+	// 					})
+	// 					.map(f => f.target)
+	// 			},
+	// 			fetchPolicy: 'no-cache'
+	// 		}
+	// 	)
+	const { loading: isLoading, data } = useQuery<GetContractsByAddressesQuery>(
+		GET_CONTRACTS_BY_ADDRESS,
+		{
+			variables: {
+				addresses: [
+					...form.values.facets,
+					{ target: form.values.address }
+				]
+					.sort((a, b) => {
+						if (a.target < b.target) {
+							return -1
+						}
+						if (a.target > b.target) {
+							return 1
+						}
+						return 0
+					})
+					.map(f => f.target)
+			},
+			fetchPolicy: 'no-cache'
+		}
+	)
 
 	const isValidAddress = fetchedAddress
 		? ethers.utils.isAddress(fetchedAddress)
@@ -182,16 +209,33 @@ export const ManageDiamondContainer: React.FC = () => {
 			return
 		}
 
-		console.log({ contract })
+		const usedSelectors: Record<string, string> = {}
+
+		proxyContract?.Contract?.functionSelectors.forEach(s => {
+			usedSelectors[s] = proxyContract.address
+		})
+
+		form.values.facets.forEach(f => {
+			f.selectors.forEach(s => {
+				usedSelectors[s] = f.target
+			})
+		})
 
 		form.addListItem('facets', {
-			selectors: contract.functionSelectors,
+			selectors: contract.functionSelectors.filter(
+				(fs: string) => !usedSelectors[fs]
+			),
 			target: contract.ContractInstances[0].address
 		})
 		setIsOpen(false)
 	}
 
 	const handleBundleSelect = async (bundle: Bundles) => {
+		const updatedFacets = form.values.facets.map(f => ({
+			selectors: f.selectors,
+			target: f.target
+		}))
+
 		bundle.BundleContracts.forEach(bc => {
 			const contract = bc.Contract
 			if (contract) {
@@ -207,18 +251,36 @@ export const ManageDiamondContainer: React.FC = () => {
 					return
 				}
 
-				const existingFacet = form.values.facets.find(
+				const existingFacet = updatedFacets.find(
 					f => f.target === instance.address
 				)
 
 				if (!existingFacet) {
-					form.addListItem('facets', {
-						selectors: contract.functionSelectors,
+					const usedSelectors: Record<string, string> = {}
+
+					updatedFacets.forEach(f => {
+						f.selectors.forEach(s => {
+							usedSelectors[s] = f.target
+						})
+					})
+
+					// form.addListItem('facets', {
+					// 	selectors: contract.functionSelectors.filter(
+					// 		(fs: string) => !usedSelectors[fs]
+					// 	),
+					// 	target: contract.ContractInstances[0].address
+					// })
+					updatedFacets.push({
+						selectors: contract.functionSelectors.filter(
+							(fs: string) => !usedSelectors[fs]
+						),
 						target: contract.ContractInstances[0].address
 					})
 				}
 			}
 		})
+
+		form.setFieldValue('facets', formList(updatedFacets))
 
 		setIsBundleOpen(false)
 	}
@@ -453,8 +515,6 @@ export const ManageDiamondContainer: React.FC = () => {
 			return
 		}
 
-		console.log({ facets, data })
-
 		const fromVersion: IFacetVersion[] = []
 		facets.forEach(facet => {
 			if (facet.target !== fetchedAddress) {
@@ -470,7 +530,7 @@ export const ManageDiamondContainer: React.FC = () => {
 				const contractInstance = data?.ContractInstances.find(
 					ci => ci.address === facet.target
 				)
-				console.log({ contractInstance })
+
 				if (contractInstance) {
 					toVersion.push({
 						address: facet.target,
@@ -501,7 +561,23 @@ export const ManageDiamondContainer: React.FC = () => {
 		isLoading
 	])
 
-	console.log({ isLoading, data })
+	useEffect(() => {
+		if (!isLoading && data) {
+			for (let i = 0; i < facets.length; i += 1) {
+				const facet = facets[i]
+				const contractInstance = data.ContractInstances.find(
+					ci => ci.address === facet.target
+				)
+
+				if (!contractInstance) {
+					setHasFoundAllFacets(false)
+					break
+				}
+			}
+
+			setHasFoundAllFacets(true)
+		}
+	}, [data, isLoading, facets])
 
 	return (
 		<Page>
@@ -769,14 +845,22 @@ export const ManageDiamondContainer: React.FC = () => {
 									</div>
 								)}
 								<Space h={12} />
-								<FacetList
-									form={form}
-									contractInstances={
-										facetContractInstances as ContractInstances[]
-									}
-									isLoading={isLoading}
-									isEnabled={isContractOwner}
-								/>
+								{hasFoundAllFacets && (
+									<FacetList
+										form={form}
+										contractInstances={
+											facetContractInstances as ContractInstances[]
+										}
+										proxyContract={proxyContract}
+										isLoading={isLoading}
+										isEnabled={isContractOwner}
+									/>
+								)}
+								{!hasFoundAllFacets && (
+									<Title order={4}>
+										Not all facets are tracked in DB
+									</Title>
+								)}
 
 								{isDirty && (
 									<div>
