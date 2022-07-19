@@ -70,6 +70,12 @@ const useStyles = createStyles(_theme => ({
 	},
 	facet_container: {
 		width: '100%'
+	},
+	save_button: {
+		position: 'fixed',
+		bottom: '32px',
+		right: '32px',
+		zIndex: 100
 	}
 }))
 
@@ -429,24 +435,17 @@ export const ManageDiamondContainer: React.FC = () => {
 				})
 			})
 			const toVersion: IFacetVersion[] = []
-			// form.values.facets.forEach(facet => {
-			// 	toVersion.push({
-			// 		address: facet.target,
-			// 		functionSelectors: facet.selectors
-			// 	})
-			// })
 
 			form.values.facets.forEach(facet => {
 				if (facet.target !== fetchedAddress) {
 					const contractInstance = data?.ContractInstances.find(
 						ci => ci.address === facet.target
 					)
-					// console.log({ contractInstance })
+
 					if (contractInstance) {
 						toVersion.push({
 							address: facet.target,
-							functionSelectors:
-								contractInstance?.Contract?.functionSelectors
+							functionSelectors: facet.selectors
 						})
 					}
 				}
@@ -534,8 +533,7 @@ export const ManageDiamondContainer: React.FC = () => {
 				if (contractInstance) {
 					toVersion.push({
 						address: facet.target,
-						functionSelectors:
-							contractInstance?.Contract?.functionSelectors
+						functionSelectors: facet.selectors
 					})
 				}
 			}
@@ -733,14 +731,14 @@ export const ManageDiamondContainer: React.FC = () => {
 										<Space h={16} />
 									</>
 								)}
-								<Title order={4}>Functions</Title>
+								{/* <Title order={4}>Functions</Title>
 								<Space h={8} />
 								<Text color="dimmed" size="sm">
 									All functions that can be called on this
 									contract
 								</Text>
 								<Space h={8} />
-								<FunctionList abi={abi} />
+								<FunctionList abi={abi} /> */}
 								<Space h={16} />
 
 								<Title order={4}>Info</Title>
@@ -867,6 +865,7 @@ export const ManageDiamondContainer: React.FC = () => {
 										<Space h={24} />
 										<Center>
 											<Button
+												className={classes.save_button}
 												type="submit"
 												loading={isSaving}
 												disabled={isLoading || isSaving}

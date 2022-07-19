@@ -2,9 +2,7 @@ import {
 	createStyles,
 	Text,
 	Center,
-	Group,
 	Skeleton,
-	Checkbox,
 	Switch,
 	Title,
 	Space
@@ -14,8 +12,7 @@ import { UseFormReturnType } from '@mantine/form/lib/use-form'
 import { showNotification } from '@mantine/notifications'
 import { ethers } from 'ethers'
 import React from 'react'
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
-import { CircleX, GripVertical } from 'tabler-icons-react'
+import { CircleX } from 'tabler-icons-react'
 import { ContractInstances, Contracts } from '../../../generated/graphql'
 import { ContractCard } from './ContractCard'
 import { IconButton } from './IconButton'
@@ -33,12 +30,6 @@ const useStyles = createStyles(_theme => ({
 }))
 
 export interface IProps {
-	// form: UseFormReturnType<{
-	// 	facets: FormList<{
-	// 		selectors: string[]
-	// 		target: string
-	// 	}>
-	// }>
 	form: UseFormReturnType<any>
 	contractInstances?: ContractInstances[]
 	proxyContract?: ContractInstances
@@ -76,7 +67,6 @@ export const FacetList: React.FC<IProps> = ({
 			return
 		}
 
-		// console.log({ facet, contractInstances })
 		const updatedFacets: any[] = []
 
 		form.values.facets.forEach((formFacet: any) => {
@@ -130,13 +120,7 @@ export const FacetList: React.FC<IProps> = ({
 		<div className="facet_container">
 			{isEnabled && (
 				<>
-					{form.values.facets.length > 1 && (
-						<Text size="md" color="dimmed">
-							Drag &amp; drop facets to re-order. Facets closest
-							to the top will take priority over those below
-						</Text>
-					)}
-					{form.values.facets.length === 1 && (
+					{form.values.facets.length === 0 && (
 						<Text size="md" color="dimmed">
 							Add facets to your contract to enable additional
 							functionality.
@@ -145,217 +129,145 @@ export const FacetList: React.FC<IProps> = ({
 				</>
 			)}
 
-			<DragDropContext
-				onDragEnd={({ destination, source }) => {
-					if (destination) {
-						form.reorderListItem('facets', {
-							from: source.index,
-							to: destination.index
+			<div>
+				{form.values.facets.map(
+					(
+						facet: {
+							selectors: string[]
+							target: string
+						},
+						i: number
+					) => {
+						let contract: Contracts | undefined | null
+
+						if (facet.target) {
+							contract = contractInstances?.find(
+								c =>
+									c.address?.toLowerCase() ===
+									facet.target.toLowerCase()
+							)?.Contract
+						}
+
+						const abiInterface = new ethers.utils.Interface(
+							contract?.abi ?? []
+						)
+
+						const functions =
+							contract?.abi.filter(a => a.type === 'function') ??
+							[]
+
+						const functionSelectorNameHash: Record<string, string> =
+							{}
+
+						functions.forEach(f => {
+							const functionName = `${f.name}(${f.inputs
+								.map(
+									(input: { name: string; type: string }) =>
+										`${input.type}${
+											input.name ? ` ${input.name}` : ''
+										}`
+								)
+								.join(', ')})`
+
+							functionSelectorNameHash[
+								abiInterface.getSighash(
+									ethers.utils.Fragment.from(f)
+								)
+							] = functionName
 						})
-					}
-				}}
-			>
-				<Droppable droppableId="dnd-list" direction="vertical">
-					{provided => (
-						<div
-							{...provided.droppableProps}
-							ref={provided.innerRef}
-						>
-							{form.values.facets.map(
-								(
-									facet: {
-										selectors: string[]
-										target: string
-										contractId: string
-									},
-									i: number
-								) => {
-									let contract: Contracts | undefined | null
 
-									if (facet.target) {
-										contract = contractInstances?.find(
-											c =>
-												c.address?.toLowerCase() ===
-												facet.target.toLowerCase()
-										)?.Contract
-									} else if (facet.contractId) {
-										contract = contracts?.find(
-											c =>
-												c.id?.toLowerCase() ===
-												facet.contractId.toLowerCase()
-										)
-									}
+						return (
+							<>
+								<Center
+									className={classes.facet_container}
+									key={`facet-${facet.target}`}
+								>
+									{isLoading && (
+										<Skeleton width="100%" height={235} />
+									)}
+									{!isLoading && (
+										<>
+											<ContractCard
+												className={classes.card}
+												contract={contract}
+											>
+												<div>
+													<Space h={16} />
+													<Title order={4}>
+														Functions
+													</Title>
+													<Space h={8} />
+													{contract?.functionSelectors.map(
+														(selector: string) => {
+															const isInUse =
+																facet.selectors.includes(
+																	selector
+																)
 
-									const abiInterface =
-										new ethers.utils.Interface(
-											contract?.abi ?? []
-										)
+															const name =
+																functionSelectorNameHash[
+																	selector
+																]
 
-									const functions =
-										contract?.abi.filter(
-											a => a.type === 'function'
-										) ?? []
-
-									const functionSelectorNameHash: Record<
-										string,
-										string
-									> = {}
-
-									functions.forEach(f => {
-										const functionName = `${
-											f.name
-										}(${f.inputs
-											.map(
-												input =>
-													`${input.type}${
-														input.name
-															? ` ${input.name}`
-															: ''
-													}`
-											)
-											.join(', ')})`
-
-										functionSelectorNameHash[
-											abiInterface.getSighash(
-												ethers.utils.Fragment.from(f)
-											)
-										] = functionName
-									})
-
-									console.log({ abi: contract?.abi })
-
-									return (
-										<Draggable
-											key={i}
-											index={i}
-											draggableId={i.toString()}
-											isDragDisabled={!isEnabled}
-										>
-											{p => {
-												return (
-													<Group
-														ref={p.innerRef}
-														mt="xs"
-														{...p.draggableProps}
-													>
-														<Center
-															className={
-																classes.facet_container
-															}
-															{...p.dragHandleProps}
-														>
-															{isEnabled && (
-																<div>
-																	<GripVertical
-																		size={
-																			18
+															return (
+																<>
+																	<Switch
+																		key={`${contract?.id}-${selector}`}
+																		checked={
+																			isInUse
 																		}
-																	/>
-																</div>
-															)}
-															{isLoading && (
-																<Skeleton
-																	width="100%"
-																	height={235}
-																/>
-															)}
-
-															<ContractCard
-																className={
-																	classes.card
-																}
-																contract={
-																	contract
-																}
-															>
-																<div>
-																	<Space
-																		h={16}
-																	/>
-																	<Title
-																		order={
-																			4
+																		label={
+																			name
 																		}
-																	>
-																		Functions
-																	</Title>
+																		onChange={e => {
+																			handleToggle(
+																				{
+																					functionName:
+																						name,
+																					facet,
+																					isChecked:
+																						e
+																							.target
+																							.checked,
+																					selector
+																				}
+																			)
+																		}}
+																	/>
 																	<Space
 																		h={8}
 																	/>
-																	{contract?.functionSelectors.map(
-																		(
-																			selector: string
-																		) => {
-																			const isInUse =
-																				facet.selectors.includes(
-																					selector
-																				)
-
-																			const name =
-																				functionSelectorNameHash[
-																					selector
-																				]
-
-																			return (
-																				<Switch
-																					key={`${contract?.id}-${selector}`}
-																					checked={
-																						isInUse
-																					}
-																					label={
-																						name
-																					}
-																					onChange={e => {
-																						handleToggle(
-																							{
-																								functionName:
-																									name,
-																								facet,
-																								isChecked:
-																									e
-																										.target
-																										.checked,
-																								selector
-																							}
-																						)
-																					}}
-																				/>
-																			)
-																		}
-																	)}
-																</div>
-															</ContractCard>
-															{isEnabled && (
-																<div>
-																	<IconButton
-																		tooltip="Remove Facet"
-																		onClick={() => {
-																			form.removeListItem(
-																				'facets',
-																				[
-																					i
-																				]
-																			)
-																		}}
-																		icon={
-																			<CircleX color="red" />
-																		}
-																	/>
-																</div>
-															)}
-														</Center>
-													</Group>
-												)
-											}}
-										</Draggable>
-									)
-								}
-							)}
-							{provided.placeholder}
-						</div>
-					)}
-				</Droppable>
-			</DragDropContext>
+																</>
+															)
+														}
+													)}
+												</div>
+											</ContractCard>
+											{isEnabled && (
+												<div>
+													<IconButton
+														tooltip="Remove Facet"
+														onClick={() => {
+															form.removeListItem(
+																'facets',
+																[i]
+															)
+														}}
+														icon={
+															<CircleX color="red" />
+														}
+													/>
+												</div>
+											)}
+										</>
+									)}
+								</Center>
+								<Space h={16} />
+							</>
+						)
+					}
+				)}
+			</div>
 		</div>
 	)
 }
