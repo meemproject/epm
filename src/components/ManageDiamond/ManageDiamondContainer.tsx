@@ -138,6 +138,7 @@ export const ManageDiamondContainer: React.FC = () => {
 	// 			fetchPolicy: 'no-cache'
 	// 		}
 	// 	)
+
 	const { loading: isLoading, data } = useQuery<GetContractsByAddressesQuery>(
 		GET_CONTRACTS_BY_ADDRESS,
 		{
@@ -155,7 +156,14 @@ export const ManageDiamondContainer: React.FC = () => {
 						}
 						return 0
 					})
-					.map(f => f.target)
+					.map(f => {
+						if (f.target) {
+							return ethers.utils.getAddress(f.target)
+						}
+
+						log.warn('No target', f)
+						return ''
+					})
 			},
 			fetchPolicy: 'no-cache'
 		}
@@ -849,7 +857,9 @@ export const ManageDiamondContainer: React.FC = () => {
 										contractInstances={
 											facetContractInstances as ContractInstances[]
 										}
-										proxyContract={proxyContract}
+										proxyContract={
+											proxyContract as ContractInstances
+										}
 										isLoading={isLoading}
 										isEnabled={isContractOwner}
 									/>

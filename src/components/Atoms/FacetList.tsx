@@ -42,6 +42,7 @@ export const FacetList: React.FC<IProps> = ({
 	form,
 	isLoading,
 	contractInstances,
+	contracts,
 	isEnabled,
 	proxyContract
 }) => {
@@ -52,6 +53,7 @@ export const FacetList: React.FC<IProps> = ({
 		facet: {
 			selectors: string[]
 			target: string
+			contractId?: string
 		}
 		isChecked: boolean
 		selector: string
@@ -73,6 +75,7 @@ export const FacetList: React.FC<IProps> = ({
 			const hasSelector = formFacet.selectors.includes(selector)
 			let updatedFacet = {
 				target: formFacet.target,
+				contractId: formFacet.target,
 				selectors: [...formFacet.selectors]
 			}
 
@@ -80,6 +83,7 @@ export const FacetList: React.FC<IProps> = ({
 				if (isChecked) {
 					updatedFacet = {
 						target: formFacet.target,
+						contractId: formFacet.target,
 						selectors: [...formFacet.selectors, selector]
 					}
 				} else {
@@ -88,6 +92,7 @@ export const FacetList: React.FC<IProps> = ({
 					)
 					updatedFacet = {
 						target: formFacet.target,
+						contractId: formFacet.target,
 						selectors: filteredSelectors
 					}
 				}
@@ -95,17 +100,21 @@ export const FacetList: React.FC<IProps> = ({
 				const contractInstance = contractInstances?.find(
 					c => c.address === formFacet.target
 				)
+				const contract = contractInstances
+					? contractInstance?.Contract
+					: contracts?.find(c => c.id === formFacet.contractId)
 				const filteredSelectors = formFacet.selectors.filter(
 					(s: string) => s !== selector
 				)
 				updatedFacet = {
 					target: formFacet.target,
+					contractId: formFacet.target,
 					selectors: filteredSelectors
 				}
 
 				showNotification({
 					title: 'Function implemented by multiple facets',
-					message: `${functionName} is also implemented on ${contractInstance?.Contract?.name} and will be disabled`,
+					message: `${functionName} is also implemented on ${contract?.name} and will be disabled`,
 					color: 'yellow'
 				})
 			}
@@ -115,6 +124,8 @@ export const FacetList: React.FC<IProps> = ({
 
 		form.setFieldValue('facets', formList(updatedFacets))
 	}
+
+	console.log({ form })
 
 	return (
 		<div className="facet_container">
@@ -135,17 +146,26 @@ export const FacetList: React.FC<IProps> = ({
 						facet: {
 							selectors: string[]
 							target: string
+							contractId?: string
 						},
 						i: number
 					) => {
 						let contract: Contracts | undefined | null
 
 						if (facet.target) {
-							contract = contractInstances?.find(
-								c =>
-									c.address?.toLowerCase() ===
-									facet.target.toLowerCase()
-							)?.Contract
+							// contract = contractInstances?.find(
+							// 	c =>
+							// 		c.address?.toLowerCase() ===
+							// 		facet.target.toLowerCase()
+							// )?.Contract
+							const contractInstance = contractInstances?.find(
+								c => c.address === facet.target
+							)
+							contract = contractInstances
+								? contractInstance?.Contract
+								: contracts?.find(
+										c => c.id === facet.contractId
+								  )
 						}
 
 						const abiInterface = new ethers.utils.Interface(
@@ -175,6 +195,8 @@ export const FacetList: React.FC<IProps> = ({
 								)
 							] = functionName
 						})
+
+						console.log({ functions, abi: contract?.abi })
 
 						return (
 							<>

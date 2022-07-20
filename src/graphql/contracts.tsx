@@ -139,6 +139,7 @@ export const SEARCH_BUNDLES = gql`
 			BundleContracts {
 				id
 				order
+				functionSelectors
 				Contract {
 					...ContractParts
 				}
@@ -161,6 +162,7 @@ export const GET_BUNDLE_BY_ID = gql`
 			BundleContracts(order_by: { order: asc }) {
 				id
 				order
+				functionSelectors
 				Contract {
 					...ContractParts
 				}
@@ -268,6 +270,7 @@ export const SUB_SEARCH_BUNDLES = gql`
 			BundleContracts {
 				id
 				order
+				functionSelectors
 				Contract {
 					...ContractParts
 				}
@@ -290,6 +293,7 @@ export const SUB_GET_BUNDLE_BY_ID = gql`
 			BundleContracts(order_by: { order: asc }) {
 				id
 				order
+				functionSelectors
 				Contract {
 					...ContractParts
 				}

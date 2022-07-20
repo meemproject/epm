@@ -44,12 +44,9 @@ export const BundleContainer: React.FC = () => {
 		}
 	})
 
-	const { loading: isContractsLoading, data: contractsData } =
-		useQuery<GetContractsByIdQuery>(GET_CONTRACTS_BY_ID, {
-			variables: {
-				ids: form.values.facets.map(f => f.contractId)
-			}
-		})
+	const contractsData = data?.Bundles[0].BundleContracts.map(
+		bc => bc.Contract
+	)
 
 	const handleSave = async (values: typeof form.values) => {
 		try {
@@ -78,7 +75,10 @@ export const BundleContainer: React.FC = () => {
 				{
 					name: values.name,
 					description: values.description,
-					contractIds: values.facets.map(f => f.contractId)
+					contracts: values.facets.map(f => ({
+						id: f.contractId,
+						functionSelectors: f.selectors
+					}))
 				}
 			)
 
@@ -107,7 +107,8 @@ export const BundleContainer: React.FC = () => {
 				description: data?.Bundles[0].description,
 				facets: formList(
 					data?.Bundles[0].BundleContracts.map(bc => ({
-						selectors: bc.Contract?.functionSelectors,
+						selectors: bc.functionSelectors,
+						target: bc.Contract?.id,
 						contractId: bc.Contract?.id
 					}))
 				)
@@ -176,18 +177,16 @@ export const BundleContainer: React.FC = () => {
 					<>
 						<Title order={3}>Bundle Info</Title>
 						<BundleForm
-							contracts={contractsData?.Contracts as Contracts[]}
+							contracts={(contractsData ?? []) as Contracts[]}
 							form={form}
-							isLoading={isLoading || isContractsLoading}
+							isLoading={isLoading}
 						/>
 						<Space h={24} />
 						<Center>
 							<Button
 								type="submit"
 								loading={isSaving}
-								disabled={
-									isLoading || isSaving || isContractsLoading
-								}
+								disabled={isLoading || isSaving}
 							>
 								Save
 							</Button>

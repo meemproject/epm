@@ -60,7 +60,7 @@ export const DeployBundle: React.FC<IProps> = ({ bundle }) => {
 				if (contract && contractInstance) {
 					toVersion.push({
 						address: contractInstance.address,
-						functionSelectors: contract.functionSelectors
+						functionSelectors: bc.functionSelectors
 					})
 				}
 			})

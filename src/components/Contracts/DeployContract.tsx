@@ -36,8 +36,6 @@ export const DeployContract: React.FC<IProps> = ({ contract, onDeployed }) => {
 		type: string
 	}[] = constructorAbi?.inputs ?? []
 
-	// console.log({ constructorAbi })
-
 	const handleDeploy = async () => {
 		const args: any[] = []
 		for (let i = 0; i < inputs.length; i += 1) {
@@ -45,7 +43,6 @@ export const DeployContract: React.FC<IProps> = ({ contract, onDeployed }) => {
 			args.push(form.values[`args${i}`])
 		}
 
-		// console.log(args)
 		try {
 			setIsLoading(true)
 			const c = new ethers.ContractFactory(

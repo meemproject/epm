@@ -56,6 +56,7 @@ export const BundleForm: React.FC<IProps> = ({
 		}
 		form.addListItem('facets', {
 			selectors: contract.functionSelectors,
+			target: contract.id,
 			contractId: contract.id
 		})
 		setIsOpen(false)

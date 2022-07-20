@@ -42,7 +42,11 @@ export const CreateBundleContainer: React.FC = () => {
 
 	const form = useForm({
 		initialValues: {
-			facets: formList<{ selectors: string[]; contractId: string }>([]),
+			facets: formList<{
+				selectors: string[]
+				contractId: string
+				target: string
+			}>([]),
 			name: '',
 			description: ''
 		},
@@ -62,9 +66,46 @@ export const CreateBundleContainer: React.FC = () => {
 		}
 	)
 
+	// const handleFacetSelect: IFindContractProps['onClick'] = async contract => {
+	// 	form.addListItem('facets', {
+	// 		selectors: contract.functionSelectors,
+	// 		contractId: contract.id,
+	// 		target: contract.id
+	// 	})
+	// 	setIsOpen(false)
+	// }
+
 	const handleFacetSelect: IFindContractProps['onClick'] = async contract => {
+		const existingFacet = form.values.facets.find(
+			f => f.contractId === contract.id
+		)
+
+		if (existingFacet) {
+			showNotification({
+				title: 'Facet already added!',
+				message: 'That facet has already been added.'
+			})
+
+			return
+		}
+
+		const usedSelectors: Record<string, string> = {}
+
+		// proxyContract?.Contract?.functionSelectors.forEach(s => {
+		// 	usedSelectors[s] = proxyContract.address
+		// })
+
+		form.values.facets.forEach(f => {
+			f.selectors.forEach(s => {
+				usedSelectors[s] = f.target
+			})
+		})
+
 		form.addListItem('facets', {
-			selectors: contract.functionSelectors,
+			selectors: contract.functionSelectors.filter(
+				(fs: string) => !usedSelectors[fs]
+			),
+			target: contract.id,
 			contractId: contract.id
 		})
 		setIsOpen(false)
@@ -95,7 +136,10 @@ export const CreateBundleContainer: React.FC = () => {
 				{
 					name: values.name,
 					description: values.description,
-					contractIds: values.facets.map(f => f.contractId)
+					contracts: values.facets.map(f => ({
+						id: f.contractId,
+						functionSelectors: f.selectors
+					}))
 				}
 			)
 
