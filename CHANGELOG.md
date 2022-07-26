@@ -1,3 +1,5 @@
+# 1.0.0 (2022-07-26)
+
 ## [1.1.3](https://github.com/meemproject/clubs-web/compare/v1.1.2...v1.1.3) (2022-06-09)
 
 ## [1.1.2](https://github.com/meemproject/clubs-web/compare/v1.1.1...v1.1.2) (2022-06-09)
