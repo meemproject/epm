@@ -6,8 +6,7 @@ import {
 	Spoiler,
 	Accordion,
 	Title,
-	Space,
-	Modal
+	Space
 } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
 import cx from 'classnames'
@@ -21,6 +20,7 @@ import { Address } from './Address'
 const useStyles = createStyles(_theme => ({
 	row: {
 		alignItems: 'center',
+		justifyContent: 'space-between',
 		display: 'flex',
 		width: '100%'
 	},
@@ -139,7 +139,10 @@ export const ContractCard: React.FC<IProps> = ({
 	return (
 		<>
 			{isCompact ? (
-				<Accordion key={contract.id} className={classes.card}>
+				<Accordion
+					key={`contractCard-${contract.id}`}
+					className={classes.card}
+				>
 					<Accordion.Item
 						className={classes.card}
 						label={
@@ -175,18 +178,20 @@ export const ContractCard: React.FC<IProps> = ({
 					{cardDetails}
 				</Card>
 			)}
-			<Modal
+			{/* <Modal
 				title={<Title>Deploy Contract</Title>}
 				opened={isOpen}
 				onClose={() => setIsOpen(false)}
-			>
-				<DeployContract
-					contract={contract as Contracts}
-					onDeployed={() => {
-						setIsOpen(false)
-					}}
-				/>
-			</Modal>
+			> */}
+			<DeployContract
+				isOpen={isOpen}
+				onClose={() => setIsOpen(false)}
+				contract={contract as Contracts}
+				onDeployed={() => {
+					setIsOpen(false)
+				}}
+			/>
+			{/* </Modal> */}
 		</>
 	)
 }

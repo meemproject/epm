@@ -176,6 +176,23 @@ export const GET_BUNDLE_BY_ID = gql`
 	${CONTRACT_PARTS}
 `
 
+// export const SUB_SEARCH_CONTRACTS_WITH_CONTRACT_TYPE = gql`
+// 	subscription SubSearchContracts($searchTerm: String) {
+// 		Contracts(
+// 			where: {
+// 				_or: [
+// 					{ name: { _ilike: $searchTerm } }
+// 					{ description: { _ilike: $searchTerm } }
+// 				]
+// 			}
+// 		) {
+// 			...ContractParts
+// 		}
+// 	}
+
+// 	${CONTRACT_PARTS}
+// `
+
 export const SUB_SEARCH_CONTRACTS = gql`
 	subscription SubSearchContracts(
 		$contractType: String

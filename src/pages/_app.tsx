@@ -12,6 +12,7 @@ import { Global, MantineProvider } from '@mantine/core'
 import { NotificationsProvider } from '@mantine/notifications'
 import { WalletProvider } from '@meemproject/react'
 import { createClient } from 'graphql-ws'
+import type { Client } from 'graphql-ws'
 import type { AppProps } from 'next/app'
 import React from 'react'
 import '@fontsource/inter'
@@ -24,24 +25,51 @@ function MyApp(props: AppProps) {
 		uri: process.env.NEXT_PUBLIC_GRAPHQL_API_URL
 	})
 
-	const wsLink =
-		typeof window !== 'undefined'
-			? new GraphQLWsLink(
-					createClient({
-						url: process.env.NEXT_PUBLIC_GRAPHQL_API_WS_URL ?? '',
-						keepAlive: 10_000,
-						lazy: false,
-						connectionAckWaitTimeout: 10_000,
-						shouldRetry: err => {
-							console.log(err)
-							return true
-						},
-						onNonLazyError: err => {
-							log.crit(err)
-						}
-					})
-			  )
-			: null
+	let wsClient: Client | undefined
+
+	if (typeof window !== 'undefined') {
+		log.debug('Creating GQL WS client')
+		wsClient = createClient({
+			url: process.env.NEXT_PUBLIC_GRAPHQL_API_WS_URL ?? '',
+			keepAlive: 10_000,
+			lazy: false,
+			connectionAckWaitTimeout: 10_000,
+			shouldRetry: err => {
+				log.crit(err)
+				return true
+			},
+			onNonLazyError: err => {
+				log.crit(err)
+			}
+		})
+
+		wsClient.on('closed', e => {
+			log.warn('Websocket: closed', e)
+		})
+		wsClient.on('connected', () => {
+			log.debug('Websocket: connected')
+		})
+		wsClient.on('connecting', () => {
+			log.debug('Websocket: connecting')
+		})
+		wsClient.on('error', e => {
+			log.crit('Websocket: error', e)
+		})
+		wsClient.on('message', e => {
+			log.trace('Websocket: message', e)
+		})
+		wsClient.on('opened', () => {
+			log.debug('Websocket: opened')
+		})
+		wsClient.on('ping', e => {
+			log.trace('Websocket: ping', e)
+		})
+		wsClient.on('pong', e => {
+			log.trace('Websocket: pong', e)
+		})
+	}
+
+	const wsLink = wsClient ? new GraphQLWsLink(wsClient) : null
 
 	// The split function takes three parameters:
 	//
@@ -68,6 +96,17 @@ function MyApp(props: AppProps) {
 		cache: new InMemoryCache(),
 		queryDeduplication: true
 	})
+
+	React.useEffect(() => {
+		const jssStyles = document.querySelector('#jss-server-side')
+		if (jssStyles) {
+			jssStyles.parentElement?.removeChild(jssStyles)
+		}
+		log.setOptions({
+			level:
+				(process.env.NEXT_PUBLIC_LOG_LEVEL as LogLevel) ?? LogLevel.Warn
+		})
+	}, [])
 
 	React.useEffect(() => {
 		const jssStyles = document.querySelector('#jss-server-side')

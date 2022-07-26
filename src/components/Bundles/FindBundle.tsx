@@ -1,10 +1,9 @@
-import { useQuery, useSubscription } from '@apollo/client'
+import { useSubscription } from '@apollo/client'
 import { TextInput, Space, Skeleton, Grid } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import React from 'react'
 import {
 	Bundles,
-	SearchBundlesQuery,
 	SubSearchBundlesSubscription
 } from '../../../generated/graphql'
 import { SUB_SEARCH_BUNDLES } from '../../graphql/contracts'

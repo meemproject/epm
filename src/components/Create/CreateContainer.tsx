@@ -14,6 +14,7 @@ import { useForm } from '@mantine/form'
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
 import { makeFetcher } from '@meemproject/react'
+import Link from 'next/link'
 import React, { useState } from 'react'
 import { Page } from '../../styles/Page'
 
@@ -56,7 +57,7 @@ export const CreateContainer: React.FC = () => {
 							method: MeemAPI.v1.CreateContract.method
 						})
 
-						await createContract(
+						const { contractId } = await createContract(
 							MeemAPI.v1.CreateContract.path(),
 							undefined,
 							{
@@ -71,8 +72,22 @@ export const CreateContainer: React.FC = () => {
 
 						showNotification({
 							title: 'Contract created',
-							message:
-								'The contract was saved and can now be deployed.',
+							message: (
+								<p>
+									The contract was saved and can now be
+									deployed.{' '}
+									<Link
+										href={{
+											pathname: '/contracts',
+											query: {
+												contractId
+											}
+										}}
+									>
+										<a target="_blank">View Contract</a>
+									</Link>
+								</p>
+							),
 							color: 'green'
 						})
 					} catch (e) {

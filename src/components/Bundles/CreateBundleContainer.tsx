@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client'
+import { useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import {
 	createStyles,
@@ -18,8 +18,11 @@ import { makeFetcher } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { CirclePlus } from 'tabler-icons-react'
-import { Contracts, GetContractsByIdQuery } from '../../../generated/graphql'
-import { GET_CONTRACTS_BY_ID } from '../../graphql/contracts'
+import {
+	Contracts,
+	SubGetContractsByIdSubscription
+} from '../../../generated/graphql'
+import { SUB_GET_CONTRACTS_BY_ID } from '../../graphql/contracts'
 import { Page } from '../../styles/Page'
 import { FacetList } from '../Atoms/FacetList'
 import {
@@ -57,14 +60,15 @@ export const CreateBundleContainer: React.FC = () => {
 
 	const [isOpen, setIsOpen] = useState(false)
 
-	const { loading: isLoading, data } = useQuery<GetContractsByIdQuery>(
-		GET_CONTRACTS_BY_ID,
-		{
-			variables: {
-				ids: form.values.facets.map(facet => facet.contractId)
+	const { loading: isLoading, data } =
+		useSubscription<SubGetContractsByIdSubscription>(
+			SUB_GET_CONTRACTS_BY_ID,
+			{
+				variables: {
+					ids: form.values.facets.map(facet => facet.contractId)
+				}
 			}
-		}
-	)
+		)
 
 	// const handleFacetSelect: IFindContractProps['onClick'] = async contract => {
 	// 	form.addListItem('facets', {
@@ -108,7 +112,13 @@ export const CreateBundleContainer: React.FC = () => {
 			target: contract.id,
 			contractId: contract.id
 		})
-		setIsOpen(false)
+
+		showNotification({
+			title: 'Contract added!',
+			message: `${contract.name} has been added to the bundle.`,
+			color: 'green'
+		})
+		// setIsOpen(false)
 	}
 
 	const handleSave = async (values: typeof form.values) => {
@@ -234,7 +244,12 @@ export const CreateBundleContainer: React.FC = () => {
 					size={900}
 					title={<Title>Find a Facet</Title>}
 				>
-					<FindContract onClick={handleFacetSelect} />
+					<FindContract
+						onClick={handleFacetSelect}
+						disabledContractIds={form.values.facets.map(
+							(f: { contractId: string }) => f.contractId
+						)}
+					/>
 				</Modal>
 			</form>
 		</Page>

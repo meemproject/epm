@@ -1932,13 +1932,13 @@
     prop-types "^15.7.2"
     react-is "^16.8.0 || ^17.0.0"
 
-"@meemproject/api@0.6.5-pre-2821809.0":
-  version "0.6.5-pre-2821809.0"
-  resolved "https://registry.yarnpkg.com/@meemproject/api/-/api-0.6.5-pre-2821809.0.tgz#f11476fd5e030415ae9945af57db6ebd4b084c33"
-  integrity sha512-YI+m5SWdFQ2qrRf2n1HWwjEXEc6Hah9ZX/8V51xWLk1buwZvuATR3Xs5iLkbMK5GoXxenyylecuYSjSOWmidJQ==
+"@meemproject/api@^0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@meemproject/api/-/api-0.7.0.tgz#317797e9290f00ef706e40bb73c25a4a625269bf"
+  integrity sha512-q1AjdDwDNR56WCew3zwbm80VKu+tCmriDEbEk05FpXUsrnLy2SlerAxWb/aJPIIRgbyBKbfcV8klI1TQ+gStvA==
   dependencies:
     "@kengoldfarb/log" "^1.0.5"
-    "@meemproject/meem-contracts" "^0.6.5-pre-2821809.0"
+    "@meemproject/meem-contracts" "^0.7.0"
     "@typechain/ethers-v5" "^10.0.0"
     "@types/js-cookie" "^3.0.1"
     "@types/luxon" "^2.3.1"
@@ -1950,51 +1950,25 @@
     tsnd "^1.0.2"
     typechain "^8.0.0"
 
-"@meemproject/api@^0.6.5-pre-2821809.0":
-  version "0.6.5-pre-c49d3f7.0"
-  resolved "https://registry.yarnpkg.com/@meemproject/api/-/api-0.6.5-pre-c49d3f7.0.tgz#af809044687d1e93205a320decba62398a8ce2c6"
-  integrity sha512-nl1LDyP8C2rIo7QSPGstYm5Fx77jUiPCm8uYr5/p/+UdsT5FjK9ZK0+sYdo2Vsauwbr93kE8X+xXe4czzFK5jw==
-  dependencies:
-    "@kengoldfarb/log" "^1.0.5"
-    "@meemproject/meem-contracts" "^0.6.5-pre-c49d3f7.0"
-    "@typechain/ethers-v5" "^10.0.0"
-    "@types/js-cookie" "^3.0.1"
-    "@types/luxon" "^2.3.1"
-    ethers "^5.6.4"
-    js-cookie "^3.0.1"
-    luxon "^2.3.1"
-    superagent "^7.1.2"
-    swr "^1.3.0"
-    tsnd "^1.0.2"
-    typechain "^8.0.0"
-
-"@meemproject/meem-contracts@0.6.5-pre-2821809.0":
-  version "0.6.5-pre-2821809.0"
-  resolved "https://registry.yarnpkg.com/@meemproject/meem-contracts/-/meem-contracts-0.6.5-pre-2821809.0.tgz#ab74489bf822217c78fdfa3566bc77d04a6fd6ab"
-  integrity sha512-Fg4LY1wJQdqO0VANOKdpnARdf+jEHxzfrtXaH7/CyWLAz9IF2zWtbCkPPdyXjrdvFvegmCtNZ6WRjBcx89tX7g==
+"@meemproject/meem-contracts@^0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@meemproject/meem-contracts/-/meem-contracts-0.7.0.tgz#8e0fb98db0eb394b980662771698466dfa3832ba"
+  integrity sha512-oGpafFyqST9OaF+8i542MW/njn/uBvkibaVqUB4HmzZEsNus+0z8BZ+Jc2rgstcgAT1ph0QYARsk+WhKkJV3XA==
   dependencies:
     "@kengoldfarb/log" "^1.0.5"
     ethers "^5.6.4"
 
-"@meemproject/meem-contracts@^0.6.5-pre-2821809.0", "@meemproject/meem-contracts@^0.6.5-pre-c49d3f7.0":
-  version "0.6.5-pre-c49d3f7.0"
-  resolved "https://registry.yarnpkg.com/@meemproject/meem-contracts/-/meem-contracts-0.6.5-pre-c49d3f7.0.tgz#52f0df68189bcaec0e6cef61c9ee2138812263a5"
-  integrity sha512-QkKxwkNBJsH7jm2Z0cXyh9ZWW/NcR5WZvo1O01SkKfSGXGy7Uqus4oNzxQcGrq+PLhZfpQvFcHEz+kEuM3G7MA==
-  dependencies:
-    "@kengoldfarb/log" "^1.0.5"
-    ethers "^5.6.4"
-
-"@meemproject/react@0.6.5-pre-2821809.0":
-  version "0.6.5-pre-2821809.0"
-  resolved "https://registry.yarnpkg.com/@meemproject/react/-/react-0.6.5-pre-2821809.0.tgz#f3c1c89b179c77e78d1bb1e96bfe1f78c542bed3"
-  integrity sha512-ah9dDMI06u0J1llo4hX1+8Dcmbp3gf6CEjQyHqUAWAmyAIdh57gpnCehzgniinmRh3Wka9JU0vnpvyYjQdtD6Q==
+"@meemproject/react@^0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@meemproject/react/-/react-0.7.0.tgz#0ccc9caa5c9ec16797033ed4048f251828a215f5"
+  integrity sha512-Hqxl9m1FdVIgmwO1+e0QCmUZfO2OIXqQTGBYOa3eokmeMHM7to+liurzCa8YEAQWkDmHHdp+y4QC59FVVengaA==
   dependencies:
     "@kengoldfarb/log" "^1.0.5"
     "@material-ui/core" "^4.12.4"
     "@material-ui/lab" "^4.0.0-alpha.61"
-    "@meemproject/api" "^0.6.5-pre-2821809.0"
-    "@meemproject/meem-contracts" "^0.6.5-pre-2821809.0"
-    "@meemproject/utils" "^0.6.5-pre-2821809.0"
+    "@meemproject/api" "^0.7.0"
+    "@meemproject/meem-contracts" "^0.7.0"
+    "@meemproject/utils" "^0.7.0"
     "@mui/material" "^5.6.1"
     "@walletconnect/web3-provider" "^1.7.7"
     ethers "^5.6.4"
@@ -2005,13 +1979,13 @@
     swr "^1.3.0"
     web3modal "^1.9.6"
 
-"@meemproject/utils@^0.6.5-pre-2821809.0":
-  version "0.6.5-pre-c49d3f7.0"
-  resolved "https://registry.yarnpkg.com/@meemproject/utils/-/utils-0.6.5-pre-c49d3f7.0.tgz#6a4bed64893c95cfa71dcf7891549747b2a16360"
-  integrity sha512-5sUqLEeCv6N3vtxrj8pP+qrBc54fShkdaFyRTe/0u+Y62NsZEToEoDrqtN2fq2Z+ojAoSDdK9CBBFcS1eHYHSg==
+"@meemproject/utils@^0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@meemproject/utils/-/utils-0.7.0.tgz#7ad3401d7c1a7d260581fe071f0ae751c6d97a6e"
+  integrity sha512-i0fdem1EdHvPzhdV4kUMaEgR3ovkF0xzQ6rNeFGINAITyC7DkZR2PPXGfzKiKjemCKl4Wtv2Jzm4/LMjpmrqHQ==
   dependencies:
     "@kengoldfarb/log" "^1.0.5"
-    "@meemproject/meem-contracts" "^0.6.5-pre-c49d3f7.0"
+    "@meemproject/meem-contracts" "^0.7.0"
     ethers "^5.6.4"
 
 "@metamask/safe-event-emitter@^2.0.0":

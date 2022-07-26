@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client'
+import { useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import { Text, Center, Button, Space, Title, Skeleton } from '@mantine/core'
 import { formList, useForm } from '@mantine/form'
@@ -9,10 +9,9 @@ import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import {
 	Contracts,
-	GetBundleByIdQuery,
-	GetContractsByIdQuery
+	SubGetBundleByIdSubscription
 } from '../../../generated/graphql'
-import { GET_BUNDLE_BY_ID, GET_CONTRACTS_BY_ID } from '../../graphql/contracts'
+import { SUB_GET_BUNDLE_BY_ID } from '../../graphql/contracts'
 import { downloadFile } from '../../lib/utils'
 import { Page } from '../../styles/Page'
 import { DemoCode } from '../Atoms/DemoCode'
@@ -34,15 +33,12 @@ export const BundleContainer: React.FC = () => {
 	const [hasInitialized, setHasInitialized] = useState(false)
 	const [isSaving, setIsSaving] = useState(false)
 
-	const {
-		loading: isLoading,
-		data,
-		refetch
-	} = useQuery<GetBundleByIdQuery>(GET_BUNDLE_BY_ID, {
-		variables: {
-			id: bundleId
-		}
-	})
+	const { loading: isLoading, data } =
+		useSubscription<SubGetBundleByIdSubscription>(SUB_GET_BUNDLE_BY_ID, {
+			variables: {
+				id: bundleId
+			}
+		})
 
 	const contractsData = data?.Bundles[0].BundleContracts.map(
 		bc => bc.Contract
@@ -81,8 +77,6 @@ export const BundleContainer: React.FC = () => {
 					}))
 				}
 			)
-
-			refetch()
 
 			showNotification({
 				title: 'Bundle Saved!',

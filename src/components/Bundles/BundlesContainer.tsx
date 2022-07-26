@@ -33,7 +33,7 @@ export const BundlesContainer: React.FC = () => {
 				onClose={() => setIsOpen(false)}
 				size="xl"
 			>
-				<DeployBundle bundle={selectedBundle} />
+				<DeployBundle bundleId={selectedBundle?.id} />
 			</Modal>
 		</Page>
 	)

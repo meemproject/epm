@@ -125,8 +125,6 @@ export const FacetList: React.FC<IProps> = ({
 		form.setFieldValue('facets', formList(updatedFacets))
 	}
 
-	console.log({ form })
-
 	return (
 		<div className="facet_container">
 			{isEnabled && (
@@ -196,96 +194,88 @@ export const FacetList: React.FC<IProps> = ({
 							] = functionName
 						})
 
-						console.log({ functions, abi: contract?.abi })
-
 						return (
-							<>
-								<Center
-									className={classes.facet_container}
-									key={`facet-${facet.target}`}
-								>
-									{isLoading && (
-										<Skeleton width="100%" height={235} />
-									)}
-									{!isLoading && (
-										<>
-											<ContractCard
-												className={classes.card}
-												contract={contract}
-											>
-												<div>
-													<Space h={16} />
-													<Title order={4}>
-														Functions
-													</Title>
-													<Space h={8} />
-													{contract?.functionSelectors.map(
-														(selector: string) => {
-															const isInUse =
-																facet.selectors.includes(
-																	selector
-																)
-
-															const name =
-																functionSelectorNameHash[
-																	selector
-																]
-
-															return (
-																<>
-																	<Switch
-																		key={`${contract?.id}-${selector}`}
-																		checked={
-																			isInUse
-																		}
-																		label={
-																			name
-																		}
-																		onChange={e => {
-																			handleToggle(
-																				{
-																					functionName:
-																						name,
-																					facet,
-																					isChecked:
-																						e
-																							.target
-																							.checked,
-																					selector
-																				}
-																			)
-																		}}
-																	/>
-																	<Space
-																		h={8}
-																	/>
-																</>
+							<Center
+								className={classes.facet_container}
+								key={`facet-${facet.target}`}
+							>
+								{isLoading && (
+									<Skeleton width="100%" height={235} />
+								)}
+								{!isLoading && (
+									<>
+										<ContractCard
+											className={classes.card}
+											contract={contract}
+										>
+											<div>
+												<Space h={16} />
+												<Title order={4}>
+													Functions
+												</Title>
+												<Space h={8} />
+												{contract?.functionSelectors.map(
+													(selector: string) => {
+														const isInUse =
+															facet.selectors.includes(
+																selector
 															)
-														}
-													)}
-												</div>
-											</ContractCard>
-											{isEnabled && (
-												<div>
-													<IconButton
-														tooltip="Remove Facet"
-														onClick={() => {
-															form.removeListItem(
-																'facets',
-																[i]
-															)
-														}}
-														icon={
-															<CircleX color="red" />
-														}
-													/>
-												</div>
-											)}
-										</>
-									)}
-								</Center>
+
+														const name =
+															functionSelectorNameHash[
+																selector
+															]
+
+														return (
+															<>
+																<Switch
+																	key={`${contract?.id}-${selector}`}
+																	checked={
+																		isInUse
+																	}
+																	label={name}
+																	onChange={e => {
+																		handleToggle(
+																			{
+																				functionName:
+																					name,
+																				facet,
+																				isChecked:
+																					e
+																						.target
+																						.checked,
+																				selector
+																			}
+																		)
+																	}}
+																/>
+																<Space h={8} />
+															</>
+														)
+													}
+												)}
+											</div>
+										</ContractCard>
+										{isEnabled && (
+											<div>
+												<IconButton
+													tooltip="Remove Facet"
+													onClick={() => {
+														form.removeListItem(
+															'facets',
+															[i]
+														)
+													}}
+													icon={
+														<CircleX color="red" />
+													}
+												/>
+											</div>
+										)}
+									</>
+								)}
 								<Space h={16} />
-							</>
+							</Center>
 						)
 					}
 				)}

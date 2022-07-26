@@ -1,3 +1,4 @@
+import { useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import {
 	Text,
@@ -19,8 +20,10 @@ import { Check, CircleX } from 'tabler-icons-react'
 import {
 	Bundles,
 	Contracts,
-	SearchContractsQuery
+	SearchContractsQuery,
+	SubGetBundleByIdSubscription
 } from '../../../generated/graphql'
+import { SUB_GET_BUNDLE_BY_ID } from '../../graphql/contracts'
 import { ArrayElement } from '../../lib/utils'
 import { Address } from '../Atoms/Address'
 import { ContractCard } from '../Atoms/ContractCard'
@@ -28,10 +31,10 @@ import { FindContract } from '../Atoms/FindContract'
 import { DeployContract } from '../Contracts/DeployContract'
 
 export interface IProps {
-	bundle?: Bundles | null
+	bundleId?: string | null
 }
 
-export const DeployBundle: React.FC<IProps> = ({ bundle }) => {
+export const DeployBundle: React.FC<IProps> = ({ bundleId }) => {
 	const router = useRouter()
 	const { signer, chainId } = useWallet()
 	const [isLoading, setIsLoading] = useState(false)
@@ -41,6 +44,15 @@ export const DeployBundle: React.FC<IProps> = ({ bundle }) => {
 	const [isDeployProxyOpen, setIsDeployProxyOpen] = useState(false)
 	const [selectedContract, setSelectedContract] =
 		useState<ArrayElement<SearchContractsQuery['Contracts']>>()
+
+	const { loading: isLoadingBundle, data } =
+		useSubscription<SubGetBundleByIdSubscription>(SUB_GET_BUNDLE_BY_ID, {
+			variables: {
+				id: bundleId
+			}
+		})
+
+	const bundle = data?.Bundles[0]
 
 	if (!bundle) {
 		return null
@@ -277,19 +289,15 @@ export const DeployBundle: React.FC<IProps> = ({ bundle }) => {
 					}}
 				/>
 			</Modal>
-			<Modal
-				title={<Title>Deploy Contract</Title>}
-				opened={isDeployProxyOpen}
+			<DeployContract
+				isOpen={isDeployProxyOpen}
 				onClose={() => setIsDeployProxyOpen(false)}
-			>
-				<DeployContract
-					contract={selectedContract as Contracts}
-					onDeployed={c => {
-						setDeployedProxy(c)
-						setIsDeployProxyOpen(false)
-					}}
-				/>
-			</Modal>
+				contract={selectedContract as Contracts}
+				onDeployed={c => {
+					setDeployedProxy(c)
+					setIsDeployProxyOpen(false)
+				}}
+			/>
 		</div>
 	)
 }

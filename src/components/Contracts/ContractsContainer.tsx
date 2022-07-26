@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client'
+import { useSubscription } from '@apollo/client'
 import {
 	Text,
 	Modal,
@@ -13,9 +13,16 @@ import { useForm } from '@mantine/form'
 import { MeemAPI } from '@meemproject/api'
 import { useWallet } from '@meemproject/react'
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
-import { Contracts, SearchContractsQuery } from '../../../generated/graphql'
-import { SEARCH_CONTRACTS } from '../../graphql/contracts'
+import React, { useEffect, useState } from 'react'
+import {
+	Contracts,
+	SubGetContractsByIdSubscription,
+	SubSearchContractsSubscription
+} from '../../../generated/graphql'
+import {
+	SUB_GET_CONTRACTS_BY_ID,
+	SUB_SEARCH_CONTRACTS
+} from '../../graphql/contracts'
 import { Page } from '../../styles/Page'
 import { ContractCard } from '../Atoms/ContractCard'
 import { DeployContract } from './DeployContract'
@@ -34,18 +41,47 @@ export const ContractsContainer: React.FC = () => {
 		validate: {}
 	})
 
+	// const { loading: isContractsLoading, data: contracts } =
+	// 	useQuery<SearchContractsQuery>(SEARCH_CONTRACTS, {
+	// 		variables: {
+	// 			contractType: form.values.contractType,
+	// 			searchTerm: `${form.values.searchText}%`
+	// 		}
+	// 	})
+
 	const { loading: isContractsLoading, data: contracts } =
-		useQuery<SearchContractsQuery>(SEARCH_CONTRACTS, {
+		useSubscription<SubSearchContractsSubscription>(SUB_SEARCH_CONTRACTS, {
 			variables: {
 				contractType: form.values.contractType,
 				searchTerm: `${form.values.searchText}%`
 			}
 		})
 
+	const { data: singleContractData } =
+		useSubscription<SubGetContractsByIdSubscription>(
+			SUB_GET_CONTRACTS_BY_ID,
+			{
+				skip: !router.query.contractId,
+				variables: {
+					ids: [router.query.contractId]
+				}
+			}
+		)
+
 	const handleDeploy = async (c: Contracts) => {
 		setIsOpen(true)
 		setSelectedContract(c)
 	}
+
+	useEffect(() => {
+		if (singleContractData) {
+			setSelectedContract(singleContractData.Contracts[0] as Contracts)
+			setIsOpen(true)
+			router.push({
+				pathname: '/contracts'
+			})
+		}
+	}, [singleContractData, router])
 
 	return (
 		<Page>
@@ -100,24 +136,20 @@ export const ContractsContainer: React.FC = () => {
 					</Grid.Col>
 				))}
 			</Grid>
-			<Modal
-				title={<Title>Deploy Contract</Title>}
-				opened={isOpen}
+			<DeployContract
+				contract={selectedContract}
+				onDeployed={tx => {
+					router.push({
+						pathname: `/manage`,
+						query: {
+							address: tx.address,
+							chainId
+						}
+					})
+				}}
+				isOpen={isOpen}
 				onClose={() => setIsOpen(false)}
-			>
-				<DeployContract
-					contract={selectedContract}
-					onDeployed={tx => {
-						router.push({
-							pathname: `/manage`,
-							query: {
-								address: tx.address,
-								chainId
-							}
-						})
-					}}
-				/>
-			</Modal>
+			/>
 		</Page>
 	)
 }

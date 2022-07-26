@@ -1,4 +1,4 @@
-import { useQuery, useSubscription } from '@apollo/client'
+import { useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import {
 	createStyles,
@@ -36,14 +36,10 @@ import {
 import {
 	Bundles,
 	ContractInstances,
-	GetContractsByAddressesQuery,
 	SubGetContractsByAddressesSubscription,
 	WalletContractInstances
 } from '../../../generated/graphql'
-import {
-	GET_CONTRACTS_BY_ADDRESS,
-	SUB_GET_CONTRACTS_BY_ADDRESS
-} from '../../graphql/contracts'
+import { SUB_GET_CONTRACTS_BY_ADDRESS } from '../../graphql/contracts'
 import { diamondABI } from '../../lib/diamond'
 import { downloadFile } from '../../lib/utils'
 import { Page } from '../../styles/Page'
@@ -55,7 +51,6 @@ import {
 	FindContract,
 	IProps as IFindContractProps
 } from '../Atoms/FindContract'
-import { FunctionList } from '../Atoms/FunctionList'
 import { IconButton } from '../Atoms/IconButton'
 import { FindBundle } from '../Bundles/FindBundle'
 
@@ -109,65 +104,35 @@ export const ManageDiamondContainer: React.FC = () => {
 	const [fetchedAddress, setFetchedAddress] = useState<string>()
 	const [fetchedChainId, setFetchedChainId] = useState<number>()
 	const [contractOwner, setContractOwner] = useState<string>()
-	const [hasFoundAllFacets, setHasFoundAllFacets] = useState(false)
+	const [hasFoundAllFacets, setHasFoundAllFacets] = useState(true)
 	const [facets, setFacets] = useState<
 		{ selectors: string[]; target: string }[]
 	>([])
 	const { web3Provider, signer, chainId, setChain, accounts } = useWallet()
 
-	// const { loading: isLoading, data } =
-	// 	useSubscription<SubGetContractsByAddressesSubscription>(
-	// 		SUB_GET_CONTRACTS_BY_ADDRESS,
-	// 		{
-	// 			variables: {
-	// 				addresses: [
-	// 					...form.values.facets,
-	// 					{ target: form.values.address }
-	// 				]
-	// 					.sort((a, b) => {
-	// 						if (a.target < b.target) {
-	// 							return -1
-	// 						}
-	// 						if (a.target > b.target) {
-	// 							return 1
-	// 						}
-	// 						return 0
-	// 					})
-	// 					.map(f => f.target)
-	// 			},
-	// 			fetchPolicy: 'no-cache'
-	// 		}
-	// 	)
-
-	const { loading: isLoading, data } = useQuery<GetContractsByAddressesQuery>(
-		GET_CONTRACTS_BY_ADDRESS,
-		{
-			variables: {
-				addresses: [
-					...form.values.facets,
-					{ target: form.values.address }
-				]
-					.sort((a, b) => {
-						if (a.target < b.target) {
-							return -1
-						}
-						if (a.target > b.target) {
-							return 1
-						}
-						return 0
-					})
-					.map(f => {
-						if (f.target) {
-							return ethers.utils.getAddress(f.target)
-						}
-
-						log.warn('No target', f)
-						return ''
-					})
-			},
-			fetchPolicy: 'no-cache'
-		}
-	)
+	const { loading: isLoading, data } =
+		useSubscription<SubGetContractsByAddressesSubscription>(
+			SUB_GET_CONTRACTS_BY_ADDRESS,
+			{
+				variables: {
+					addresses: [
+						...form.values.facets,
+						{ target: form.values.address }
+					]
+						.sort((a, b) => {
+							if (a.target < b.target) {
+								return -1
+							}
+							if (a.target > b.target) {
+								return 1
+							}
+							return 0
+						})
+						.map(f => f.target)
+				},
+				fetchPolicy: 'no-cache'
+			}
+		)
 
 	const isValidAddress = fetchedAddress
 		? ethers.utils.isAddress(fetchedAddress)
@@ -568,7 +533,7 @@ export const ManageDiamondContainer: React.FC = () => {
 	])
 
 	useEffect(() => {
-		if (!isLoading && data) {
+		if (!isLoading && data && data.ContractInstances.length > 0) {
 			for (let i = 0; i < facets.length; i += 1) {
 				const facet = facets[i]
 				const contractInstance = data.ContractInstances.find(
@@ -895,7 +860,12 @@ export const ManageDiamondContainer: React.FC = () => {
 					size={900}
 					title={<Title>Find a Facet</Title>}
 				>
-					<FindContract onClick={handleFacetSelect} />
+					<FindContract
+						onClick={handleFacetSelect}
+						disabledContractIds={data?.ContractInstances.map(
+							ci => ci.Contract?.id
+						)}
+					/>
 				</Modal>
 				<Modal
 					opened={isBundleOpen}

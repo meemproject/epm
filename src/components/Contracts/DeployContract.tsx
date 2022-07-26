@@ -1,27 +1,48 @@
 import log from '@kengoldfarb/log'
-import { Text, Button, TextInput, Space, Title } from '@mantine/core'
+import { Text, Button, TextInput, Space, Title, Modal } from '@mantine/core'
 import { useForm } from '@mantine/form'
+import { showNotification } from '@mantine/notifications'
 import { chains, MeemAPI } from '@meemproject/api'
 import { makeFetcher, useWallet } from '@meemproject/react'
 import { ethers } from 'ethers'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Contracts } from '../../../generated/graphql'
 
 export interface IProps {
 	contract?: Contracts
 	onDeployed?: (contract: ethers.Contract) => void
+	onClose?: () => void
+	isOpen?: boolean
+	title?: string
 }
 
-export const DeployContract: React.FC<IProps> = ({ contract, onDeployed }) => {
+export const DeployContract: React.FC<IProps> = ({
+	contract,
+	onDeployed,
+	isOpen: isRequestedOpen,
+	title,
+	onClose
+}) => {
 	const { signer, chainId } = useWallet()
 	const [isLoading, setIsLoading] = useState(false)
+	const [isOpen, setIsOpen] = useState(false)
 
 	const form = useForm({
 		initialValues: {},
 		validate: {}
 	})
 
-	if (!contract) {
+	useEffect(() => {
+		if (!isLoading) {
+			setIsOpen(!!isRequestedOpen)
+		}
+
+		if (!isRequestedOpen && onClose) {
+			onClose()
+		}
+	}, [isRequestedOpen, isLoading, onClose])
+
+	if (!contract || !chainId) {
 		return null
 	}
 
@@ -70,6 +91,13 @@ export const DeployContract: React.FC<IProps> = ({ contract, onDeployed }) => {
 					chainId
 				}
 			)
+
+			showNotification({
+				title: 'Contract Deployed!',
+				message: `${contract.name} was deployed to ${tx.address}.`,
+				color: 'green'
+			})
+
 			if (onDeployed) {
 				onDeployed(tx)
 			}
@@ -83,42 +111,64 @@ export const DeployContract: React.FC<IProps> = ({ contract, onDeployed }) => {
 	const chain = chains.find(c => c.chainId === chainId)
 
 	return (
-		<div>
-			<Title order={3}>{contract.name}</Title>
-			<Text>{contract.description}</Text>
-			<Space h={24} />
-			{inputs.length > 0 && (
-				<Title order={3}>Constructor Arguments</Title>
-			)}
-			<form
-				onSubmit={form.onSubmit(async _values => {
-					handleDeploy()
-				})}
-			>
-				{inputs.map((input, i) => {
-					switch (input.type) {
-						case 'address':
-						default: {
-							return (
-								<TextInput
-									key={`input-${name}`}
-									label={input.name}
-									placeholder={
-										input.type === 'address' ? '0x...' : ''
-									}
-									// @ts-ignore
-									{...form.getInputProps(`args${i}`)}
-								/>
-							)
-						}
+		<Modal
+			title={
+				<Title order={3}>{title || `Deploy ${contract.name}`}</Title>
+			}
+			opened={isOpen}
+			onClose={() => {
+				if (isLoading) {
+					showNotification({
+						title: 'Contract Deployment In Progress',
+						message: 'Please wait for the contract to deploy.',
+						color: 'yellow'
+					})
+				} else {
+					setIsOpen(false)
+					if (onClose) {
+						onClose()
 					}
-				})}
-				<Space h={8} />
-				<Button
-					loading={isLoading}
-					type="submit"
-				>{`Deploy to ${chain?.name}`}</Button>
-			</form>
-		</div>
+				}
+			}}
+		>
+			<div>
+				<Text>{contract.description}</Text>
+				<Space h={24} />
+				{inputs.length > 0 && (
+					<Title order={3}>Constructor Arguments</Title>
+				)}
+				<form
+					onSubmit={form.onSubmit(async _values => {
+						handleDeploy()
+					})}
+				>
+					{inputs.map((input, i) => {
+						switch (input.type) {
+							case 'address':
+							default: {
+								return (
+									<TextInput
+										key={`input-${name}`}
+										label={input.name}
+										placeholder={
+											input.type === 'address'
+												? '0x...'
+												: ''
+										}
+										// @ts-ignore
+										{...form.getInputProps(`args${i}`)}
+									/>
+								)
+							}
+						}
+					})}
+					<Space h={8} />
+					<Button
+						loading={isLoading}
+						type="submit"
+					>{`Deploy to ${chain?.name}`}</Button>
+				</form>
+			</div>
+		</Modal>
 	)
 }

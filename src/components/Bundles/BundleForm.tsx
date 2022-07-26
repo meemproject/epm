@@ -107,7 +107,12 @@ export const BundleForm: React.FC<IProps> = ({
 				size={900}
 				title={<Title>Find a Facet</Title>}
 			>
-				<FindContract onClick={handleFacetSelect} />
+				<FindContract
+					onClick={handleFacetSelect}
+					disabledContractIds={form.values.facets.map(
+						(f: { contractId: string }) => f.contractId
+					)}
+				/>
 			</Modal>
 		</>
 	)
