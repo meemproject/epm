@@ -1,7 +1,6 @@
 import { useSubscription } from '@apollo/client'
 import {
 	Text,
-	Modal,
 	Select,
 	Space,
 	Grid,

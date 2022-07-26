@@ -10,7 +10,7 @@ import {
 	Modal
 } from '@mantine/core'
 import { chains, MeemAPI } from '@meemproject/api'
-import { IVersion, upgrade } from '@meemproject/meem-contracts'
+import { upgrade } from '@meemproject/meem-contracts'
 import { useWallet } from '@meemproject/react'
 import { ethers } from 'ethers'
 import Link from 'next/link'
@@ -18,7 +18,6 @@ import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { Check, CircleX } from 'tabler-icons-react'
 import {
-	Bundles,
 	Contracts,
 	SearchContractsQuery,
 	SubGetBundleByIdSubscription
@@ -45,12 +44,14 @@ export const DeployBundle: React.FC<IProps> = ({ bundleId }) => {
 	const [selectedContract, setSelectedContract] =
 		useState<ArrayElement<SearchContractsQuery['Contracts']>>()
 
-	const { loading: isLoadingBundle, data } =
-		useSubscription<SubGetBundleByIdSubscription>(SUB_GET_BUNDLE_BY_ID, {
+	const { data } = useSubscription<SubGetBundleByIdSubscription>(
+		SUB_GET_BUNDLE_BY_ID,
+		{
 			variables: {
 				id: bundleId
 			}
-		})
+		}
+	)
 
 	const bundle = data?.Bundles[0]
 
