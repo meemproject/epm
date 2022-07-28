@@ -1,3 +1,4 @@
+import { useSubscription } from '@apollo/client'
 import {
 	createStyles,
 	Text,
@@ -12,7 +13,11 @@ import { UseFormReturnType } from '@mantine/form/lib/use-form'
 import { showNotification } from '@mantine/notifications'
 import React, { useState } from 'react'
 import { CirclePlus } from 'tabler-icons-react'
-import { Contracts } from '../../../generated/graphql'
+import {
+	Contracts,
+	SubGetContractsByIdSubscription
+} from '../../../generated/graphql'
+import { SUB_GET_CONTRACTS_BY_ID } from '../../graphql/contracts'
 import { FacetList } from '../Atoms/FacetList'
 import {
 	FindContract,
@@ -36,30 +41,62 @@ export interface IProps {
 
 export const BundleForm: React.FC<IProps> = ({
 	form,
-	contracts,
-	isLoading
+	isLoading: isParentLoading
 }) => {
 	const { classes } = useStyles()
 	const [isOpen, setIsOpen] = useState(false)
+
+	const { loading: isContractsLoading, data } =
+		useSubscription<SubGetContractsByIdSubscription>(
+			SUB_GET_CONTRACTS_BY_ID,
+			{
+				variables: {
+					ids: form.values.facets.map(
+						(facet: { selectors: string[]; contractId: string }) =>
+							facet.contractId
+					)
+				}
+			}
+		)
+
+	const isLoading = isParentLoading || isContractsLoading
 
 	const handleFacetSelect: IFindContractProps['onClick'] = async contract => {
 		const existingFacet = form.values.facets.find(
 			f => f.contractId === contract.id
 		)
+
 		if (existingFacet) {
 			showNotification({
-				title: 'Contract already added',
-				message: 'That contract is already part of the bundle',
-				color: 'red'
+				title: 'Facet already added!',
+				message: 'That facet has already been added.'
 			})
+
 			return
 		}
+
+		const usedSelectors: Record<string, string> = {}
+
+		form.values.facets.forEach(f => {
+			f.selectors.forEach(s => {
+				usedSelectors[s] = f.target
+			})
+		})
+
 		form.addListItem('facets', {
-			selectors: contract.functionSelectors,
+			selectors: contract.functionSelectors.filter(
+				(fs: string) => !usedSelectors[fs]
+			),
 			target: contract.id,
 			contractId: contract.id
 		})
-		setIsOpen(false)
+
+		showNotification({
+			title: 'Contract added!',
+			message: `${contract.name} has been added to the bundle.`,
+			color: 'green'
+		})
+		// setIsOpen(false)
 	}
 
 	return (
@@ -97,7 +134,7 @@ export const BundleForm: React.FC<IProps> = ({
 			<Space h={12} />
 			<FacetList
 				form={form}
-				contracts={contracts}
+				contracts={data?.Contracts as Contracts[]}
 				isLoading={isLoading}
 				isEnabled
 			/>

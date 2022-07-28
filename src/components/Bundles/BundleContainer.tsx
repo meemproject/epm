@@ -7,10 +7,7 @@ import { MeemAPI } from '@meemproject/api'
 import { makeFetcher } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import {
-	Contracts,
-	SubGetBundleByIdSubscription
-} from '../../../generated/graphql'
+import { SubGetBundleByIdSubscription } from '../../../generated/graphql'
 import { SUB_GET_BUNDLE_BY_ID } from '../../graphql/contracts'
 import { downloadFile } from '../../lib/utils'
 import { Page } from '../../styles/Page'
@@ -39,10 +36,6 @@ export const BundleContainer: React.FC = () => {
 				id: bundleId
 			}
 		})
-
-	const contractsData = data?.Bundles[0].BundleContracts.map(
-		bc => bc.Contract
-	)
 
 	const handleSave = async (values: typeof form.values) => {
 		try {
@@ -170,11 +163,7 @@ export const BundleContainer: React.FC = () => {
 				{hasInitialized && (
 					<>
 						<Title order={3}>Bundle Info</Title>
-						<BundleForm
-							contracts={(contractsData ?? []) as Contracts[]}
-							form={form}
-							isLoading={isLoading}
-						/>
+						<BundleForm form={form} isLoading={isLoading} />
 						<Space h={24} />
 						<Center>
 							<Button
