@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/meemproject/epm/compare/v1.0.0...v1.0.1) (2022-07-29)
+
+
+### Bug Fixes
+
+* add bundle facet not fetching contract ([880bde6](https://github.com/meemproject/epm/commit/880bde6))
+
 # 1.0.0 (2022-07-26)
 
 ## [1.1.3](https://github.com/meemproject/clubs-web/compare/v1.1.2...v1.1.3) (2022-06-09)
