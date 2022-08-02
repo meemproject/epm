@@ -279,5 +279,29 @@ export const diamondABI = [
 	{
 		stateMutability: 'payable',
 		type: 'receive'
+	},
+	{
+		inputs: [
+			{
+				internalType: 'bytes32',
+				name: 'role',
+				type: 'bytes32'
+			},
+			{
+				internalType: 'address',
+				name: 'user',
+				type: 'address'
+			}
+		],
+		name: 'hasRole',
+		outputs: [
+			{
+				internalType: 'bool',
+				name: '',
+				type: 'bool'
+			}
+		],
+		stateMutability: 'view',
+		type: 'function'
 	}
 ]

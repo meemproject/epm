@@ -104,6 +104,7 @@ export const ManageDiamondContainer: React.FC = () => {
 	const [fetchedAddress, setFetchedAddress] = useState<string>()
 	const [fetchedChainId, setFetchedChainId] = useState<number>()
 	const [contractOwner, setContractOwner] = useState<string>()
+	const [isUpgrader, setIsUpgrader] = useState<boolean>(false)
 	const [hasFoundAllFacets, setHasFoundAllFacets] = useState(true)
 	const [facets, setFacets] = useState<
 		{ selectors: string[]; target: string }[]
@@ -331,11 +332,15 @@ export const ManageDiamondContainer: React.FC = () => {
 				signer
 			)
 
-			const [facetResult, bytecodeResult, ownerResult] =
+			const [facetResult, bytecodeResult, ownerResult, hasRoleResult] =
 				await Promise.allSettled([
 					diamond.facets(),
 					web3Provider?.getCode(form.values.address),
-					diamond.owner()
+					diamond.owner(),
+					diamond.hasRole(
+						'0x189ab7a9244df0848122154315af71fe140f3db0fe014031783b0946b8c9d2e3',
+						signer?.getAddress()
+					)
 				])
 
 			const result =
@@ -346,6 +351,9 @@ export const ManageDiamondContainer: React.FC = () => {
 
 			const owner =
 				ownerResult.status === 'fulfilled' && ownerResult.value
+
+			const hasRole =
+				hasRoleResult.status === 'fulfilled' && hasRoleResult.value
 
 			form.values.facets.splice(0, form.values.facets.length)
 			// form.setFieldValue('facets', formList(result))
@@ -362,6 +370,7 @@ export const ManageDiamondContainer: React.FC = () => {
 			setFacets(result)
 			setBytecode(bc && bc !== '0x' ? bc : undefined)
 			setContractOwner(owner)
+			setIsUpgrader(hasRole)
 			setFetchedAddress(form.values.address)
 			setFetchedChainId(chainId)
 			setIsDiamond(!!result)
@@ -549,6 +558,8 @@ export const ManageDiamondContainer: React.FC = () => {
 			setHasFoundAllFacets(true)
 		}
 	}, [data, isLoading, facets])
+
+	const shouldShowUpgradeControls = isContractOwner || isUpgrader
 
 	return (
 		<Page>
@@ -750,10 +761,49 @@ export const ManageDiamondContainer: React.FC = () => {
 											You are the owner of this contract.
 										</Text>
 									)}
+									{isContractOwner && !isUpgrader && (
+										<Text color="dimmed" size="sm">
+											You are not listed as an upgrader on
+											the contract
+										</Text>
+									)}
 									{!isContractOwner && (
 										<Text color="dimmed" size="sm">
 											The connected account is not the
 											owner of the contract
+										</Text>
+									)}
+								</Timeline.Item>
+							)}
+							{bytecode && isUpgrader && (
+								<Timeline.Item
+									active
+									bullet={
+										<ThemeIcon
+											color={isUpgrader ? 'green' : 'red'}
+										>
+											{isUpgrader ? (
+												<Check size={20} />
+											) : (
+												<FaceIdError size={20} />
+											)}
+										</ThemeIcon>
+									}
+									title={
+										isUpgrader
+											? 'Contract Upgrader'
+											: 'Not Contract Upgrader'
+									}
+								>
+									{isUpgrader && (
+										<Text color="dimmed" size="sm">
+											You have the upgrader role on this
+											contract
+										</Text>
+									)}
+									{!isUpgrader && !isContractOwner && (
+										<Text color="dimmed" size="sm">
+											{`You can't upgrade this contract`}
 										</Text>
 									)}
 								</Timeline.Item>
@@ -792,7 +842,7 @@ export const ManageDiamondContainer: React.FC = () => {
 						{isDiamond && (
 							<>
 								<Space h={48} />
-								{isContractOwner && (
+								{shouldShowUpgradeControls && (
 									<div className={classes.section_wrapper}>
 										<Text size="xl">Facets</Text>
 										<Space w={12} />
@@ -826,7 +876,7 @@ export const ManageDiamondContainer: React.FC = () => {
 											proxyContract as ContractInstances
 										}
 										isLoading={isLoading}
-										isEnabled={isContractOwner}
+										isEnabled={shouldShowUpgradeControls}
 									/>
 								)}
 								{!hasFoundAllFacets && (

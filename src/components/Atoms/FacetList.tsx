@@ -230,6 +230,9 @@ export const FacetList: React.FC<IProps> = ({
 															<>
 																<Switch
 																	key={`${contract?.id}-${selector}`}
+																	disabled={
+																		!isEnabled
+																	}
 																	checked={
 																		isInUse
 																	}
