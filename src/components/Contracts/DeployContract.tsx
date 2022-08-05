@@ -73,7 +73,7 @@ export const DeployContract: React.FC<IProps> = ({
 				case 'address[]': {
 					// @ts-ignore
 					const vals = form.values[`args${i}`].split('\n')
-					console.log({ formVal: form.values[`args${i}`], vals })
+
 					args.push(vals.map(item => item.trim()))
 					break
 				}
