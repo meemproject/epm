@@ -166,8 +166,6 @@ export const DeployContract: React.FC<IProps> = ({
 					})}
 				>
 					{inputs.map((input, i) => {
-						console.log({ input, i })
-
 						switch (input.type) {
 							case 'address[]':
 								return (
