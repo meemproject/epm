@@ -1,5 +1,13 @@
 import log from '@kengoldfarb/log'
-import { Text, Button, TextInput, Space, Title, Modal } from '@mantine/core'
+import {
+	Text,
+	Button,
+	TextInput,
+	Space,
+	Title,
+	Modal,
+	Textarea
+} from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { showNotification } from '@mantine/notifications'
 import { chains, MeemAPI } from '@meemproject/api'
@@ -60,8 +68,23 @@ export const DeployContract: React.FC<IProps> = ({
 	const handleDeploy = async () => {
 		const args: any[] = []
 		for (let i = 0; i < inputs.length; i += 1) {
-			// @ts-ignore
-			args.push(form.values[`args${i}`])
+			const input = inputs[i]
+			switch (input.type) {
+				case 'address[]': {
+					// @ts-ignore
+					const vals = form.values[`args${i}`].split('\n')
+
+					args.push(vals.map(item => item.trim()))
+					break
+				}
+
+				case 'address':
+				default: {
+					// @ts-ignore
+					args.push(form.values[`args${i}`])
+					break
+				}
+			}
 		}
 
 		try {
@@ -144,6 +167,20 @@ export const DeployContract: React.FC<IProps> = ({
 				>
 					{inputs.map((input, i) => {
 						switch (input.type) {
+							case 'address[]':
+								return (
+									<Textarea
+										key={`input-${name}`}
+										label={input.name}
+										placeholder={
+											input.type === 'address[]'
+												? '0x...\n0x...'
+												: ''
+										}
+										// @ts-ignore
+										{...form.getInputProps(`args${i}`)}
+									/>
+								)
 							case 'address':
 							default: {
 								return (
