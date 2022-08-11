@@ -252,7 +252,7 @@ export const SUB_GET_MY_CONTRACTS = gql`
 	subscription SubGetMyContracts($address: String!) {
 		Wallets(where: { address: { _ilike: $address } }) {
 			id
-			WalletContractInstances {
+			WalletContractInstances(order_by: { createdAt: desc }) {
 				id
 				note
 				name
