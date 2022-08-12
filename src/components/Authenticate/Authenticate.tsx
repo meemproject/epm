@@ -86,15 +86,13 @@ const MAuthenticate: React.FC = () => {
 
 					log.debug(`logged in successfully.`)
 
-					// Cookies.set('meemJwtToken', loginRequest.jwt)
 					wallet.setJwt(loginRequest.jwt)
 					log.debug(loginRequest.jwt)
 					log.debug(`saved JWT token as cookie.`)
 
 					router.push({
-						pathname: router.query.return
-							? decodeURIComponent(router.query.return as string)
-							: '/'
+						pathname: router.query.r as string,
+						query: JSON.parse(router.query.rq as string)
 					})
 				} catch (e) {
 					log.error(e)
