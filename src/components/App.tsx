@@ -15,25 +15,12 @@ export const App: React.FC<IProps> = ({ children }) => {
 			typeof window !== 'undefined' &&
 			['/', '/authenticate'].includes(window.location.pathname)
 
-		// console.log({
-		// 	isLoggedOutUrl,
-		// 	isConnected
-		// })
-
-		// if (!isLoggedOutUrl && !isConnected) {
-		// 	console.log('CONNECT WALLET!!!')
-		// 	setTimeout(() => {
-		// 		connectWallet()
-		// 	}, 700)
-		// }
-
 		if (!isLoggedOutUrl && loginState === LoginState.NotLoggedIn) {
 			router.push({
 				pathname: '/authenticate',
 				query: {
-					return: `${window.location.pathname}${encodeURIComponent(
-						window.location.search
-					)}`
+					r: window.location.pathname,
+					rq: JSON.stringify(router.query)
 				}
 			})
 		}

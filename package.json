@@ -1,6 +1,6 @@
 {
 	"name": "@meemproject/epm",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"private": true,
 	"author": "Meem Project",
 	"contributors": [
@@ -44,9 +44,9 @@
 		"@mantine/next": "4.2.2",
 		"@mantine/notifications": "4.2.2",
 		"@mantine/prism": "^4.2.11",
-		"@meemproject/api": "^0.7.1",
-		"@meemproject/meem-contracts": "^0.7.1",
-		"@meemproject/react": "^0.7.1",
+		"@meemproject/api": "^0.7.6",
+		"@meemproject/meem-contracts": "^0.7.6",
+		"@meemproject/react": "^0.7.6",
 		"@next/bundle-analyzer": "^12.1.4",
 		"@types/superagent": "^4.1.15",
 		"blob-util": "^2.0.2",
