@@ -17,7 +17,12 @@ import {
 import { formList, useForm } from '@mantine/form'
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
-import { getCuts, IFacetVersion, upgrade } from '@meemproject/meem-contracts'
+import {
+	getCuts,
+	IFacetVersion,
+	upgrade,
+	diamondABI
+} from '@meemproject/meem-contracts'
 import { makeFetcher, useWallet } from '@meemproject/react'
 import { ethers } from 'ethers'
 import { useRouter } from 'next/router'
@@ -40,7 +45,6 @@ import {
 	WalletContractInstances
 } from '../../../generated/graphql'
 import { SUB_GET_CONTRACTS_BY_ADDRESS } from '../../graphql/contracts'
-import { diamondABI } from '../../lib/diamond'
 import { downloadFile } from '../../lib/utils'
 import { Page } from '../../styles/Page'
 import { Address } from '../Atoms/Address'

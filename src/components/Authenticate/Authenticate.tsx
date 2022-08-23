@@ -62,13 +62,13 @@ const MAuthenticate: React.FC = () => {
 
 	const login = useCallback(
 		async (walletSig: string) => {
-			const address = Cookies.get('walletAddress')
+			// const address = Cookies.get('walletAddress')
 
 			log.info('Logging in to Meem...')
-			log.debug(`address = ${address}`)
+			log.debug(`address = ${wallet.accounts[0]}`)
 			log.debug(`sig = ${walletSig}`)
 
-			if (address && walletSig) {
+			if (wallet.accounts[0] && walletSig) {
 				try {
 					setIsLoading(true)
 
@@ -78,7 +78,7 @@ const MAuthenticate: React.FC = () => {
 							{
 								method: MeemAPI.v1.Login.method,
 								body: {
-									address,
+									address: wallet.accounts[0],
 									signature: walletSig
 								}
 							}
@@ -91,26 +91,30 @@ const MAuthenticate: React.FC = () => {
 					log.debug(`saved JWT token as cookie.`)
 
 					router.push({
-						pathname: router.query.r as string,
-						query: JSON.parse(router.query.rq as string)
+						pathname: router.query.r
+							? (router.query.r as string)
+							: '/',
+						query: router.query.rq
+							? JSON.parse(router.query.rq as string)
+							: {}
 					})
 				} catch (e) {
 					log.error(e)
 				}
 			}
+			setIsLoading(false)
 		},
 		[router, wallet]
 	)
 
 	const sign = useCallback(async () => {
-		const address = Cookies.get('walletAddress') ?? ''
 		setIsLoading(true)
 
 		try {
 			const { nonce } = await getNonceFetcher(
 				MeemAPI.v1.GetNonce.path(),
 				{
-					address
+					address: wallet.accounts[0]
 				}
 			)
 			log.debug('got nonce')
@@ -137,14 +141,13 @@ const MAuthenticate: React.FC = () => {
 			setIsLoading(false)
 			log.crit(e)
 		}
-	}, [getNonceFetcher, login, wallet.signer])
+	}, [getNonceFetcher, login, wallet.signer, wallet.accounts])
 
 	const connectWallet = useCallback(async () => {
 		setIsLoading(true)
 		await wallet.connectWallet()
 
-		const address = Cookies.get('walletAddress')
-		if (address) {
+		if (wallet.accounts[0]) {
 			setIsConnected(true)
 			setIsLoading(false)
 		} else {
