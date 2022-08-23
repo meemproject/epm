@@ -10,7 +10,6 @@ import {
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
 import { useWallet, makeFetcher, makeRequest } from '@meemproject/react'
-import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
 
