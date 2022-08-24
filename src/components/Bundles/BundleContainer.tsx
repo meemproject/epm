@@ -1,21 +1,43 @@
 import { useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
-import { Text, Center, Button, Space, Title, Skeleton } from '@mantine/core'
+import {
+	Text,
+	Center,
+	Button,
+	Space,
+	Title,
+	Skeleton,
+	Modal,
+	createStyles
+} from '@mantine/core'
 import { formList, useForm } from '@mantine/form'
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
 import { makeFetcher } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import { SubGetBundleByIdSubscription } from '../../../generated/graphql'
+import {
+	Contracts,
+	SubGetBundleByIdSubscription
+} from '../../../generated/graphql'
 import { SUB_GET_BUNDLE_BY_ID } from '../../graphql/contracts'
 import { downloadFile } from '../../lib/utils'
 import { Page } from '../../styles/Page'
 import { DemoCode } from '../Atoms/DemoCode'
 import { BundleForm } from './BundleForm'
+import { DeployBundle } from './DeployBundle'
+
+const useStyles = createStyles(_theme => ({
+	row: {
+		alignItems: 'center',
+		display: 'flex',
+		flexDirection: 'row'
+	}
+}))
 
 export const BundleContainer: React.FC = () => {
 	const router = useRouter()
+	const { classes } = useStyles()
 	const bundleId = router.query.bundleId as string
 
 	const form = useForm({
@@ -29,6 +51,7 @@ export const BundleContainer: React.FC = () => {
 
 	const [hasInitialized, setHasInitialized] = useState(false)
 	const [isSaving, setIsSaving] = useState(false)
+	const [isOpen, setIsOpen] = useState(false)
 
 	const { loading: isLoading, data } =
 		useSubscription<SubGetBundleByIdSubscription>(SUB_GET_BUNDLE_BY_ID, {
@@ -105,6 +128,15 @@ export const BundleContainer: React.FC = () => {
 		}
 	}, [hasInitialized, form, data])
 
+	const contracts: Contracts[] = []
+	if (data?.Bundles[0].BundleContracts) {
+		data?.Bundles[0].BundleContracts.forEach(bc => {
+			if (bc.Contract) {
+				contracts.push(bc.Contract as Contracts)
+			}
+		})
+	}
+
 	return (
 		<Page>
 			<form onSubmit={form.onSubmit(values => handleSave(values))}>
@@ -123,35 +155,45 @@ export const BundleContainer: React.FC = () => {
 					}
 				/>
 				<Space h={8} />
-				<Button
-					onClick={async () => {
-						const genTypes = makeFetcher<
-							MeemAPI.v1.GenerateTypes.IQueryParams,
-							MeemAPI.v1.GenerateTypes.IRequestBody,
-							MeemAPI.v1.GenerateTypes.IResponseBody
-						>({
-							method: MeemAPI.v1.GenerateTypes.method
-						})
+				<div className={classes.row}>
+					<Button
+						onClick={async () => {
+							const genTypes = makeFetcher<
+								MeemAPI.v1.GenerateTypes.IQueryParams,
+								MeemAPI.v1.GenerateTypes.IRequestBody,
+								MeemAPI.v1.GenerateTypes.IResponseBody
+							>({
+								method: MeemAPI.v1.GenerateTypes.method
+							})
 
-						const fileName =
-							data?.Bundles[0].name.replace(/\s/g, '') ??
-							'MyContract'
+							const fileName =
+								data?.Bundles[0].name.replace(/\s/g, '') ??
+								'MyContract'
 
-						const { types } = await genTypes(
-							MeemAPI.v1.GenerateTypes.path(),
-							undefined,
-							{
-								bundleId,
-								name: fileName
-							}
-						)
+							const { types } = await genTypes(
+								MeemAPI.v1.GenerateTypes.path(),
+								undefined,
+								{
+									bundleId,
+									name: fileName
+								}
+							)
 
-						downloadFile(`${fileName}.ts`, types)
-					}}
-				>
-					Download Types
-				</Button>
+							downloadFile(`${fileName}.ts`, types)
+						}}
+					>
+						Download Types
+					</Button>
 
+					<Space w={16} />
+					<Button
+						loading={isSaving}
+						disabled={isLoading || isSaving}
+						onClick={() => setIsOpen(true)}
+					>
+						Deploy Bundle
+					</Button>
+				</div>
 				<Space h={16} />
 				{!hasInitialized && (
 					<>
@@ -163,7 +205,11 @@ export const BundleContainer: React.FC = () => {
 				{hasInitialized && (
 					<>
 						<Title order={3}>Bundle Info</Title>
-						<BundleForm form={form} isLoading={isLoading} />
+						<BundleForm
+							form={form}
+							isLoading={isLoading}
+							contracts={contracts}
+						/>
 						<Space h={24} />
 						<Center>
 							<Button
@@ -177,6 +223,14 @@ export const BundleContainer: React.FC = () => {
 					</>
 				)}
 			</form>
+			<Modal
+				title={<Title>Deploy Bundle</Title>}
+				opened={isOpen}
+				onClose={() => setIsOpen(false)}
+				size="xl"
+			>
+				<DeployBundle bundleId={bundleId} />
+			</Modal>
 		</Page>
 	)
 }

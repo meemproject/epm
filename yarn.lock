@@ -1932,13 +1932,13 @@
     prop-types "^15.7.2"
     react-is "^16.8.0 || ^17.0.0"
 
-"@meemproject/api@^0.7.11":
-  version "0.7.11"
-  resolved "https://registry.yarnpkg.com/@meemproject/api/-/api-0.7.11.tgz#8516b9214b5716bf175545436d45be0a7b1d0c80"
-  integrity sha512-XsgqZ94QGI7+eylq1FwB1GU6V+ESBHHRHGLqQ9ydYlev+Kgx4qql+gvpcfXVpAm3CogIQ3IeHrSNqBVE9wME2w==
+"@meemproject/api@^0.8.0":
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@meemproject/api/-/api-0.8.0.tgz#dd63275ec22459d064c4b5acb6e69f5f10571104"
+  integrity sha512-RVQCEmdZN23YIYhVoOqsG63tNMSONe7w/OoJ6SK71ZUa3q4I9HvlswxT7u5s+/dFZzT3lyUuZ0FKwWHeyEVPSw==
   dependencies:
     "@kengoldfarb/log" "^1.0.5"
-    "@meemproject/meem-contracts" "^0.7.11"
+    "@meemproject/meem-contracts" "^0.8.0"
     "@typechain/ethers-v5" "^10.0.0"
     "@types/js-cookie" "^3.0.1"
     "@types/luxon" "^2.3.1"
@@ -1950,10 +1950,10 @@
     tsnd "^1.0.2"
     typechain "^8.0.0"
 
-"@meemproject/meem-contracts@^0.7.11":
-  version "0.7.11"
-  resolved "https://registry.yarnpkg.com/@meemproject/meem-contracts/-/meem-contracts-0.7.11.tgz#15541ae91551afff5344a424d9d9c284005b298d"
-  integrity sha512-e2NiNb36KvYWrPgbLZp6VgWlZtugNE4qKlUgkkX0dyylFcTDzIs0eFu+sdj2wI335ZKta2npF7JubZwpv0Wg2A==
+"@meemproject/meem-contracts@^0.8.0":
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@meemproject/meem-contracts/-/meem-contracts-0.8.0.tgz#f16c14cac1dc22e514e88edddda174bfc9b4c018"
+  integrity sha512-rkoy/vigMoEQT+WnXq1Ec+BUTcPYN75/YgFb2hBrUHVw1UB2qInom7bo3XMOdsYJnb2ZQFtlRTgTptShjwvb6g==
   dependencies:
     "@kengoldfarb/log" "^1.0.5"
     "@openzeppelin/contracts" "^4.7.3"
@@ -1962,17 +1962,17 @@
     merkletreejs "^0.2.32"
     superagent "^8.0.0"
 
-"@meemproject/react@^0.7.11":
-  version "0.7.11"
-  resolved "https://registry.yarnpkg.com/@meemproject/react/-/react-0.7.11.tgz#b30e04f29e6debe03e458db103c4385f8559ec77"
-  integrity sha512-FR7gcxWeP4482C4EwQym5V+XMZst8l+gJyGhkRsoeyMmo7n8zTV0RHjKR3D2ttLqxwaKxKt6H63SdURzj5nmzQ==
+"@meemproject/react@^0.8.0":
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@meemproject/react/-/react-0.8.0.tgz#1e71123785faf20d73caa45f33b712fadc7a181e"
+  integrity sha512-SAc739C4lGysWg0FDrRNvvNZ4S8lhLQPHhzwubTc6N/q3ziT2PzkpjIzQbiru+tQ+tzTf3MPETBwrJofysl32A==
   dependencies:
     "@kengoldfarb/log" "^1.0.5"
     "@material-ui/core" "^4.12.4"
     "@material-ui/lab" "^4.0.0-alpha.61"
-    "@meemproject/api" "^0.7.11"
-    "@meemproject/meem-contracts" "^0.7.11"
-    "@meemproject/utils" "^0.7.11"
+    "@meemproject/api" "^0.8.0"
+    "@meemproject/meem-contracts" "^0.8.0"
+    "@meemproject/utils" "^0.8.0"
     "@mui/material" "^5.6.1"
     "@walletconnect/web3-provider" "^1.7.7"
     ethers "^5.6.4"
@@ -1985,13 +1985,13 @@
     swr "^1.3.0"
     web3modal "^1.9.6"
 
-"@meemproject/utils@^0.7.11":
-  version "0.7.11"
-  resolved "https://registry.yarnpkg.com/@meemproject/utils/-/utils-0.7.11.tgz#968424c0ef9b9c34b1f5438d8905bac99a02dcb4"
-  integrity sha512-mX5zowQrBCEIkrMV5aDQmLvpMZ5N16/ij70m02uytS8IW0wJ+OKE6/lMrmztPotU3J2tILEF/Py/btb7AEKjEA==
+"@meemproject/utils@^0.8.0":
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@meemproject/utils/-/utils-0.8.0.tgz#102642225477dad320a55ad9691264b325933c34"
+  integrity sha512-A6kQRKNBUjVW2zNRFE2kwaNqmMo+Mc3EJRbk8NVOGbS8bgUjxag6qGNZpjoDxoH22sOtt7PX2EOEzZnKrOcMZQ==
   dependencies:
     "@kengoldfarb/log" "^1.0.5"
-    "@meemproject/meem-contracts" "^0.7.11"
+    "@meemproject/meem-contracts" "^0.8.0"
     ethers "^5.6.4"
 
 "@metamask/safe-event-emitter@^2.0.0":
@@ -7125,10 +7125,10 @@ eslint-config-airbnb-typescript@^17.0.0:
   dependencies:
     eslint-config-airbnb-base "^15.0.0"
 
-eslint-config-kengoldfarb@^1.4.2:
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/eslint-config-kengoldfarb/-/eslint-config-kengoldfarb-1.4.2.tgz#1da52d05c5844933cedba5b78608bbd7edf48132"
-  integrity sha512-Sa8QNs/qceGbTKnCbHt1M5GsiSOeCAU0yc7s3sGVGh9zTrxhM+ujpCRJ7Ja61UKrZmrNxSPSu4V8QL2yGQAy+g==
+eslint-config-kengoldfarb@^1.4.4:
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/eslint-config-kengoldfarb/-/eslint-config-kengoldfarb-1.4.4.tgz#c9e168e53ec440ccd6868137e3f58fbeb094259a"
+  integrity sha512-l1Xy6TgDeVlLXxNCIHDHvEKcrM7ldaQUwkVGIE1gpdE1l/b/g4AzGQKOM2L5nBo31Om26YdO6KoMUT8eyW/Oow==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^5.19.0"
     "@typescript-eslint/parser" "^5.19.0"
@@ -7136,7 +7136,7 @@ eslint-config-kengoldfarb@^1.4.2:
     eslint-config-prettier "^8.5.0"
     eslint-plugin-import "^2.26.0"
     eslint-plugin-jsx-a11y "^6.3.1"
-    eslint-plugin-kengoldfarb "^1.4.2"
+    eslint-plugin-kengoldfarb "^1.4.4"
     eslint-plugin-prettier "^4.0.0"
     eslint-plugin-react "^7.29.4"
     eslint-plugin-react-hooks "^4.4.0"
@@ -7200,10 +7200,10 @@ eslint-plugin-jsx-a11y@^6.3.1:
     language-tags "^1.0.5"
     minimatch "^3.0.4"
 
-eslint-plugin-kengoldfarb@^1.4.2:
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-kengoldfarb/-/eslint-plugin-kengoldfarb-1.4.2.tgz#17fb4450e97ecf72273b51d7d515cde2ad1c3d19"
-  integrity sha512-1tsn+etNKJ1W8N90KSnb7GiZt/PHBnNkuOd0Lh2F+m/MdRNKrMzeZO89lpyOop1l4VjQEXz7noqjubALW/Hmwg==
+eslint-plugin-kengoldfarb@^1.4.4:
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-kengoldfarb/-/eslint-plugin-kengoldfarb-1.4.4.tgz#f65963d62b702bd343e7622e893bd5545ab112fe"
+  integrity sha512-76gaABj2suVR22M4jppEXDhf0uLKeWuJ7ms/o3wf0lY/VDdAIa2yS4Q5HG2nyR0Z6JHpcwhIkbKAfNLIlK/YbQ==
   dependencies:
     pascal-case "^3"
 
