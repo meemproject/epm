@@ -195,7 +195,7 @@ export const ManageDiamondContainer: React.FC = () => {
 
 		const usedSelectors: Record<string, string> = {}
 
-		proxyContract?.Contract?.functionSelectors.forEach(s => {
+		proxyContract?.Contract?.functionSelectors.forEach((s: any) => {
 			usedSelectors[s] = proxyContract.address
 		})
 

@@ -74,7 +74,7 @@ export const DeployContract: React.FC<IProps> = ({
 					// @ts-ignore
 					const vals = form.values[`args${i}`].split('\n')
 
-					args.push(vals.map(item => item.trim()))
+					args.push(vals.map((item: any) => item.trim()))
 					break
 				}
 
