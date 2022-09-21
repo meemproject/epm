@@ -1,6 +1,6 @@
 import { Select } from '@mantine/core'
 import { UseFormReturnType } from '@mantine/form/lib/use-form'
-import { chains } from '@meemproject/api'
+import { chains } from '@meemproject/react'
 import React from 'react'
 
 export interface IProps {

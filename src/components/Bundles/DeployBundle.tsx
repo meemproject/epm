@@ -10,9 +10,9 @@ import {
 	Modal,
 	Loader
 } from '@mantine/core'
-import { chains, MeemAPI } from '@meemproject/api'
+import { MeemAPI } from '@meemproject/api'
 import { IFacetVersion, upgrade } from '@meemproject/meem-contracts'
-import { useWallet } from '@meemproject/react'
+import { chains, useWallet } from '@meemproject/react'
 import { ethers } from 'ethers'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -49,7 +49,8 @@ export const DeployBundle: React.FC<IProps> = ({ bundleId }) => {
 		SUB_GET_BUNDLE_BY_ID,
 		{
 			variables: {
-				id: bundleId
+				id: bundleId,
+				chainId
 			}
 		}
 	)

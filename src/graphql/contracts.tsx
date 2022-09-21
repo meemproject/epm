@@ -302,7 +302,7 @@ export const SUB_SEARCH_BUNDLES = gql`
 `
 
 export const SUB_GET_BUNDLE_BY_ID = gql`
-	subscription SubGetBundleById($id: uuid!) {
+	subscription SubGetBundleById($id: uuid!, $chainId: Int) {
 		Bundles(where: { id: { _eq: $id } }) {
 			id
 			name
@@ -312,7 +312,27 @@ export const SUB_GET_BUNDLE_BY_ID = gql`
 				order
 				functionSelectors
 				Contract {
-					...ContractParts
+					# ...ContractParts
+					id
+					name
+					description
+					abi
+					bytecode
+					contractType
+					functionSelectors
+					ContractInstances(where: { chainId: { _eq: $chainId } }) {
+						chainId
+						address
+
+						WalletContractInstances {
+							name
+							note
+						}
+					}
+					CreatorId
+					Creator {
+						address
+					}
 				}
 			}
 			Creator {
