@@ -63,7 +63,7 @@ export const BundleForm: React.FC<IProps> = ({
 
 	const handleFacetSelect: IFindContractProps['onClick'] = async contract => {
 		const existingFacet = form.values.facets.find(
-			f => f.contractId === contract.id
+			(f: any) => f.contractId === contract.id
 		)
 
 		if (existingFacet) {
@@ -77,8 +77,8 @@ export const BundleForm: React.FC<IProps> = ({
 
 		const usedSelectors: Record<string, string> = {}
 
-		form.values.facets.forEach(f => {
-			f.selectors.forEach(s => {
+		form.values.facets.forEach((f: any) => {
+			f.selectors.forEach((s: any) => {
 				usedSelectors[s] = f.target
 			})
 		})

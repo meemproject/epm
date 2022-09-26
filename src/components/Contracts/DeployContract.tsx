@@ -10,8 +10,8 @@ import {
 } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { showNotification } from '@mantine/notifications'
-import { chains, MeemAPI } from '@meemproject/api'
-import { makeFetcher, useWallet } from '@meemproject/react'
+import { MeemAPI } from '@meemproject/api'
+import { makeFetcher, useWallet, chains } from '@meemproject/react'
 import { ethers } from 'ethers'
 import React, { useEffect, useState } from 'react'
 import { Contracts } from '../../../generated/graphql'
@@ -74,7 +74,7 @@ export const DeployContract: React.FC<IProps> = ({
 					// @ts-ignore
 					const vals = form.values[`args${i}`].split('\n')
 
-					args.push(vals.map(item => item.trim()))
+					args.push(vals.map((item: any) => item.trim()))
 					break
 				}
 

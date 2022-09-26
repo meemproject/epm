@@ -171,13 +171,14 @@ export const FacetList: React.FC<IProps> = ({
 						)
 
 						const functions =
-							contract?.abi.filter(a => a.type === 'function') ??
-							[]
+							contract?.abi.filter(
+								(a: any) => a.type === 'function'
+							) ?? []
 
 						const functionSelectorNameHash: Record<string, string> =
 							{}
 
-						functions.forEach(f => {
+						functions.forEach((f: any) => {
 							const functionName = `${f.name}(${f.inputs
 								.map(
 									(input: { name: string; type: string }) =>
