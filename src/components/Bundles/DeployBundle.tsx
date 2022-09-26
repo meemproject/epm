@@ -7,11 +7,12 @@ import {
 	Title,
 	Timeline,
 	ThemeIcon,
-	Modal
+	Modal,
+	Loader
 } from '@mantine/core'
-import { chains, MeemAPI } from '@meemproject/api'
-import { upgrade } from '@meemproject/meem-contracts'
-import { useWallet } from '@meemproject/react'
+import { MeemAPI } from '@meemproject/api'
+import { IFacetVersion, upgrade } from '@meemproject/meem-contracts'
+import { chains, useWallet } from '@meemproject/react'
 import { ethers } from 'ethers'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -48,7 +49,8 @@ export const DeployBundle: React.FC<IProps> = ({ bundleId }) => {
 		SUB_GET_BUNDLE_BY_ID,
 		{
 			variables: {
-				id: bundleId
+				id: bundleId,
+				chainId
 			}
 		}
 	)
@@ -56,7 +58,7 @@ export const DeployBundle: React.FC<IProps> = ({ bundleId }) => {
 	const bundle = data?.Bundles[0]
 
 	if (!bundle) {
-		return null
+		return <Loader />
 	}
 
 	const handleAttachFacets = async () => {
@@ -64,7 +66,7 @@ export const DeployBundle: React.FC<IProps> = ({ bundleId }) => {
 			if (!deployedProxy || !signer) {
 				return
 			}
-			const toVersion: IVersion = []
+			const toVersion: IFacetVersion[] = []
 			bundle.BundleContracts.forEach(bc => {
 				const contract = bc.Contract
 				const contractInstance = bc.Contract?.ContractInstances.find(

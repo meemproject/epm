@@ -9,7 +9,7 @@ export const FunctionList: React.FC<IProps> = ({ abi }) => {
 	return (
 		<Spoiler showLabel="show" hideLabel="hide" maxHeight={0}>
 			<ul>
-				{abi.map(a =>
+				{abi.map((a: any) =>
 					a.type === 'function' ? (
 						<li>
 							<p>
