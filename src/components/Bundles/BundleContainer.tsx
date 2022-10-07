@@ -13,7 +13,7 @@ import {
 import { formList, useForm } from '@mantine/form'
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
-import { makeFetcher } from '@meemproject/react'
+import { makeFetcher, useWallet } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import {
@@ -39,6 +39,7 @@ export const BundleContainer: React.FC = () => {
 	const router = useRouter()
 	const { classes } = useStyles()
 	const bundleId = router.query.bundleId as string
+	const { chainId } = useWallet()
 
 	const form = useForm({
 		initialValues: {
@@ -56,12 +57,15 @@ export const BundleContainer: React.FC = () => {
 	const { loading: isLoading, data } =
 		useSubscription<SubGetBundleByIdSubscription>(SUB_GET_BUNDLE_BY_ID, {
 			variables: {
-				id: bundleId
+				id: bundleId,
+				chainId
 			}
 		})
 
 	const handleSave = async (values: typeof form.values) => {
 		try {
+			setIsSaving(true)
+
 			if (values.facets.length === 0) {
 				showNotification({
 					title: 'No Facets Added!',
