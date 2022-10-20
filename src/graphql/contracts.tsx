@@ -307,6 +307,7 @@ export const SUB_GET_BUNDLE_BY_ID = gql`
 			id
 			name
 			description
+			abi
 			BundleContracts(order_by: { order: asc }) {
 				id
 				order

@@ -45,7 +45,7 @@ import {
 	WalletContractInstances
 } from '../../../generated/graphql'
 import { SUB_GET_CONTRACTS_BY_ADDRESS } from '../../graphql/contracts'
-import { downloadFile } from '../../lib/utils'
+import { downloadFile, formatFilename } from '../../lib/utils'
 import { Page } from '../../styles/Page'
 import { Address } from '../Atoms/Address'
 import { DemoCode } from '../Atoms/DemoCode'
@@ -316,7 +316,10 @@ export const ManageDiamondContainer: React.FC = () => {
 				}
 			})
 
-			downloadFile(`${fileName}.json`, JSON.stringify(facetABI))
+			downloadFile(
+				`${formatFilename(fileName)}.json`,
+				JSON.stringify(facetABI)
+			)
 			showNotification({
 				title: 'Success!',
 				message: 'ABI file generated.',

@@ -16,12 +16,13 @@ import { MeemAPI } from '@meemproject/api'
 import { makeFetcher, useWallet } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
+import { Download, Rocket } from 'tabler-icons-react'
 import {
 	Contracts,
 	SubGetBundleByIdSubscription
 } from '../../../generated/graphql'
 import { SUB_GET_BUNDLE_BY_ID } from '../../graphql/contracts'
-import { downloadFile } from '../../lib/utils'
+import { downloadFile, formatFilename } from '../../lib/utils'
 import { Page } from '../../styles/Page'
 import { DemoCode } from '../Atoms/DemoCode'
 import { BundleForm } from './BundleForm'
@@ -114,6 +115,33 @@ export const BundleContainer: React.FC = () => {
 		setIsSaving(false)
 	}
 
+	const handleDownloadABI = async () => {
+		try {
+			const bundle = data?.Bundles[0]
+			if (!bundle) {
+				showNotification({
+					title: 'Error',
+					message: 'Bundle not found',
+					color: 'red'
+				})
+				return
+			}
+
+			downloadFile(
+				`${formatFilename(bundle.name)}.json`,
+				JSON.stringify(bundle.abi)
+			)
+			showNotification({
+				title: 'Success!',
+				message: 'ABI file generated.',
+				color: 'green'
+			})
+		} catch (e) {
+			log.crit(e)
+		}
+		setIsSaving(false)
+	}
+
 	useEffect(() => {
 		if (!hasInitialized && data?.Bundles[0]) {
 			form.setValues({
@@ -161,6 +189,7 @@ export const BundleContainer: React.FC = () => {
 				<Space h={8} />
 				<div className={classes.row}>
 					<Button
+						leftIcon={<Download />}
 						onClick={async () => {
 							const genTypes = makeFetcher<
 								MeemAPI.v1.GenerateTypes.IQueryParams,
@@ -191,6 +220,15 @@ export const BundleContainer: React.FC = () => {
 
 					<Space w={16} />
 					<Button
+						disabled={isLoading || isSaving}
+						onClick={handleDownloadABI}
+						leftIcon={<Download />}
+					>
+						Download ABI
+					</Button>
+					<Space w={16} />
+					<Button
+						leftIcon={<Rocket />}
 						loading={isSaving}
 						disabled={isLoading || isSaving}
 						onClick={() => setIsOpen(true)}
