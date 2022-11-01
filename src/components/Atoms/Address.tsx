@@ -47,7 +47,7 @@ export const Address: React.FC<IProps> = ({
 	const chain = chains.find(c => c.chainId === chainId)
 	const href =
 		chain?.explorers && chain?.explorers[0]
-			? `${chain?.explorers[0].url}/address/${address}`
+			? `${chain?.explorers[0].url.replace(/\/$/, '')}/address/${address}`
 			: ''
 
 	return (

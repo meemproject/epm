@@ -78,7 +78,6 @@ export const ContractCard: React.FC<IProps> = ({
 						</Link>
 					)}
 					{!href && <Text size={'xl'}>{contract.name}</Text>}
-					{/* {isCompact &&} */}
 				</>
 			)}
 			<Spoiler maxHeight={50} showLabel="Show more" hideLabel="hide">
@@ -95,9 +94,8 @@ export const ContractCard: React.FC<IProps> = ({
 					)}
 					{contract.ContractInstances.map(ci => {
 						return (
-							<>
+							<div key={`address-${ci.address}`}>
 								<Address
-									key={`address-${ci.address}`}
 									address={ci.address}
 									chainId={ci.chainId}
 									label={
@@ -108,7 +106,7 @@ export const ContractCard: React.FC<IProps> = ({
 									labelLink={`/manage?address=${ci.address}&chainId=${ci.chainId}`}
 								/>
 								<Space h={16} />
-							</>
+							</div>
 						)
 					})}
 					<Space h={32} />
@@ -178,11 +176,6 @@ export const ContractCard: React.FC<IProps> = ({
 					{cardDetails}
 				</Card>
 			)}
-			{/* <Modal
-				title={<Title>Deploy Contract</Title>}
-				opened={isOpen}
-				onClose={() => setIsOpen(false)}
-			> */}
 			<DeployContract
 				isOpen={isOpen}
 				onClose={() => setIsOpen(false)}
@@ -191,7 +184,6 @@ export const ContractCard: React.FC<IProps> = ({
 					setIsOpen(false)
 				}}
 			/>
-			{/* </Modal> */}
 		</>
 	)
 }

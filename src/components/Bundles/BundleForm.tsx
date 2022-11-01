@@ -96,7 +96,6 @@ export const BundleForm: React.FC<IProps> = ({
 			message: `${contract.name} has been added to the bundle.`,
 			color: 'green'
 		})
-		// setIsOpen(false)
 	}
 
 	return (

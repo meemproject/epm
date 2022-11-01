@@ -8,8 +8,8 @@ import {
 	Loader
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { MeemAPI } from '@meemproject/api'
-import { useWallet, makeFetcher, makeRequest } from '@meemproject/react'
+import { MeemAPI, makeFetcher, makeRequest } from '@meemproject/api'
+import { useWallet } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
 
@@ -61,8 +61,6 @@ const MAuthenticate: React.FC = () => {
 
 	const login = useCallback(
 		async (walletSig: string) => {
-			// const address = Cookies.get('walletAddress')
-
 			log.info('Logging in to Meem...')
 			log.debug(`address = ${wallet.accounts[0]}`)
 			log.debug(`sig = ${walletSig}`)

@@ -1,13 +1,8 @@
 {
 	"name": "@meemproject/epm",
 	"version": "1.0.5",
-	"private": true,
-	"author": "Meem Project",
+	"author": "Ken Goldfarb",
 	"contributors": [
-		{
-			"name": "James Gadsby",
-			"email": "james.gadsby@gmail.com"
-		},
 		{
 			"name": "Ken Goldfarb",
 			"email": "hello@kengoldfarb.com"
@@ -44,11 +39,12 @@
 		"@mantine/next": "4.2.2",
 		"@mantine/notifications": "4.2.2",
 		"@mantine/prism": "^4.2.11",
-		"@meemproject/api": "^0.8.5",
-		"@meemproject/meem-contracts": "^0.8.5",
-		"@meemproject/react": "^0.8.5",
+		"@meemproject/api": "^0.9.9",
+		"@meemproject/meem-contracts": "^0.9.9",
+		"@meemproject/react": "^0.9.9",
 		"@next/bundle-analyzer": "^12.1.4",
 		"@types/superagent": "^4.1.15",
+		"alchemy-sdk": "^2.2.0",
 		"blob-util": "^2.0.2",
 		"classnames": "^2.3.1",
 		"dayjs": "^1.11.0",

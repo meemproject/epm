@@ -41,11 +41,9 @@ export const FindContract: React.FC<IProps> = ({
 	return (
 		<form onSubmit={form.onSubmit(async _values => {})}>
 			<TextInput
-				// label="Find a Contract"
 				radius="lg"
 				size="md"
 				placeholder="Access Control"
-				// required
 				{...form.getInputProps('searchTerm')}
 			/>
 			<Grid>

@@ -70,15 +70,6 @@ export const CreateBundleContainer: React.FC = () => {
 			}
 		)
 
-	// const handleFacetSelect: IFindContractProps['onClick'] = async contract => {
-	// 	form.addListItem('facets', {
-	// 		selectors: contract.functionSelectors,
-	// 		contractId: contract.id,
-	// 		target: contract.id
-	// 	})
-	// 	setIsOpen(false)
-	// }
-
 	const handleFacetSelect: IFindContractProps['onClick'] = async contract => {
 		const existingFacet = form.values.facets.find(
 			f => f.contractId === contract.id
@@ -94,10 +85,6 @@ export const CreateBundleContainer: React.FC = () => {
 		}
 
 		const usedSelectors: Record<string, string> = {}
-
-		// proxyContract?.Contract?.functionSelectors.forEach(s => {
-		// 	usedSelectors[s] = proxyContract.address
-		// })
 
 		form.values.facets.forEach(f => {
 			f.selectors.forEach(s => {

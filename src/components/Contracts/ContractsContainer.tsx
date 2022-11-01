@@ -40,14 +40,6 @@ export const ContractsContainer: React.FC = () => {
 		validate: {}
 	})
 
-	// const { loading: isContractsLoading, data: contracts } =
-	// 	useQuery<SearchContractsQuery>(SEARCH_CONTRACTS, {
-	// 		variables: {
-	// 			contractType: form.values.contractType,
-	// 			searchTerm: `${form.values.searchText}%`
-	// 		}
-	// 	})
-
 	const { loading: isContractsLoading, data: contracts } =
 		useSubscription<SubSearchContractsSubscription>(SUB_SEARCH_CONTRACTS, {
 			variables: {

@@ -248,12 +248,6 @@ export const ManageDiamondContainer: React.FC = () => {
 						})
 					})
 
-					// form.addListItem('facets', {
-					// 	selectors: contract.functionSelectors.filter(
-					// 		(fs: string) => !usedSelectors[fs]
-					// 	),
-					// 	target: contract.ContractInstances[0].address
-					// })
 					updatedFacets.push({
 						selectors: contract.functionSelectors.filter(
 							(fs: string) => !usedSelectors[fs]
@@ -363,7 +357,7 @@ export const ManageDiamondContainer: React.FC = () => {
 				hasRoleResult.status === 'fulfilled' && hasRoleResult.value
 
 			form.values.facets.splice(0, form.values.facets.length)
-			// form.setFieldValue('facets', formList(result))
+
 			if (Array.isArray(result)) {
 				result.forEach(f => {
 					if (
@@ -446,7 +440,7 @@ export const ManageDiamondContainer: React.FC = () => {
 				fromVersion,
 				toVersion
 			})
-			// refetch()
+
 			fetchDiamondInfo()
 			showNotification({
 				title: 'Success!',
@@ -608,8 +602,6 @@ export const ManageDiamondContainer: React.FC = () => {
 							{ shallow: true }
 						)
 					}}
-					// disabled={!!router.query.address}
-					// required
 					{...form.getInputProps('address')}
 				/>
 				<Space h={48} />
