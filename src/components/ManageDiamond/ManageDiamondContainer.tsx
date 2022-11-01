@@ -16,14 +16,14 @@ import {
 } from '@mantine/core'
 import { formList, useForm } from '@mantine/form'
 import { showNotification } from '@mantine/notifications'
-import { MeemAPI } from '@meemproject/api'
+import { MeemAPI, makeFetcher } from '@meemproject/api'
 import {
 	getCuts,
 	IFacetVersion,
 	upgrade,
 	diamondABI
 } from '@meemproject/meem-contracts'
-import { makeFetcher, useWallet } from '@meemproject/react'
+import { useWallet } from '@meemproject/react'
 import { ethers } from 'ethers'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'

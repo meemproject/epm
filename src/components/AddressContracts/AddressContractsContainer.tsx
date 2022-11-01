@@ -11,8 +11,8 @@ import {
 	Skeleton
 } from '@mantine/core'
 import { useForm } from '@mantine/form'
-import { MeemAPI } from '@meemproject/api'
-import { makeFetcher, useWallet } from '@meemproject/react'
+import { MeemAPI, makeFetcher } from '@meemproject/api'
+import { useWallet } from '@meemproject/react'
 import { ethers } from 'ethers'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
