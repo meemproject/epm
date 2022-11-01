@@ -1,5 +1,5 @@
 <svg width="190" height="70" viewBox="0 0 190 70" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M56 33.04V-3.8147e-06H0V56H56V45.92H10.08V33.04H56ZM10.08 10.08H45.92V22.96H10.08V10.08ZM116 56V-3.8147e-06H60V69.04H70.08V56H116ZM70.08 10.08H105.92V45.92H70.08V10.08ZM190 56V-3.8147e-06H120V56H130.08V10.08H150V56H160V10.08H180V56H190Z" fill="#D0FF6C"/>
+<path d="M56 33.04V-3.8147e-06H0V56H56V45.92H10.08V33.04H56ZM10.08 10.08H45.92V22.96H10.08V10.08ZM116 56V-3.8147e-06H60V69.04H70.08V56H116ZM70.08 10.08H105.92V45.92H70.08V10.08ZM190 56V-3.8147e-06H120V56H130.08V10.08H150V56H160V10.08H180V56H190Z" fill="#D0FF6C" />
 </svg>
 
 # Ethereum Package Manager
@@ -10,7 +10,7 @@
 
 # What is EPM?
 
-EPM lets you deploy and compose smart contracts. It leans heavily into providing functionality for EIP-2535 Diamond Standard contracts.
+EPM lets you deploy and compose smart contracts. It leans heavily into providing functionality for [EIP-2535 Diamond Standard](https://eips.ethereum.org/EIPS/eip-2535) contracts.
 
 For a more detailed intro see [Introducing Ethereum Package Manager (EPM)](https://paragraph.xyz/@ken/ethereum-package-manager).
 
