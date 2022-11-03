@@ -38,6 +38,8 @@ animation: octocat-wave 560ms ease-in-out;
 				href="https://github.com/meemproject/epm/"
 				className="github-corner"
 				aria-label="View source on GitHub"
+				target="_blank"
+				rel="noreferrer"
 			>
 				<svg
 					width="80"

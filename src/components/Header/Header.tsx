@@ -162,14 +162,6 @@ const useStyles = createStyles(theme => ({
 		height: 36,
 		paddingLeft: theme.spacing.xs,
 		paddingTop: 2
-	},
-	githubIcon: {
-		fill: '#151513',
-		color: '#fff',
-		position: 'absolute',
-		top: 0,
-		border: 0,
-		right: 0
 	}
 }))
 
