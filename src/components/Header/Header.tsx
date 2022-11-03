@@ -98,10 +98,6 @@ const useStyles = createStyles(theme => ({
 	},
 
 	ellipse: {
-		[theme.fn.smallerThan('md')]: {
-			marginLeft: 0,
-			marginRight: 0
-		},
 		marginRight: 104,
 		marginLeft: 24
 	},
