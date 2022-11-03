@@ -7,6 +7,7 @@ import {
 	BoxMultiple,
 	Bulb,
 	LayoutDashboard,
+	Rocket,
 	Upload
 } from 'tabler-icons-react'
 import { Page } from '../../styles/Page'
@@ -35,11 +36,25 @@ export const HomeContainer: React.FC = () => {
 		<Page>
 			<Title>Ethereum Package Manager</Title>
 			<Space h={8} />
-			<Text>
-				Welcome to EPM! With this tool you can upload, deploy, and
-				manage smart contracts. No coding required!
-			</Text>
+
 			<Grid>
+				<Grid.Col md={12}>
+					<Card shadow="sm" p="lg">
+						<Link href="https://paragraph.xyz/@ken/ethereum-package-manager">
+							<a className={classes.card_link} target="_blank">
+								<div className={classes.row}>
+									<Rocket color="green" />
+									<Space w={8} />
+									<Title order={3}>Introducing EPM</Title>
+									<Space w={8} />
+									<Rocket color="green" />
+								</div>
+								<Space h={16} />
+								<Text color="dimmed">WTF is this?</Text>
+							</a>
+						</Link>
+					</Card>
+				</Grid.Col>
 				<Grid.Col md={6}>
 					<Card shadow="sm" p="lg">
 						<Link href="/contracts">
