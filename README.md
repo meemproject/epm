@@ -23,7 +23,7 @@ Also, [check out the docs](https://docs.meem.wtf/meem-protocol/epm/ethereum-pack
 
 # Code style
 
-CI will fail if the code does will not lint. You can check this from the CLI with:
+CI will fail if the code does not lint. You can check this from the CLI with:
 
 `yarn lint`
 

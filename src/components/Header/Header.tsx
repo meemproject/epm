@@ -10,6 +10,7 @@ import {
 	Divider
 } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
+import cx from 'classnames'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
@@ -23,6 +24,7 @@ import {
 } from 'tabler-icons-react'
 import { ensWalletAddress, quickTruncate } from '../../utils/truncated_wallet'
 import { ChainSelect } from '../Atoms/ChainSelect'
+import { GithubCorner } from './GithubCorner'
 
 const useStyles = createStyles(theme => ({
 	headerLeftItems: {
@@ -52,7 +54,7 @@ const useStyles = createStyles(theme => ({
 	},
 
 	inner: {
-		height: 56,
+		height: 76,
 		marginTop: 8,
 		display: 'flex',
 		justifyContent: 'space-between',
@@ -101,7 +103,7 @@ const useStyles = createStyles(theme => ({
 			marginLeft: 0,
 			marginRight: 0
 		},
-		marginRight: 24,
+		marginRight: 104,
 		marginLeft: 24
 	},
 
@@ -140,6 +142,9 @@ const useStyles = createStyles(theme => ({
 	menuItem: {
 		fontWeight: 600
 	},
+	lastMenuItem: {
+		paddingRight: 80
+	},
 	menuItemWithIcon: {
 		fontWeight: 600,
 		marginBottom: '-2px',
@@ -153,6 +158,7 @@ const useStyles = createStyles(theme => ({
 		marginTop: '-2px'
 	},
 	logoLink: {
+		cursor: 'pointer',
 		display: 'flex',
 		alignItems: 'center',
 		marginRight: theme.spacing.md
@@ -161,7 +167,14 @@ const useStyles = createStyles(theme => ({
 		height: 36,
 		paddingLeft: theme.spacing.xs,
 		paddingTop: 2
-		// width: 100
+	},
+	githubIcon: {
+		fill: '#151513',
+		color: '#fff',
+		position: 'absolute',
+		top: 0,
+		border: 0,
+		right: 0
 	}
 }))
 
@@ -205,7 +218,7 @@ export const HeaderMenu: React.FC = () => {
 	}
 
 	return (
-		<Header height={56}>
+		<Header height={76}>
 			<div className={classes.inner}>
 				<div className={classes.headerLeftItems}>
 					<a onClick={navigateHome} className={classes.logoLink}>
@@ -368,7 +381,7 @@ export const HeaderMenu: React.FC = () => {
 									'_blank'
 								)
 							}
-							className={classes.menuItem}
+							className={cx(classes.menuItem)}
 						>
 							From{' '}
 							<span style={{ textDecoration: 'underline' }}>
@@ -378,6 +391,7 @@ export const HeaderMenu: React.FC = () => {
 					</Menu>
 				</div>
 			</div>
+			<GithubCorner />
 		</Header>
 	)
 }
