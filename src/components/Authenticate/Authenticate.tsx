@@ -8,8 +8,8 @@ import {
 	Loader
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { MeemAPI, makeFetcher, makeRequest } from '@meemproject/api'
 import { useWallet } from '@meemproject/react'
+import { MeemAPI, makeFetcher, makeRequest } from '@meemproject/sdk'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
 

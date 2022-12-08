@@ -1,18 +1,7 @@
-import {
-	ApolloClient,
-	InMemoryCache,
-	ApolloProvider,
-	HttpLink,
-	split
-} from '@apollo/client'
-import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
-import { getMainDefinition } from '@apollo/client/utilities'
 import log, { LogLevel } from '@kengoldfarb/log'
 import { Global, MantineProvider } from '@mantine/core'
 import { NotificationsProvider } from '@mantine/notifications'
-import { WalletProvider } from '@meemproject/react'
-import { createClient } from 'graphql-ws'
-import type { Client } from 'graphql-ws'
+import { MeemProvider } from '@meemproject/react'
 import type { AppProps } from 'next/app'
 import React from 'react'
 import '@fontsource/inter'
@@ -20,82 +9,6 @@ import { App } from '../components/App'
 
 function MyApp(props: AppProps) {
 	const { Component, pageProps } = props
-
-	const httpLink = new HttpLink({
-		uri: process.env.NEXT_PUBLIC_GRAPHQL_API_URL
-	})
-
-	let wsClient: Client | undefined
-
-	if (typeof window !== 'undefined') {
-		log.debug('Creating GQL WS client')
-		wsClient = createClient({
-			url: process.env.NEXT_PUBLIC_GRAPHQL_API_WS_URL ?? '',
-			keepAlive: 10_000,
-			lazy: false,
-			connectionAckWaitTimeout: 10_000,
-			shouldRetry: err => {
-				log.crit(err)
-				return true
-			},
-			onNonLazyError: err => {
-				log.crit(err)
-			}
-		})
-
-		wsClient.on('closed', e => {
-			log.warn('Websocket: closed', e)
-		})
-		wsClient.on('connected', () => {
-			log.debug('Websocket: connected')
-		})
-		wsClient.on('connecting', () => {
-			log.debug('Websocket: connecting')
-		})
-		wsClient.on('error', e => {
-			log.crit('Websocket: error', e)
-		})
-		wsClient.on('message', e => {
-			log.trace('Websocket: message', e)
-		})
-		wsClient.on('opened', () => {
-			log.debug('Websocket: opened')
-		})
-		wsClient.on('ping', e => {
-			log.trace('Websocket: ping', e)
-		})
-		wsClient.on('pong', e => {
-			log.trace('Websocket: pong', e)
-		})
-	}
-
-	const wsLink = wsClient ? new GraphQLWsLink(wsClient) : null
-
-	// The split function takes three parameters:
-	//
-	// * A function that's called for each operation to execute
-	// * The Link to use for an operation if the function returns a "truthy" value
-	// * The Link to use for an operation if the function returns a "falsy" value
-	const splitLink =
-		typeof window !== 'undefined' && wsLink != null
-			? split(
-					({ query }) => {
-						const definition = getMainDefinition(query)
-						return (
-							definition.kind === 'OperationDefinition' &&
-							definition.operation === 'subscription'
-						)
-					},
-					wsLink,
-					httpLink
-			  )
-			: httpLink
-
-	const client = new ApolloClient({
-		link: splitLink,
-		cache: new InMemoryCache(),
-		queryDeduplication: true
-	})
 
 	React.useEffect(() => {
 		const jssStyles = document.querySelector('#jss-server-side')
@@ -164,25 +77,23 @@ function MyApp(props: AppProps) {
 				primaryColor: 'brand'
 			}}
 		>
-			<ApolloProvider client={client}>
-				<WalletProvider rpcs={rpcs}>
-					<NotificationsProvider>
-						<Global
-							styles={theme => ({
-								a: {
-									color: theme.colors.dark,
-									'&:hover': {
-										opacity: 0.6
-									}
+			<MeemProvider>
+				<NotificationsProvider>
+					<Global
+						styles={theme => ({
+							a: {
+								color: theme.colors.dark,
+								'&:hover': {
+									opacity: 0.6
 								}
-							})}
-						/>
-						<App>
-							<Component {...pageProps} />
-						</App>
-					</NotificationsProvider>
-				</WalletProvider>
-			</ApolloProvider>
+							}
+						})}
+					/>
+					<App>
+						<Component {...pageProps} />
+					</App>
+				</NotificationsProvider>
+			</MeemProvider>
 		</MantineProvider>
 	)
 }

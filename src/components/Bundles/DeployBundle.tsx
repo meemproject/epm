@@ -10,9 +10,9 @@ import {
 	Modal,
 	Loader
 } from '@mantine/core'
-import { MeemAPI } from '@meemproject/api'
 import { IFacetVersion, upgrade } from '@meemproject/meem-contracts'
-import { chains, useWallet } from '@meemproject/react'
+import { chains, useMeemApollo, useWallet } from '@meemproject/react'
+import { MeemAPI } from '@meemproject/sdk'
 import { ethers } from 'ethers'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -35,6 +35,7 @@ export interface IProps {
 }
 
 export const DeployBundle: React.FC<IProps> = ({ bundleId }) => {
+	const { anonClient } = useMeemApollo()
 	const router = useRouter()
 	const { signer, chainId } = useWallet()
 	const [isLoading, setIsLoading] = useState(false)
@@ -51,7 +52,8 @@ export const DeployBundle: React.FC<IProps> = ({ bundleId }) => {
 			variables: {
 				id: bundleId,
 				chainId
-			}
+			},
+			client: anonClient
 		}
 	)
 
