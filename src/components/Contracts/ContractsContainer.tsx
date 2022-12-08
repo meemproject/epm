@@ -38,8 +38,7 @@ export const ContractsContainer: React.FC = () => {
 			contractType: '',
 			searchText: ''
 		},
-		validate: {},
-		client: anonClient
+		validate: {}
 	})
 
 	const { loading: isContractsLoading, data: contracts } =
@@ -47,7 +46,8 @@ export const ContractsContainer: React.FC = () => {
 			variables: {
 				contractType: form.values.contractType,
 				searchTerm: `${form.values.searchText}%`
-			}
+			},
+			client: anonClient
 		})
 
 	const { data: singleContractData } =
@@ -57,7 +57,8 @@ export const ContractsContainer: React.FC = () => {
 				skip: !router.query.contractId,
 				variables: {
 					ids: [router.query.contractId]
-				}
+				},
+				client: anonClient
 			}
 		)
 
