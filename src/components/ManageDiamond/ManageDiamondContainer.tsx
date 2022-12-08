@@ -16,14 +16,14 @@ import {
 } from '@mantine/core'
 import { formList, useForm } from '@mantine/form'
 import { showNotification } from '@mantine/notifications'
-import { MeemAPI, makeFetcher } from '@meemproject/api'
 import {
 	getCuts,
 	IFacetVersion,
 	upgrade,
 	diamondABI
 } from '@meemproject/meem-contracts'
-import { useWallet } from '@meemproject/react'
+import { useMeemApollo, useWallet } from '@meemproject/react'
+import { MeemAPI, makeFetcher } from '@meemproject/sdk'
 import { ethers } from 'ethers'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -79,6 +79,7 @@ const useStyles = createStyles(_theme => ({
 }))
 
 export const ManageDiamondContainer: React.FC = () => {
+	const { anonClient } = useMeemApollo()
 	const router = useRouter()
 	const { classes } = useStyles()
 
@@ -135,7 +136,8 @@ export const ManageDiamondContainer: React.FC = () => {
 						})
 						.map(f => f.target)
 				},
-				fetchPolicy: 'no-cache'
+				fetchPolicy: 'no-cache',
+				client: anonClient
 			}
 		)
 

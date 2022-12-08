@@ -13,7 +13,8 @@ import {
 } from '@mantine/core'
 import { formList, useForm } from '@mantine/form'
 import { showNotification } from '@mantine/notifications'
-import { MeemAPI, makeFetcher } from '@meemproject/api'
+import { useMeemApollo } from '@meemproject/react'
+import { MeemAPI, makeFetcher } from '@meemproject/sdk'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { CirclePlus } from 'tabler-icons-react'
@@ -39,6 +40,7 @@ const useStyles = createStyles(_theme => ({
 }))
 
 export const CreateBundleContainer: React.FC = () => {
+	const { anonClient } = useMeemApollo()
 	const router = useRouter()
 	const { classes } = useStyles()
 
@@ -65,7 +67,8 @@ export const CreateBundleContainer: React.FC = () => {
 			{
 				variables: {
 					ids: form.values.facets.map(facet => facet.contractId)
-				}
+				},
+				client: anonClient
 			}
 		)
 

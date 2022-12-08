@@ -12,8 +12,8 @@ import {
 } from '@mantine/core'
 import { formList, useForm } from '@mantine/form'
 import { showNotification } from '@mantine/notifications'
-import { MeemAPI, makeFetcher } from '@meemproject/api'
-import { useWallet } from '@meemproject/react'
+import { useMeemApollo, useWallet } from '@meemproject/react'
+import { MeemAPI, makeFetcher } from '@meemproject/sdk'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { Download, Rocket } from 'tabler-icons-react'
@@ -38,6 +38,7 @@ const useStyles = createStyles(_theme => ({
 
 export const BundleContainer: React.FC = () => {
 	const router = useRouter()
+	const { anonClient } = useMeemApollo()
 	const { classes } = useStyles()
 	const bundleId = router.query.bundleId as string
 	const { chainId } = useWallet()
@@ -60,7 +61,8 @@ export const BundleContainer: React.FC = () => {
 			variables: {
 				id: bundleId,
 				chainId
-			}
+			},
+			client: anonClient
 		})
 
 	const handleSave = async (values: typeof form.values) => {

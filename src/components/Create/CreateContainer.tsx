@@ -12,7 +12,7 @@ import {
 } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { showNotification } from '@mantine/notifications'
-import { MeemAPI, makeFetcher } from '@meemproject/api'
+import { MeemAPI, makeFetcher } from '@meemproject/sdk'
 import Link from 'next/link'
 import React, { useState } from 'react'
 import { Page } from '../../styles/Page'

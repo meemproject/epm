@@ -1,6 +1,7 @@
 import { useSubscription } from '@apollo/client'
 import { TextInput, Space, Skeleton, Grid } from '@mantine/core'
 import { useForm } from '@mantine/form'
+import { useMeemApollo } from '@meemproject/react'
 import React from 'react'
 import {
 	Bundles,
@@ -15,6 +16,7 @@ export interface IProps {
 }
 
 export const FindBundle: React.FC<IProps> = ({ onSelect, ctaText }) => {
+	const { anonClient } = useMeemApollo()
 	const form = useForm({
 		initialValues: {
 			searchTerm: ''
@@ -26,7 +28,8 @@ export const FindBundle: React.FC<IProps> = ({ onSelect, ctaText }) => {
 		useSubscription<SubSearchBundlesSubscription>(SUB_SEARCH_BUNDLES, {
 			variables: {
 				searchTerm: `${form.values.searchTerm}%`
-			}
+			},
+			client: anonClient
 		})
 
 	return (

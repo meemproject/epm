@@ -2,7 +2,7 @@ import log from '@kengoldfarb/log'
 import { Text, Button, Space, Textarea, TextInput } from '@mantine/core'
 import { useForm } from '@mantine/hooks'
 import { showNotification } from '@mantine/notifications'
-import { MeemAPI, makeFetcher } from '@meemproject/api'
+import { MeemAPI, makeFetcher } from '@meemproject/sdk'
 import React, { useEffect, useState } from 'react'
 import { WalletContractInstances } from '../../../generated/graphql'
 
