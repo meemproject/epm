@@ -8,14 +8,15 @@ import {
 	Loader
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { useWallet } from '@meemproject/react'
-import { MeemAPI, makeFetcher, makeRequest } from '@meemproject/sdk'
+import { useAuth, useSDK, useWallet } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
 
 const MAuthenticate: React.FC = () => {
 	const wallet = useWallet()
 	const router = useRouter()
+	const { login } = useSDK()
+	const { chainId } = useAuth()
 
 	const useStyles = createStyles(theme => ({
 		buttonSaveChanges: {
@@ -47,98 +48,38 @@ const MAuthenticate: React.FC = () => {
 	const [isLoading, setIsLoading] = useState(false)
 	const { classes } = useStyles()
 
-	const getNonceFetcher = makeFetcher<
-		MeemAPI.v1.GetNonce.IQueryParams,
-		MeemAPI.v1.GetNonce.IRequestBody,
-		MeemAPI.v1.GetNonce.IResponseBody
-	>({
-		method: MeemAPI.v1.GetNonce.method
-	})
-
 	useEffect(() => {
 		setIsConnected(wallet.isConnected)
 	}, [wallet.isConnected])
 
-	const login = useCallback(
-		async (walletSig: string) => {
-			log.info('Logging in to Meem...')
-			log.debug(`address = ${wallet.accounts[0]}`)
-			log.debug(`sig = ${walletSig}`)
+	const doLogin = useCallback(async () => {
+		log.info('Logging in to Meem...')
+		log.debug(`address = ${wallet.accounts[0]}`)
 
-			if (wallet.accounts[0] && walletSig) {
-				try {
-					setIsLoading(true)
+		if (wallet.accounts[0] && chainId && wallet.signer) {
+			try {
+				setIsLoading(true)
 
-					const loginRequest =
-						await makeRequest<MeemAPI.v1.Login.IDefinition>(
-							MeemAPI.v1.Login.path(),
-							{
-								method: MeemAPI.v1.Login.method,
-								body: {
-									address: wallet.accounts[0],
-									signature: walletSig
-								}
-							}
-						)
-
-					log.debug(`logged in successfully.`)
-
-					wallet.setJwt(loginRequest.jwt)
-					log.debug(loginRequest.jwt)
-					log.debug(`saved JWT token as cookie.`)
-
-					router.push({
-						pathname: router.query.r
-							? (router.query.r as string)
-							: '/',
-						query: router.query.rq
-							? JSON.parse(router.query.rq as string)
-							: {}
-					})
-				} catch (e) {
-					log.error(e)
-				}
-			}
-			setIsLoading(false)
-		},
-		[router, wallet]
-	)
-
-	const sign = useCallback(async () => {
-		setIsLoading(true)
-
-		try {
-			const { nonce } = await getNonceFetcher(
-				MeemAPI.v1.GetNonce.path(),
-				{
-					address: wallet.accounts[0]
-				}
-			)
-			log.debug('got nonce')
-			const signature = await wallet.signer?.signMessage(nonce)
-			log.debug({ signature })
-
-			if (signature === undefined) {
-				log.debug('Unable to authenticate - signature is undefined.')
-				showNotification({
-					title: 'Oops!',
+				await login({
+					chainId,
 					message:
-						'Unable to authenticate with your wallet. Please try again.'
+						'Welcome to EPM! Please sign this message to authenticate.',
+					signer: wallet.signer,
+					uri: window.location.href
 				})
-				setIsLoading(false)
-			} else {
-				login(signature)
+
+				router.push({
+					pathname: router.query.r ? (router.query.r as string) : '/',
+					query: router.query.rq
+						? JSON.parse(router.query.rq as string)
+						: {}
+				})
+			} catch (e) {
+				log.error(e)
 			}
-		} catch (e) {
-			showNotification({
-				title: 'Oops!',
-				message:
-					'Unable to authenticate with your wallet. Please get in touch!'
-			})
-			setIsLoading(false)
-			log.crit(e)
 		}
-	}, [getNonceFetcher, login, wallet.signer, wallet.accounts])
+		setIsLoading(false)
+	}, [router, wallet, login, chainId])
 
 	const connectWallet = useCallback(async () => {
 		setIsLoading(true)
@@ -193,7 +134,7 @@ const MAuthenticate: React.FC = () => {
 				{!isLoading && isConnected && (
 					<Button
 						className={classes.buttonSaveChanges}
-						onClick={sign}
+						onClick={doLogin}
 					>
 						Add your signature
 					</Button>
