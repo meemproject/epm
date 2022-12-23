@@ -10,7 +10,7 @@ export const useStyles = createStyles(theme => ({
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			paddingBottom: 80,
 			paddingTop: 0,
-			marginTop: 80
+			marginTop: theme.spacing.md
 		}
 	}
 }))

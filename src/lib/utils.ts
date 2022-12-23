@@ -1,3 +1,5 @@
+import slug from 'slug'
+
 export type ArrayElement<ArrayType extends readonly unknown[]> =
 	ArrayType extends readonly (infer ElementType)[] ? ElementType : never
 
@@ -15,4 +17,8 @@ export function downloadFile(filename: string, text: string) {
 	element.click()
 
 	document.body.removeChild(element)
+}
+
+export function formatFilename(name: string) {
+	return slug(name, { lower: true }).substr(0, 200)
 }

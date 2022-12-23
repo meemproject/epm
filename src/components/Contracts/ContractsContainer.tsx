@@ -9,8 +9,8 @@ import {
 	Skeleton
 } from '@mantine/core'
 import { useForm } from '@mantine/form'
-import { MeemAPI } from '@meemproject/api'
-import { useWallet } from '@meemproject/react'
+import { useMeemApollo, useWallet } from '@meemproject/react'
+import { MeemAPI } from '@meemproject/sdk'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import {
@@ -27,6 +27,7 @@ import { ContractCard } from '../Atoms/ContractCard'
 import { DeployContract } from './DeployContract'
 
 export const ContractsContainer: React.FC = () => {
+	const { anonClient } = useMeemApollo()
 	const [isOpen, setIsOpen] = useState(false)
 	const [selectedContract, setSelectedContract] = useState<Contracts>()
 	const { chainId } = useWallet()
@@ -40,20 +41,13 @@ export const ContractsContainer: React.FC = () => {
 		validate: {}
 	})
 
-	// const { loading: isContractsLoading, data: contracts } =
-	// 	useQuery<SearchContractsQuery>(SEARCH_CONTRACTS, {
-	// 		variables: {
-	// 			contractType: form.values.contractType,
-	// 			searchTerm: `${form.values.searchText}%`
-	// 		}
-	// 	})
-
 	const { loading: isContractsLoading, data: contracts } =
 		useSubscription<SubSearchContractsSubscription>(SUB_SEARCH_CONTRACTS, {
 			variables: {
 				contractType: form.values.contractType,
 				searchTerm: `${form.values.searchText}%`
-			}
+			},
+			client: anonClient
 		})
 
 	const { data: singleContractData } =
@@ -63,7 +57,8 @@ export const ContractsContainer: React.FC = () => {
 				skip: !router.query.contractId,
 				variables: {
 					ids: [router.query.contractId]
-				}
+				},
+				client: anonClient
 			}
 		)
 

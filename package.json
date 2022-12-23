@@ -1,13 +1,8 @@
 {
 	"name": "@meemproject/epm",
 	"version": "1.0.5",
-	"private": true,
-	"author": "Meem Project",
+	"author": "Ken Goldfarb",
 	"contributors": [
-		{
-			"name": "James Gadsby",
-			"email": "james.gadsby@gmail.com"
-		},
 		{
 			"name": "Ken Goldfarb",
 			"email": "hello@kengoldfarb.com"
@@ -34,7 +29,7 @@
 		"ethers": "^5.6.4"
 	},
 	"dependencies": {
-		"@apollo/client": "^3.6.9",
+		"@apollo/client": "^3.7.1",
 		"@fontsource/inter": "^4.5.10",
 		"@kengoldfarb/log": "^1.0.5",
 		"@mantine/core": "4.2.2",
@@ -44,11 +39,12 @@
 		"@mantine/next": "4.2.2",
 		"@mantine/notifications": "4.2.2",
 		"@mantine/prism": "^4.2.11",
-		"@meemproject/api": "^0.8.5",
-		"@meemproject/meem-contracts": "^0.8.5",
-		"@meemproject/react": "^0.8.5",
+		"@meemproject/meem-contracts": "^0.11.0",
+		"@meemproject/react": "^0.11.0",
+		"@meemproject/sdk": "^0.11.0",
 		"@next/bundle-analyzer": "^12.1.4",
 		"@types/superagent": "^4.1.15",
+		"alchemy-sdk": "^2.2.0",
 		"blob-util": "^2.0.2",
 		"classnames": "^2.3.1",
 		"dayjs": "^1.11.0",
@@ -63,6 +59,7 @@
 		"react-dom": "18.1.0",
 		"react-gtm-module": "^2.0.11",
 		"react-image-file-resizer": "^0.4.7",
+		"slug": "^8.2.2",
 		"subscriptions-transport-ws": "^0.11.0",
 		"superagent": "^7.1.6",
 		"tabler-icons-react": "^1.50.0",
@@ -78,6 +75,7 @@
 		"@sentry/webpack-plugin": "^1.17.1",
 		"@types/react": "18.0.0",
 		"@types/react-beautiful-dnd": "^13.1.2",
+		"@types/slug": "^5.0.3",
 		"@zeit/next-source-maps": "^0.0.3",
 		"apollo": "^2.33.10",
 		"eslint": "^8.13.0",

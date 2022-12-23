@@ -49,7 +49,6 @@ export const ChainSelect: React.FC<IProps> = ({ chainId, onChange, form }) => {
 	return (
 		<>
 			<Select
-				// value={chainId?.toString() ?? form?.values.chainId.toString()}
 				placeholder="Select Network"
 				data={chains.map(c => ({
 					label: c.name,
@@ -57,16 +56,6 @@ export const ChainSelect: React.FC<IProps> = ({ chainId, onChange, form }) => {
 				}))}
 				searchable
 				{...props}
-				// {...form?.getInputProps('chainId')}
-				// onChange={val => {
-				// 	if (onChange && val) {
-				// 		onChange(+val)
-				// 	}
-				// 	if (val) {
-				// 		setChain(+val)
-				// 	}
-				// }}
-				// {...formProps}
 			/>
 		</>
 	)

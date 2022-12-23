@@ -151,11 +151,6 @@ export const FacetList: React.FC<IProps> = ({
 						let contract: Contracts | undefined | null
 
 						if (facet.target) {
-							// contract = contractInstances?.find(
-							// 	c =>
-							// 		c.address?.toLowerCase() ===
-							// 		facet.target.toLowerCase()
-							// )?.Contract
 							const contractInstance = contractInstances?.find(
 								c => c.address === facet.target
 							)

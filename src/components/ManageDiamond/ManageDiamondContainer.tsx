@@ -16,14 +16,14 @@ import {
 } from '@mantine/core'
 import { formList, useForm } from '@mantine/form'
 import { showNotification } from '@mantine/notifications'
-import { MeemAPI } from '@meemproject/api'
 import {
 	getCuts,
 	IFacetVersion,
 	upgrade,
 	diamondABI
 } from '@meemproject/meem-contracts'
-import { makeFetcher, useWallet } from '@meemproject/react'
+import { useMeemApollo, useWallet } from '@meemproject/react'
+import { MeemAPI, makeFetcher } from '@meemproject/sdk'
 import { ethers } from 'ethers'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -45,7 +45,7 @@ import {
 	WalletContractInstances
 } from '../../../generated/graphql'
 import { SUB_GET_CONTRACTS_BY_ADDRESS } from '../../graphql/contracts'
-import { downloadFile } from '../../lib/utils'
+import { downloadFile, formatFilename } from '../../lib/utils'
 import { Page } from '../../styles/Page'
 import { Address } from '../Atoms/Address'
 import { DemoCode } from '../Atoms/DemoCode'
@@ -79,6 +79,7 @@ const useStyles = createStyles(_theme => ({
 }))
 
 export const ManageDiamondContainer: React.FC = () => {
+	const { anonClient } = useMeemApollo()
 	const router = useRouter()
 	const { classes } = useStyles()
 
@@ -135,7 +136,8 @@ export const ManageDiamondContainer: React.FC = () => {
 						})
 						.map(f => f.target)
 				},
-				fetchPolicy: 'no-cache'
+				fetchPolicy: 'no-cache',
+				client: anonClient
 			}
 		)
 
@@ -248,12 +250,6 @@ export const ManageDiamondContainer: React.FC = () => {
 						})
 					})
 
-					// form.addListItem('facets', {
-					// 	selectors: contract.functionSelectors.filter(
-					// 		(fs: string) => !usedSelectors[fs]
-					// 	),
-					// 	target: contract.ContractInstances[0].address
-					// })
 					updatedFacets.push({
 						selectors: contract.functionSelectors.filter(
 							(fs: string) => !usedSelectors[fs]
@@ -316,7 +312,10 @@ export const ManageDiamondContainer: React.FC = () => {
 				}
 			})
 
-			downloadFile(`${fileName}.json`, JSON.stringify(facetABI))
+			downloadFile(
+				`${formatFilename(fileName)}.json`,
+				JSON.stringify(facetABI)
+			)
 			showNotification({
 				title: 'Success!',
 				message: 'ABI file generated.',
@@ -360,7 +359,7 @@ export const ManageDiamondContainer: React.FC = () => {
 				hasRoleResult.status === 'fulfilled' && hasRoleResult.value
 
 			form.values.facets.splice(0, form.values.facets.length)
-			// form.setFieldValue('facets', formList(result))
+
 			if (Array.isArray(result)) {
 				result.forEach(f => {
 					if (
@@ -443,7 +442,7 @@ export const ManageDiamondContainer: React.FC = () => {
 				fromVersion,
 				toVersion
 			})
-			// refetch()
+
 			fetchDiamondInfo()
 			showNotification({
 				title: 'Success!',
@@ -605,8 +604,6 @@ export const ManageDiamondContainer: React.FC = () => {
 							{ shallow: true }
 						)
 					}}
-					// disabled={!!router.query.address}
-					// required
 					{...form.getInputProps('address')}
 				/>
 				<Space h={48} />
