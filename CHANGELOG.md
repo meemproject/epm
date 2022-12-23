@@ -1,3 +1,17 @@
+## [1.0.5](https://github.com/meemproject/epm/compare/v1.0.4...v1.0.5) (2022-10-07)
+
+
+### Bug Fixes
+
+* save bundle can be clicked multiple times ([4368764](https://github.com/meemproject/epm/commit/4368764))
+
+## [1.0.4](https://github.com/meemproject/epm/compare/v1.0.3...v1.0.4) (2022-09-26)
+
+
+### Bug Fixes
+
+* specify chainId ([c3d4074](https://github.com/meemproject/epm/commit/c3d4074))
+
 ## [1.0.3](https://github.com/meemproject/epm/compare/v1.0.2...v1.0.3) (2022-08-12)
 
 ## [1.0.2](https://github.com/meemproject/epm/compare/v1.0.1...v1.0.2) (2022-08-11)

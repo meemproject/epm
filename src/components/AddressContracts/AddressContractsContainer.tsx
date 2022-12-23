@@ -11,8 +11,8 @@ import {
 	Skeleton
 } from '@mantine/core'
 import { useForm } from '@mantine/form'
-import { MeemAPI } from '@meemproject/api'
-import { makeFetcher, useWallet } from '@meemproject/react'
+import { useMeemApollo, useWallet } from '@meemproject/react'
+import { MeemAPI, makeFetcher } from '@meemproject/sdk'
 import { ethers } from 'ethers'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -25,6 +25,7 @@ import { WalletContractCard } from '../Atoms/WalletContractCard'
 
 export const AddressContractsContainer: React.FC = () => {
 	const { chainId } = useWallet()
+	const { anonClient } = useMeemApollo()
 	const [isOpen, setIsOpen] = useState(false)
 	const [isChainSet, setIsChainSet] = useState(false)
 	const router = useRouter()
@@ -36,7 +37,8 @@ export const AddressContractsContainer: React.FC = () => {
 			fetchPolicy: 'no-cache',
 			variables: {
 				address
-			}
+			},
+			client: anonClient
 		})
 
 	const form = useForm({

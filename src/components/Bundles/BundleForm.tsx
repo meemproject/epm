@@ -11,6 +11,7 @@ import {
 } from '@mantine/core'
 import { UseFormReturnType } from '@mantine/form/lib/use-form'
 import { showNotification } from '@mantine/notifications'
+import { useMeemApollo } from '@meemproject/react'
 import React, { useState } from 'react'
 import { CirclePlus } from 'tabler-icons-react'
 import {
@@ -43,6 +44,7 @@ export const BundleForm: React.FC<IProps> = ({
 	form,
 	isLoading: isParentLoading
 }) => {
+	const { anonClient } = useMeemApollo()
 	const { classes } = useStyles()
 	const [isOpen, setIsOpen] = useState(false)
 
@@ -55,7 +57,8 @@ export const BundleForm: React.FC<IProps> = ({
 						(facet: { selectors: string[]; contractId: string }) =>
 							facet.contractId
 					)
-				}
+				},
+				client: anonClient
 			}
 		)
 
@@ -96,7 +99,6 @@ export const BundleForm: React.FC<IProps> = ({
 			message: `${contract.name} has been added to the bundle.`,
 			color: 'green'
 		})
-		// setIsOpen(false)
 	}
 
 	return (
