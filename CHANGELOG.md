@@ -1,3 +1,13 @@
+# [1.1.0](https://github.com/meemproject/epm/compare/v1.0.5...v1.1.0) (2022-12-23)
+
+
+### Features
+
+* add GH ribbon ([e81626f](https://github.com/meemproject/epm/commit/e81626f))
+* download abi from bundle page ([87f50d9](https://github.com/meemproject/epm/commit/87f50d9))
+* update sdk / login ([9f5a864](https://github.com/meemproject/epm/commit/9f5a864))
+* upgrade to latest SDK ([79413f8](https://github.com/meemproject/epm/commit/79413f8))
+
 ## [1.0.5](https://github.com/meemproject/epm/compare/v1.0.4...v1.0.5) (2022-10-07)
 
 
