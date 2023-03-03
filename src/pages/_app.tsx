@@ -77,7 +77,9 @@ function MyApp(props: AppProps) {
 				primaryColor: 'brand'
 			}}
 		>
-			<MeemProvider>
+			<MeemProvider
+				magicApiKey={process.env.NEXT_PUBLIC_MAGIC_API_KEY ?? ''}
+			>
 				<NotificationsProvider>
 					<Global
 						styles={theme => ({

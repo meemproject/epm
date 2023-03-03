@@ -12,16 +12,9 @@ import {
 import { useWallet } from '@meemproject/react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
-import {
-	Logout,
-	ChevronDown,
-	Dots,
-	BrandDiscord,
-	BrandTwitter,
-	BrandGithub
-} from 'tabler-icons-react'
-import { ensWalletAddress, quickTruncate } from '../../utils/truncated_wallet'
+import React, { useState } from 'react'
+import { Logout, ChevronDown, Dots } from 'tabler-icons-react'
+import { quickTruncate } from '../../utils/truncated_wallet'
 import { ChainSelect } from '../Atoms/ChainSelect'
 import { GithubCorner } from './GithubCorner'
 
@@ -167,38 +160,9 @@ const useStyles = createStyles(theme => ({
 
 export const HeaderMenu: React.FC = () => {
 	const [isUserMenuOpened, setUserMenuOpened] = useState(false)
-	const [hasFetchedENS, setHasFetchedENS] = useState(false)
 	const { classes, cx } = useStyles()
 	const router = useRouter()
-
-	const [username, setUsername] = useState('')
 	const wallet = useWallet()
-
-	useEffect(() => {
-		async function getName() {
-			try {
-				if (
-					!hasFetchedENS &&
-					wallet.isConnected &&
-					wallet.web3Provider
-				) {
-					const name = await ensWalletAddress(wallet.accounts[0])
-					setUsername(quickTruncate(name))
-					setHasFetchedENS(true)
-				}
-			} catch (e) {
-				log.warn(e)
-				setUsername(quickTruncate('0x...'))
-				setHasFetchedENS(true)
-			}
-		}
-		getName()
-	}, [
-		wallet.accounts,
-		wallet.isConnected,
-		wallet.web3Provider,
-		hasFetchedENS
-	])
 
 	const navigateHome = () => {
 		router.push({ pathname: '/' })
@@ -255,7 +219,13 @@ export const HeaderMenu: React.FC = () => {
 											sx={{ lineHeight: 1 }}
 											mr={3}
 										>
-											{username}
+											{wallet.me?.user.DefaultWallet
+												.ens ??
+												quickTruncate(
+													wallet.me?.user
+														.DefaultWallet.address
+												) ??
+												'0x...'}
 										</Text>
 										<ChevronDown size={12} />
 									</Group>
@@ -278,7 +248,7 @@ export const HeaderMenu: React.FC = () => {
 						<Text className={classes.connectWallet}>
 							<a
 								onClick={async () => {
-									await wallet.connectWallet()
+									router.push('/authenticate')
 								}}
 							>
 								Connect wallet
@@ -296,77 +266,40 @@ export const HeaderMenu: React.FC = () => {
 							</UnstyledButton>
 						}
 					>
-						<Menu.Item className={classes.menuItem}>
-							<Link href={`/tracked/${wallet.accounts[0]}`}>
+						<Link href={`/tracked/${wallet.accounts[0]}`}>
+							<Menu.Item className={classes.menuItem}>
 								<a>My Contracts</a>
-							</Link>
-						</Menu.Item>
-						<Menu.Item className={classes.menuItem}>
-							<Link href="/create">
+							</Menu.Item>
+						</Link>
+						<Link href="/create">
+							<Menu.Item className={classes.menuItem}>
 								<a>Create Contract</a>
-							</Link>
-						</Menu.Item>
-						<Menu.Item className={classes.menuItem}>
-							<Link href="/manage">
+							</Menu.Item>
+						</Link>
+						<Link href="/manage">
+							<Menu.Item className={classes.menuItem}>
 								<a>Manage Contract</a>
-							</Link>
-						</Menu.Item>
-						<Menu.Item className={classes.menuItem}>
-							<Link href="/contracts">
+							</Menu.Item>
+						</Link>
+						<Link href="/contracts">
+							<Menu.Item className={classes.menuItem}>
 								<a>Deploy Contract</a>
-							</Link>
-						</Menu.Item>
-						<Menu.Item className={classes.menuItem}>
-							<Link href="/bundles">
+							</Menu.Item>
+						</Link>
+						<Link href="/bundles">
+							<Menu.Item className={classes.menuItem}>
 								<a>Bundles</a>
-							</Link>
-						</Menu.Item>
-						<Menu.Item className={classes.menuItem}>
-							<Link href="/createbundle">
+							</Menu.Item>
+						</Link>
+						<Link href="/createbundle">
+							<Menu.Item className={classes.menuItem}>
 								<a>Create Bundle</a>
-							</Link>
-						</Menu.Item>
+							</Menu.Item>
+						</Link>
 						<Divider />
 						<Menu.Item
 							onClick={() =>
-								window.open(
-									'https://github.com/meemproject/epm',
-									'_blank'
-								)
-							}
-							className={classes.menuItemWithIcon}
-							icon={<BrandGithub size={20} />}
-						>
-							Github
-						</Menu.Item>
-						<Menu.Item
-							onClick={() =>
 								window.open('https://meem.wtf', '_blank')
-							}
-							className={classes.menuItemWithIcon}
-							icon={<BrandTwitter size={20} />}
-						>
-							Twitter
-						</Menu.Item>
-						<Menu.Item
-							onClick={() =>
-								window.open(
-									'https://twitter.com/0xmeem',
-									'_blank'
-								)
-							}
-							className={classes.menuItemWithIcon}
-							icon={<BrandDiscord size={20} />}
-						>
-							Discord
-						</Menu.Item>
-
-						<Menu.Item
-							onClick={() =>
-								window.open(
-									'https://discord.gg/jgxuK6662v',
-									'_blank'
-								)
 							}
 							className={cx(classes.menuItem)}
 						>
