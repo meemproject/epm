@@ -1,3 +1,4 @@
+import log from '@kengoldfarb/log'
 import {
 	createStyles,
 	Text,
@@ -9,9 +10,11 @@ import {
 	Modal
 } from '@mantine/core'
 import { useForm } from '@mantine/hooks'
+import { showNotification } from '@mantine/notifications'
+import { makeFetcher, MeemAPI } from '@meemproject/sdk'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
-import { Pencil } from 'tabler-icons-react'
+import { Pencil, Trash } from 'tabler-icons-react'
 import {
 	GetMyContractsQuery,
 	SearchContractsQuery,
@@ -22,6 +25,7 @@ import { Address } from './Address'
 import { ContractCard } from './ContractCard'
 import { EditWalletContract } from './EditWalletContract'
 import { IconButton } from './IconButton'
+import { ModalCTA } from './ModalCTA'
 
 const useStyles = createStyles(_theme => ({
 	row: {
@@ -59,6 +63,38 @@ export const WalletContractCard: React.FC<IProps> = ({
 		// validate: {}
 	})
 
+	const handleUntrack = async () => {
+		try {
+			const unTrackContract = makeFetcher<
+				MeemAPI.v1.UntrackContractInstance.IQueryParams,
+				MeemAPI.v1.UntrackContractInstance.IRequestBody,
+				MeemAPI.v1.UntrackContractInstance.IResponseBody
+			>({
+				method: MeemAPI.v1.UntrackContractInstance.method
+			})
+			await unTrackContract(
+				MeemAPI.v1.UntrackContractInstance.path({
+					contractInstanceId: walletContract?.ContractInstance?.id
+				})
+			)
+
+			showNotification({
+				title: 'Success',
+				message:
+					'The contract has been un-tracked and will no longer show up under "My Contracts"',
+				color: 'green'
+			})
+		} catch (e) {
+			log.crit(e)
+			showNotification({
+				title: 'Error',
+				message:
+					'Something went wrong untracking the contract. Please try again',
+				color: 'red'
+			})
+		}
+	}
+
 	useEffect(() => {
 		if (walletContract) {
 			setValues({
@@ -82,7 +118,10 @@ export const WalletContractCard: React.FC<IProps> = ({
 						<a>
 							<Text size="xl">
 								{walletContract.name ??
-									`My ${walletContract.ContractInstance?.Contract?.name}`}
+									`My ${
+										walletContract.ContractInstance
+											?.Contract?.name ?? 'Contract'
+									}`}
 							</Text>
 						</a>
 					</Link>
@@ -91,6 +130,18 @@ export const WalletContractCard: React.FC<IProps> = ({
 						<IconButton
 							icon={<Pencil size={24} />}
 							onClick={() => setIsEditing(true)}
+						/>
+					</Tooltip>
+					<Space w={8} />
+					<Tooltip label="Untrack Contract" withArrow>
+						<ModalCTA
+							title="Untrack Contract"
+							body='Are you sure you want to untrack this contract? It will no longer appear under "My Contracts"'
+							buttonThatOpensModal={<Trash size={24} />}
+							onConfirm={handleUntrack}
+							ctaButton={
+								<Button color="red">Untrack Contract</Button>
+							}
 						/>
 					</Tooltip>
 				</div>
