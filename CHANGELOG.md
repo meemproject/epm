@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/meemproject/epm/compare/v1.1.0...v1.2.0) (2023-03-04)
+
+
+### Features
+
+* untrack contract ([6a5cca3](https://github.com/meemproject/epm/commit/6a5cca3))
+
 # [1.1.0](https://github.com/meemproject/epm/compare/v1.0.5...v1.1.0) (2022-12-23)
 
 
