@@ -4,6 +4,7 @@ import { NotificationsProvider } from '@mantine/notifications'
 import { MeemProvider } from '@meemproject/react'
 import type { AppProps } from 'next/app'
 import React from 'react'
+import ReactGA from 'react-ga4'
 import '@fontsource/inter'
 import { App } from '../components/App'
 
@@ -11,6 +12,11 @@ function MyApp(props: AppProps) {
 	const { Component, pageProps } = props
 
 	React.useEffect(() => {
+		if (process.env.NEXT_PUBLIC_GA_ID) {
+			ReactGA.initialize(process.env.NEXT_PUBLIC_GA_ID)
+		} else {
+			log.warn('No Google Analytics ID found. Skipping initialization.')
+		}
 		const jssStyles = document.querySelector('#jss-server-side')
 		if (jssStyles) {
 			jssStyles.parentElement?.removeChild(jssStyles)
@@ -77,7 +83,12 @@ function MyApp(props: AppProps) {
 				primaryColor: 'brand'
 			}}
 		>
-			<MeemProvider>
+			<MeemProvider
+				magicApiKey={process.env.NEXT_PUBLIC_MAGIC_API_KEY ?? ''}
+				sdk={{
+					isGunEnabled: false
+				}}
+			>
 				<NotificationsProvider>
 					<Global
 						styles={theme => ({

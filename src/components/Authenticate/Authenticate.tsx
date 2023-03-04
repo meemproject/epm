@@ -1,146 +1,79 @@
 import log from '@kengoldfarb/log'
-import {
-	createStyles,
-	Text,
-	Button,
-	Space,
-	Container,
-	Loader
-} from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
-import { useAuth, useSDK, useWallet } from '@meemproject/react'
+import { Text, Button, Space, Container, Loader, Center } from '@mantine/core'
+import { LoginForm, useAuth, useSDK } from '@meemproject/react'
+import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
+import { showErrorNotification } from '../../utils/notifications'
 
 const MAuthenticate: React.FC = () => {
-	const wallet = useWallet()
+	const wallet = useAuth()
 	const router = useRouter()
 	const { login } = useSDK()
-	const { chainId } = useAuth()
 
-	const useStyles = createStyles(theme => ({
-		buttonSaveChanges: {
-			marginTop: 48,
-			marginBottom: 48,
-
-			backgroundColor: 'black',
-			'&:hover': {
-				backgroundColor: theme.colors.gray[8]
-			},
-			borderRadius: 24
-		},
-		authHeader: {
-			fontSize: 24,
-			fontWeight: 600,
-			marginTop: 60
-		},
-		authSubHeader: {
-			fontSize: 20,
-			fontWeight: 600,
-			marginTop: 16
-		},
-		loader: {
-			marginTop: 48
-		}
-	}))
-
-	const [isConnected, setIsConnected] = useState(false)
 	const [isLoading, setIsLoading] = useState(false)
-	const { classes } = useStyles()
+	const sign = useCallback(async () => {
+		setIsLoading(true)
 
-	useEffect(() => {
-		setIsConnected(wallet.isConnected)
-	}, [wallet.isConnected])
-
-	const doLogin = useCallback(async () => {
-		log.info('Logging in to Meem...')
-		log.debug(`address = ${wallet.accounts[0]}`)
-
-		if (wallet.accounts[0] && chainId && wallet.signer) {
-			try {
-				setIsLoading(true)
-
+		try {
+			if (wallet.signer && wallet.chainId) {
 				await login({
-					chainId,
-					message:
-						'Welcome to EPM! Please sign this message to authenticate.',
+					message: process.env.NEXT_PUBLIC_LOGIN_MESSAGE ?? '',
 					signer: wallet.signer,
+					chainId: wallet.chainId,
 					uri: window.location.href
 				})
 
-				router.push({
-					pathname: router.query.r ? (router.query.r as string) : '/',
-					query: router.query.rq
-						? JSON.parse(router.query.rq as string)
-						: {}
-				})
-			} catch (e) {
-				log.error(e)
+				Cookies.set('redirectPath', JSON.stringify(router.asPath ?? ''))
+
+				if (router.query.return) {
+					router.push({
+						pathname: router.query.return.toString()
+					})
+				} else {
+					router.push({
+						pathname: '/'
+					})
+				}
 			}
-		}
-		setIsLoading(false)
-	}, [router, wallet, login, chainId])
-
-	const connectWallet = useCallback(async () => {
-		setIsLoading(true)
-		await wallet.connectWallet()
-
-		if (wallet.accounts[0]) {
-			setIsConnected(true)
+		} catch (e) {
 			setIsLoading(false)
-		} else {
-			log.debug('Unable to authenticate - wallet address not found.')
-			showNotification({
-				title: 'Oops!',
-				message:
-					'Unable to authenticate with your wallet. Please try again.'
-			})
+			showErrorNotification(
+				'Oops!',
+				'Unable to sign into Meem with your wallet. Contact us using the top-right link on this page.'
+			)
+			log.crit(e)
 		}
-	}, [wallet])
+	}, [wallet, router, login])
 
 	return (
-		<Container>
-			<Text
-				className={classes.authHeader}
-			>{`Let's make sure it's really you.`}</Text>
-			<div>
-				<Text className={classes.authSubHeader}>
-					{wallet.isConnected
-						? 'Add Your Signature'
-						: 'Connect Your Wallet'}
-				</Text>
-				<Space h={16} />
-			</div>
+		<Center>
+			<Container>
+				<div>
+					<Space h={80} />
+					<Text>{`Sign in with Meem`}</Text>
+					<Space h={16} />
 
-			<div>
-				<Text>
-					{wallet.isConnected
-						? `Let's connect your wallet again.`
-						: `Please sign a message to confirm it's really you. The signature request might take a moment
-					to pop up - please be patient!`}
-				</Text>
-			</div>
+					<div>
+						<Text>
+							{wallet.isConnected
+								? `Please sign the message below.`
+								: `Connect with your wallet or email address.`}
+						</Text>
+					</div>
 
-			{isLoading && <Loader className={classes.loader} />}
-			<div>
-				{!isLoading && !isConnected && (
-					<Button
-						className={classes.buttonSaveChanges}
-						onClick={connectWallet}
-					>
-						Connect wallet
-					</Button>
-				)}
-				{!isLoading && isConnected && (
-					<Button
-						className={classes.buttonSaveChanges}
-						onClick={doLogin}
-					>
-						Add your signature
-					</Button>
-				)}
-			</div>
-		</Container>
+					<Space h={40} />
+
+					{isLoading && <Loader variant="oval" color={'cyan'} />}
+					<div>
+						{!isLoading && !wallet.isConnected && <LoginForm />}
+						{!isLoading && wallet.isConnected && (
+							<Button onClick={sign}>Sign Message</Button>
+						)}
+					</div>
+				</div>
+			</Container>
+		</Center>
 	)
 }
 

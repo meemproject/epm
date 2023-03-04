@@ -15,7 +15,7 @@ export async function ensWalletAddress(address: string): Promise<string> {
 	return address.toLowerCase()
 }
 
-export function quickTruncate(address: string): string {
+export function quickTruncate(address?: string): string {
 	if (!address || address.length === 0) {
 		return ''
 	}

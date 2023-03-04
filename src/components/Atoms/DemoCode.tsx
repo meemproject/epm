@@ -8,11 +8,12 @@ export const demoCode = (name: string) => {
 	return `import React, { useState } from 'react'
 // Import from the generated and downloaded file
 import { ${safeName}__factory } from '../types/${safeName}'
-import { useWallet } from '@meemproject/react'
+import { useSDK, useAuth } from '@meemproject/react'
 
 export const Home: React.FC = () => {
 	// Use @meemproject/react wallet context
-	const { isConnected, connectWallet, accounts, signer } = useWallet()
+	const { isConnected, connectWallet, accounts, signer } = useAuth()
+	const { login } = useSDK()
 	const [contractAddress, setContractAddress] = useState('')
 
 	const handleConnectWallet = () => {
