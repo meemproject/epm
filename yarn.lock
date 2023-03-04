@@ -2658,10 +2658,10 @@
     merkletreejs "^0.2.32"
     superagent "^8.0.0"
 
-"@meemproject/react@^0.19.7":
-  version "0.19.7"
-  resolved "https://registry.yarnpkg.com/@meemproject/react/-/react-0.19.7.tgz#b4d89b8d1bafc28ece939ca337d2c97d201ab889"
-  integrity sha512-rmxEPhUn6Zt+k+WUVxmRfEiC9slZos0/bOlZwJUGz1K/4wwp+dhizNIokn1DwKOiPRfoUQU4Q5GTc8lfMPOaow==
+"@meemproject/react@0.19.8-pre-5040443.0":
+  version "0.19.8-pre-5040443.0"
+  resolved "https://registry.yarnpkg.com/@meemproject/react/-/react-0.19.8-pre-5040443.0.tgz#5204695e7dfaf9e4ed93cee57317930245c857ac"
+  integrity sha512-SSS2zAApQVeSH5LBr5WHqLaauUZ7c6W+8gPVC8qweDa+fu7E/MCw7YXjK1ISFuLNzXDEGAh1V3u64oFGpbp2Iw==
   dependencies:
     "@apollo/client" "^3.7.1"
     "@auth0/auth0-react" "^1.12.0"
@@ -2674,7 +2674,7 @@
     "@material-ui/core" "^4.12.4"
     "@material-ui/lab" "^4.0.0-alpha.61"
     "@meemproject/meem-contracts" "^0.19.7"
-    "@meemproject/sdk" "^0.19.7"
+    "@meemproject/sdk" "^0.19.8-pre-5040443.0"
     "@meemproject/utils" "^0.19.7"
     "@mui/material" "^5.6.1"
     "@walletconnect/web3-provider" "^1.7.7"
@@ -2691,10 +2691,10 @@
     swr "^1.3.0"
     web3modal "^1.9.9"
 
-"@meemproject/sdk@^0.19.7":
-  version "0.19.7"
-  resolved "https://registry.yarnpkg.com/@meemproject/sdk/-/sdk-0.19.7.tgz#74b80c25a3beaea17a59086a56bda3c4b0266bfa"
-  integrity sha512-n1ZV3qzvWqnShSo1rUPnFnyIHDq+8qJXpnF/thA1inU+Lfwac1jQz7W3sM7BdfLNQsFL+NbhR2zNhEQd3qfhpQ==
+"@meemproject/sdk@0.19.8-pre-5040443.0", "@meemproject/sdk@^0.19.8-pre-5040443.0":
+  version "0.19.8-pre-5040443.0"
+  resolved "https://registry.yarnpkg.com/@meemproject/sdk/-/sdk-0.19.8-pre-5040443.0.tgz#ddbcf0c2063a9432c4708a91ea4690064eaca1f2"
+  integrity sha512-EPLn5PVjuKn2Sk83S8BITSjoEGm28Kx3FYeyfFOv5VXUC4RRmUbuTUS1xSwon0NeBcy2aNOiMby+QslSoe3fXw==
   dependencies:
     "@apollo/client" "^3.7.1"
     "@kengoldfarb/log" "^1.0.5"
@@ -15907,6 +15907,11 @@ react-fast-compare@^3.0.1:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-3.2.0.tgz#641a9da81b6a6320f270e89724fb45a0b39e43bb"
   integrity sha512-rtGImPZ0YyLrscKI9xTpV8psd6I8VAtjKCzQDlzyDvqJA8XOW78TXYQwNRNd8g8JZnDu8q9Fu/1v4HPAVwVdHA==
+
+react-ga4@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/react-ga4/-/react-ga4-2.0.0.tgz#d125807cc30b087a6aa24401ec5f1f1c2d176fe9"
+  integrity sha512-WHi98hMunzh4ngRdNil8NN6Qly3ZZUkprhbgSqA+NFzovp8zqpYV3jcbKL9FnMdeBQHGhv8AVNCT2oFEE+EFXA==
 
 react-gtm-module@^2.0.11:
   version "2.0.11"

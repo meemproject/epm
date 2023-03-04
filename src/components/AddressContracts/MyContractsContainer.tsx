@@ -19,7 +19,9 @@ export const MyContractsContainer: React.FC<IProps> = () => {
 			<Space h={8} />
 			<Text>All the contracts you&apos;ve deployed or tracked</Text>
 			<Space h={8} />
-			<AddressContracts address={accounts && accounts[0]} />
+			{accounts && accounts[0] && (
+				<AddressContracts address={accounts[0]} />
+			)}
 		</Page>
 	)
 }

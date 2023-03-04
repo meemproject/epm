@@ -27,8 +27,8 @@ export const ModalCTA: React.FC<IModalCTAProps> = ({
 	onConfirm,
 	buttonThatOpensModal,
 	ctaButton,
-	modalWidth = 400,
-	modalHeight,
+	// modalWidth = 400,
+	// modalHeight,
 	isOpen,
 	onClose,
 	className

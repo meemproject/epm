@@ -1,52 +1,15 @@
 import log from '@kengoldfarb/log'
-import {
-	Text,
-	Button,
-	Space,
-	Container,
-	Loader,
-	Center,
-	createStyles
-} from '@mantine/core'
+import { Text, Button, Space, Container, Loader, Center } from '@mantine/core'
 import { LoginForm, useAuth, useSDK } from '@meemproject/react'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useCallback, useState } from 'react'
 import { showErrorNotification } from '../../utils/notifications'
 
-const useStyles = createStyles(theme => ({
-	buttonSaveChanges: {
-		marginTop: 48,
-		marginBottom: 48,
-
-		backgroundColor: 'black',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24
-	},
-	authHeader: {
-		fontSize: 24,
-		fontWeight: 600,
-		marginTop: 60
-	},
-	authSubHeader: {
-		fontSize: 20,
-		fontWeight: 600,
-		marginTop: 16
-	},
-	loader: {
-		marginTop: 48
-	},
-	centered: {}
-}))
-
 const MAuthenticate: React.FC = () => {
 	const wallet = useAuth()
 	const router = useRouter()
 	const { login } = useSDK()
-
-	const styles = useStyles()
 
 	const [isLoading, setIsLoading] = useState(false)
 	const sign = useCallback(async () => {
@@ -86,11 +49,9 @@ const MAuthenticate: React.FC = () => {
 	return (
 		<Center>
 			<Container>
-				<div className={styles.centered}>
+				<div>
 					<Space h={80} />
-					<Text
-						className={styles.tLargeBold}
-					>{`Sign in with Meem`}</Text>
+					<Text>{`Sign in with Meem`}</Text>
 					<Space h={16} />
 
 					<div>
@@ -107,12 +68,7 @@ const MAuthenticate: React.FC = () => {
 					<div>
 						{!isLoading && !wallet.isConnected && <LoginForm />}
 						{!isLoading && wallet.isConnected && (
-							<Button
-								className={styles.buttonBlack}
-								onClick={sign}
-							>
-								Sign Message
-							</Button>
+							<Button onClick={sign}>Sign Message</Button>
 						)}
 					</div>
 				</div>

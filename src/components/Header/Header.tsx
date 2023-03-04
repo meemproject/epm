@@ -1,4 +1,3 @@
-import log from '@kengoldfarb/log'
 import {
 	createStyles,
 	Header,
@@ -16,6 +15,7 @@ import React, { useState } from 'react'
 import { Logout, ChevronDown, Dots } from 'tabler-icons-react'
 import { quickTruncate } from '../../utils/truncated_wallet'
 import { ChainSelect } from '../Atoms/ChainSelect'
+import { Logo } from '../Atoms/Logo'
 import { GithubCorner } from './GithubCorner'
 
 const useStyles = createStyles(theme => ({
@@ -152,9 +152,9 @@ const useStyles = createStyles(theme => ({
 		marginRight: theme.spacing.md
 	},
 	logo: {
-		height: 36,
 		paddingLeft: theme.spacing.xs,
-		paddingTop: 2
+		paddingTop: 2,
+		width: '120px'
 	}
 }))
 
@@ -173,17 +173,7 @@ export const HeaderMenu: React.FC = () => {
 			<div className={classes.inner}>
 				<div className={classes.headerLeftItems}>
 					<a onClick={navigateHome} className={classes.logoLink}>
-						<svg
-							className={classes.logo}
-							viewBox="0 0 190 70"
-							fill="none"
-							xmlns="http://www.w3.org/2000/svg"
-						>
-							<path
-								d="M56 33.04V-3.8147e-06H0V56H56V45.92H10.08V33.04H56ZM10.08 10.08H45.92V22.96H10.08V10.08ZM116 56V-3.8147e-06H60V69.04H70.08V56H116ZM70.08 10.08H105.92V45.92H70.08V10.08ZM190 56V-3.8147e-06H120V56H130.08V10.08H150V56H160V10.08H180V56H190Z"
-								fill="#D0FF6C"
-							/>
-						</svg>
+						<Logo className={classes.logo} />
 					</a>
 					<ChainSelect
 						chainId={wallet.chainId}
