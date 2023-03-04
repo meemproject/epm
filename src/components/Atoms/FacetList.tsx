@@ -36,6 +36,7 @@ export interface IProps {
 	contracts?: Contracts[]
 	isLoading?: boolean
 	isEnabled?: boolean
+	isDisabled?: boolean
 }
 
 export const FacetList: React.FC<IProps> = ({
@@ -44,6 +45,7 @@ export const FacetList: React.FC<IProps> = ({
 	contractInstances,
 	contracts,
 	isEnabled,
+	isDisabled,
 	proxyContract
 }) => {
 	const { classes } = useStyles()
@@ -227,7 +229,8 @@ export const FacetList: React.FC<IProps> = ({
 																<Switch
 																	key={`${contract?.id}-${selector}`}
 																	disabled={
-																		!isEnabled
+																		!isEnabled ||
+																		isDisabled
 																	}
 																	checked={
 																		isInUse
@@ -255,7 +258,7 @@ export const FacetList: React.FC<IProps> = ({
 												)}
 											</div>
 										</ContractCard>
-										{isEnabled && (
+										{isEnabled && !isDisabled && (
 											<div>
 												<IconButton
 													tooltip="Remove Facet"
