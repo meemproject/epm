@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/meemproject/epm/compare/v1.2.0...v1.3.0) (2023-03-04)
+
+
+### Features
+
+* show magic wallet ([8e19ec8](https://github.com/meemproject/epm/commit/8e19ec8))
+
 # [1.2.0](https://github.com/meemproject/epm/compare/v1.1.0...v1.2.0) (2023-03-04)
 
 
