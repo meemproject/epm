@@ -38,11 +38,13 @@ export interface IProps {
 	form: UseFormReturnType<any>
 	contracts: Contracts[]
 	isLoading?: boolean
+	isDisabled?: boolean
 }
 
 export const BundleForm: React.FC<IProps> = ({
 	form,
-	isLoading: isParentLoading
+	isLoading: isParentLoading,
+	isDisabled
 }) => {
 	const { anonClient } = useMeemApollo()
 	const { classes } = useStyles()
@@ -125,13 +127,15 @@ export const BundleForm: React.FC<IProps> = ({
 			<div className={classes.section_wrapper}>
 				<Text size="xl">Facets</Text>
 				<Space w={12} />
-				<Button
-					disabled={isLoading}
-					onClick={() => setIsOpen(true)}
-					leftIcon={<CirclePlus />}
-				>
-					Add Facet
-				</Button>
+				{!isDisabled && (
+					<Button
+						disabled={isLoading}
+						onClick={() => setIsOpen(true)}
+						leftIcon={<CirclePlus />}
+					>
+						Add Facet
+					</Button>
+				)}
 			</div>
 			<Space h={12} />
 			<FacetList
@@ -139,6 +143,7 @@ export const BundleForm: React.FC<IProps> = ({
 				contracts={data?.Contracts as Contracts[]}
 				isLoading={isLoading}
 				isEnabled
+				isDisabled={isDisabled}
 			/>
 			<Modal
 				opened={isOpen}

@@ -41,7 +41,7 @@ export const BundleContainer: React.FC = () => {
 	const { anonClient } = useMeemApollo()
 	const { classes } = useStyles()
 	const bundleId = router.query.bundleId as string
-	const { chainId } = useWallet()
+	const { chainId, accounts } = useWallet()
 
 	const form = useForm({
 		initialValues: {
@@ -253,17 +253,23 @@ export const BundleContainer: React.FC = () => {
 							form={form}
 							isLoading={isLoading}
 							contracts={contracts}
+							isDisabled={
+								data?.Bundles[0].Creator?.address !==
+								accounts[0]
+							}
 						/>
 						<Space h={24} />
-						<Center>
-							<Button
-								type="submit"
-								loading={isSaving}
-								disabled={isLoading || isSaving}
-							>
-								Save
-							</Button>
-						</Center>
+						{data?.Bundles[0].Creator?.address === accounts[0] && (
+							<Center>
+								<Button
+									type="submit"
+									loading={isSaving}
+									disabled={isLoading || isSaving}
+								>
+									Save
+								</Button>
+							</Center>
+						)}
 					</>
 				)}
 			</form>
