@@ -1,5 +1,5 @@
 import { useSubscription } from '@apollo/client'
-import { TextInput, Space, Skeleton, Grid } from '@mantine/core'
+import { TextInput, Space, Skeleton, Grid, createStyles } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { useMeemApollo } from '@meemproject/react'
 import React from 'react'
@@ -10,6 +10,11 @@ import {
 import { SUB_SEARCH_BUNDLES } from '../../graphql/contracts'
 import { BundleCard } from '../Atoms/BundleCard'
 
+const useStyles = createStyles(_theme => ({
+	cardContainer: {
+		margin: '16px 0'
+	}
+}))
 export interface IProps {
 	onSelect: (bundle: Bundles) => void
 	ctaText?: string
@@ -17,6 +22,7 @@ export interface IProps {
 
 export const FindBundle: React.FC<IProps> = ({ onSelect, ctaText }) => {
 	const { anonClient } = useMeemApollo()
+	const { classes } = useStyles()
 	const form = useForm({
 		initialValues: {
 			searchTerm: ''
@@ -52,17 +58,18 @@ export const FindBundle: React.FC<IProps> = ({ onSelect, ctaText }) => {
 					))}
 
 				{data?.Bundles.map(b => (
-					<>
-						<Grid.Col md={6} key={`col-${b.id}`}>
-							<BundleCard
-								key={`bundle-${b.id}`}
-								bundle={b as Bundles}
-								ctaText={ctaText ?? 'Select'}
-								onClick={() => onSelect(b as Bundles)}
-							/>
-						</Grid.Col>
-						<Space h={16} />
-					</>
+					<Grid.Col
+						md={6}
+						key={`col-${b.id}`}
+						className={classes.cardContainer}
+					>
+						<BundleCard
+							key={`bundle-${b.id}`}
+							bundle={b as Bundles}
+							ctaText={ctaText ?? 'Select'}
+							onClick={() => onSelect(b as Bundles)}
+						/>
+					</Grid.Col>
 				))}
 			</Grid>
 		</>

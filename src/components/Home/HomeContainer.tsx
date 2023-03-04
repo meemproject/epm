@@ -137,7 +137,13 @@ export const HomeContainer: React.FC = () => {
 				</Grid.Col>
 				<Grid.Col md={6}>
 					<Card shadow="sm" p="lg">
-						<Link href={`/tracked/${accounts[0]}`}>
+						<Link
+							href={
+								accounts[0]
+									? `/tracked/${accounts[0]}`
+									: '/authenticate'
+							}
+						>
 							<a className={classes.card_link}>
 								<div className={classes.row}>
 									<LayoutDashboard color="green" />
