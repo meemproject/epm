@@ -8,11 +8,11 @@ import {
 	Avatar,
 	Divider
 } from '@mantine/core'
-import { useWallet } from '@meemproject/react'
+import { useAuth } from '@meemproject/react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-import { Logout, ChevronDown, Dots } from 'tabler-icons-react'
+import { Logout, ChevronDown, Dots, Wallet } from 'tabler-icons-react'
 import { quickTruncate } from '../../utils/truncated_wallet'
 import { ChainSelect } from '../Atoms/ChainSelect'
 import { Logo } from '../Atoms/Logo'
@@ -162,7 +162,7 @@ export const HeaderMenu: React.FC = () => {
 	const [isUserMenuOpened, setUserMenuOpened] = useState(false)
 	const { classes, cx } = useStyles()
 	const router = useRouter()
-	const wallet = useWallet()
+	const wallet = useAuth()
 
 	const navigateHome = () => {
 		router.push({ pathname: '/' })
@@ -222,6 +222,22 @@ export const HeaderMenu: React.FC = () => {
 								</UnstyledButton>
 							}
 						>
+							{wallet.walletType === 'magic' && (
+								<Menu.Item
+									className={classes.menuItem}
+									onClick={async () => {
+										try {
+											wallet.magic?.wallet.showUI()
+										} catch (e) {
+											// eslint-disable-next-line no-console
+											console.log(e)
+										}
+									}}
+									icon={<Wallet size={14} />}
+								>
+									Wallet
+								</Menu.Item>
+							)}
 							<Menu.Item
 								className={classes.menuItem}
 								onClick={async () => {
