@@ -1,4 +1,6 @@
-![EPM Logo](https://cdn.meem.wtf/epm-380x380.png)
+# !! No longer maintained
+
+### For the latest version see: [https://github.com/kengoldfarb/epm](https://github.com/kengoldfarb/epm)
 
 # Ethereum Package Manager
 
